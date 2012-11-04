@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<title>Reflexie Tests</title>
+		<link rel="stylesheet" href="css/runner.css" />
+
+		<style>
+			#flex-container {
+				opacity: 1;
+			}
+
+			#flex-target {
+				-webkit-flex-direction: column;
+				flex-direction: column;
+
+				-webkit-flex-wrap: nowrap;
+				flex-wrap: nowrap;
+
+				-webkit-justify-content: flex-start;
+				flex-direction: flex-start;
+
+				-webkit-align-items: stretch;
+				flex-align-items: stretch;
+
+				-webkit-align-self: auto;
+				align-self: auto;
+
+				-webkit-align-content: flex-start;
+				align-content: flex-start;
+			}
+		</style>
+
+		<script src="lib/require.js"></script>
+		<script>
+			require.config({
+				urlArgs : "cacheBust=" + (new Date()).getTime()
+			});
+		</script>
+
+		<script>
+			require([
+				"reflexie/reflexie"
+			], function (Flexbox) {
+
+				var target = document.querySelector("#flex-target");
+				var items = document.querySelectorAll("#flex-target > *");
+
+				var flex = new Flexbox({
+					container: {
+						"element": target,
+						"selector": "#flex-target",
+						"properties": {
+							"display": "flex",
+							"flex-direction": "row",
+							"flex-wrap": "nowrap",
+							"justify-content": "flex-start",
+							"align-items": "stretch",
+							"align-self": "auto",
+							"align-content": "flex-start"
+						}
+					},
+
+					items: [{
+						"element": items[0],
+						"selector": "#flex-target > *",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto"
+						}
+					}, {
+						"element": items[1],
+						"selector": "#flex-target > *",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto"
+						}
+					}, {
+						"element": items[2],
+						"selector": "#flex-target > *",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto"
+						}
+					}]
+				});
+
+			});
+		</script>
+	</head>
+	<body>
+
+		<div id="flex-container">
+			<div id="flex-target">
+				<div id="flex-col-1">
+					<h2>Col 1</h2>
+				</div>
+				<div id="flex-col-2">
+					<h2>Col 2</h2>
+				</div>
+				<div id="flex-col-3">
+					<h2>Col 3</h2>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>

@@ -20,10 +20,11 @@
 			require([
 				"jquery",
 				"socket.io",
+				"reflexie/reflexie",
 				"lib/tests",
 				"lib/mocha",
 				"lib/expect"
-			], function ($, io, tests) {
+			], function ($, io, reflexie, tests) {
 				mocha.setup({
 					setup : "bdd",
 					reporter : "html"
@@ -41,6 +42,10 @@
 
 						runner.on("end", function () {
 							document.title = "Done.";
+						});
+
+						runner.on("fail", function (e) {
+							throw new Error(e.title);
 						});
 					});
 

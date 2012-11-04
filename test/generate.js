@@ -33,6 +33,7 @@ app.configure(function () {
 	app.use("/css", express.static(__dirname + "/css"));
 	app.use("/lib", express.static(__dirname + "/lib"));
 	app.use("/data", express.static(__dirname + "/data"));
+	app.use("/reflexie", express.static(__dirname + "../../reflexie"));
 
 	app.set("views", __dirname + "/views");
 	app.engine("html", require("ejs").renderFile);
@@ -49,6 +50,10 @@ app.get("/generate", function (req, res) {
 
 app.get("/runner", function (req, res) {
 	res.render("runner.html");
+});
+
+app.get("/tester", function (req, res) {
+	res.render("tester.html");
 });
 
 app.post("/flex", function (req, res) {
