@@ -10,8 +10,8 @@
 	top: 0;
 	left: 0;
 	position: fixed;
-	width: 600px;
 	opacity: 0.4;
+	outline: 1px solid blue;
 }
 
 #flex-target {
@@ -20,14 +20,19 @@
 	display: -moz-flex;
 	display: -ms-flex;
 	display: flex;
+
+	width: 600px;
+	height: 600px;
 }
 
 #flex-col-1, #flex-col-3 {
 	width: 100px;
+	height: 100px;
 	background: #ccc;
 }
 
 #flex-col-2 {
-	width: 50px;
+	width: 200px;
+	height: 200px;
 	background: red;
 }
