@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<title>Flexbox Tests</title>
+		<link rel="stylesheet" href="css/runner.css" />
+	</head>
+	<body>
+
+		<div id="flex-container">
+			<div id="flex-target">
+				<div id="flex-col-1">
+					<h2>Col 1</h2>
+					<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+				</div>
+				<div id="flex-col-2">
+					<h2>Col 2</h2>
+					<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+				</div>
+				<div id="flex-col-3">
+					<h2>Col 3</h2>
+					<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+				</div>
+			</div>
+		</div>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				if (!$.browser.chrome) {
+					console.error("Only Chrome 21 supports Flexbox.");
+					return;
+				}
+
+				var flex = $("#flex-target");
+				var items = flex.children();
+
+				var getFlexValues = function () {
+					var values = $.map(items, function (child) {
+						var box = child.getBoundingClientRect();
+						delete box.bottom;
+
+						return box;
+					});
+
+					var flexbox = flex[0].getBoundingClientRect();
+					delete flexbox.bottom;
+
+					return {
+						container: flexbox,
+						items: values
+					};
+				};
+
+				var obj = getFlexValues();
+
+				var tests = {};
+
+				$("<h1>Generating results...</h1>").prependTo("body");
+
+				$.getJSON("/properties").then(function (json) {
+					var target = json.target,
+						container = json.container,
+						props = container.properties,
+						shorts = container.shorthands;
+
+					var x = 0, values, prop, value;
+					var flexProp = "-webkit-" + target.initial;
+
+					var _interval = window.setInterval(function () {
+						prop = props[x];
+						values = prop.values;
+
+						flex.removeAttr("style");
+						flex.css(target.property, flexProp);
+
+						tests[prop.property] = tests[prop.property] || {};
+
+						for (i = 0, j = values.length; i < j; i++) {
+							value = values[i];
+							flex.css(prop.property, values[i]);
+							tests[prop.property][value] = getFlexValues();
+						}
+
+						if (!props[++x]) {
+							window.clearInterval(_interval);
+
+							$.post("/flex", tests, function (data) {
+								var h1 = $("<h1></h1>");
+								$("body").html(h1.text(data));
+							});
+						}
+					}, 100);
+				});
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,141 @@
+<html>
+	<head>
+		<title>Mocha</title>
+		<link rel="stylesheet" href="lib/browser/mocha.css" />
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="lib/mocha.js"></script>
+		<script>
+			mocha.setup({
+				setup : "bdd",
+				reporter : "html"
+			});
+		</script>
+		<script src="lib/expect.js"></script>
+		<script>
+			"use strict";
+
+			$(document).ready(function () {
+				var flex = $("#flex-target");
+				var flexProp = "-webkit-flex";
+
+				var children = flex.children();
+
+				$.getJSON("data/flex.js", function (json) {
+					var property, values, value,
+						types, container, items,
+						rect, i, j, child;
+
+					var buildTest = function (el, rect, val) {
+						it(rect + " should be " + val, function () {
+							var box = el.getBoundingClientRect();
+							expect(box[rect]).to.equal(val);
+							console.log("expect", box[rect], "to equal", val);
+						});
+					};
+
+					for (property in json) {
+						describe(property, function () {
+							var p = property;
+							values = json[property];
+
+							before(function () {
+								console.group(p);
+							});
+
+							for (value in values) {
+
+								describe(value, function () {
+									var v = value;
+
+									before(function () {
+										flex.removeAttr("style");
+										flex.css("display", flexProp);
+										flex.css(p, v);
+
+										console.group(v);
+									});
+
+									types = values[value];
+									container = types.container;
+									items = types.items;
+
+									describe("container", function () {
+										before(function () {
+											console.group("container");
+										});
+
+										for (rect in container) {
+											var val = window.parseFloat(container[rect]);
+											buildTest(flex[0], rect, val);
+										}
+
+
+										for (i = 0, j = items.length; i < j; i++) {
+											var name = ":nth-child(" + (i + 1) + ")";
+
+											describe(name, function () {
+												var n = name;
+
+												before(function () {
+													console.group(n);
+												});
+
+												child = items[i];
+
+												for (rect in child) {
+													var val = window.parseFloat(child[rect]);
+													buildTest(children[i], rect, val);
+												}
+
+												after(function () {
+													console.groupEnd(n);
+												});
+											});
+										}
+
+										after(function () {
+											console.groupEnd("container");
+										});
+									});
+
+									after(function () {
+										console.groupEnd(v);
+									});
+								});
+							}
+
+							after(function () {
+								console.groupEnd(p);
+							});
+						});
+					}
+
+					var runner = mocha.run();
+				});
+			});
+		</script>
+
+		<link rel="stylesheet" href="css/runner.css" />
+	</head>
+	<body>
+
+		<div id="flex-container">
+			<div id="flex-target">
+				<div id="flex-col-1">
+					<h2>Col 1</h2>
+					<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+				</div>
+				<div id="flex-col-2">
+					<h2>Col 2</h2>
+					<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+				</div>
+				<div id="flex-col-3">
+					<h2>Col 3</h2>
+					<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+				</div>
+			</div>
+		</div>
+
+		<div id="mocha"></div>
+	</body>
+</html>

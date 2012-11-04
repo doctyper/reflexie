@@ -1,0 +1,28 @@
+{
+	"name": "reflexie",
+	"version": "0.0.0",
+	"description": "A grown-up polyfill for a grown-up flexbox.",
+	"main": "reflexie.js",
+	"dependencies": {},
+	"devDependencies": {
+		"express": ">=3.0.1",
+		"ejs": ">=0.8.3",
+		"mocha": ">=1.6.0",
+		"expect.js": ">=0.2.0"
+	},
+	"scripts": {
+		"start": "node test/generate.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/doctyper/reflexie.git"
+	},
+	"keywords": [
+		"flexie",
+		"flexbox",
+		"reflexie",
+		"doctyper"
+	],
+	"author": "Richard Herrera <rich@doctyper.com>",
+	"license": "MIT"
+}

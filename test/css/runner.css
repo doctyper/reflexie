@@ -1,0 +1,33 @@
+#flex-container, #flex-container * {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font: normal 12px/1 Arial;
+	list-style: none;
+}
+
+#flex-container {
+	top: 0;
+	left: 0;
+	position: fixed;
+	width: 600px;
+	opacity: 0.4;
+}
+
+#flex-target {
+	/*  As of August 2012, only supported in Chrome 21+ */
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+}
+
+#flex-col-1, #flex-col-3 {
+	width: 100px;
+	background: #ccc;
+}
+
+#flex-col-2 {
+	width: 50px;
+	background: red;
+}
