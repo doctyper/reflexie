@@ -11,7 +11,8 @@
 	left: 0;
 	position: fixed;
 	opacity: 0.4;
-	outline: 1px solid blue;
+	outline: 1px solid green;
+	z-index: -1;
 }
 
 #flex-target {

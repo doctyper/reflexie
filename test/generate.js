@@ -13,12 +13,17 @@ server.listen(9999);
 io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
 	var flex = __dirname + "/data/flex.js";
+	var data = __dirname + "/data/flex-properties.js";
 
 	fs.watchFile(css, function (curr, prev) {
 		socket.emit("csschange");
 	});
 
 	fs.watchFile(flex, function (curr, prev) {
+		socket.emit("datachange");
+	});
+
+	fs.watchFile(data, function (curr, prev) {
 		socket.emit("datachange");
 	});
 });

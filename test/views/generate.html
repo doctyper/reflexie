@@ -52,7 +52,7 @@
 
 				var tests = {};
 
-				$("<h1>Generating results...</h1>").prependTo("body");
+				document.title = "Generating results...";
 
 				$.getJSON("/properties").then(function (json) {
 					var target = json.target,
@@ -82,8 +82,7 @@
 							window.clearInterval(_interval);
 
 							$.post("/flex", tests, function (data) {
-								var h1 = $("<h1></h1>");
-								$("body").html(h1.text(data));
+								document.title = data;
 							});
 						}
 					}, 100);

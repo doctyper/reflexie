@@ -1,129 +1,52 @@
 <html>
 	<head>
-		<title>Mocha</title>
+		<title>MochaJS Tests</title>
 		<link rel="stylesheet" href="lib/browser/mocha.css" />
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		<script src="lib/mocha.js"></script>
+		<link rel="stylesheet" href="css/runner.css" />
+
+		<script src="lib/require.js"></script>
 		<script>
-			mocha.setup({
-				setup : "bdd",
-				reporter : "html"
+			require.config({
+				baseUrl : "/",
+				paths: {
+					"jquery": "http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min",
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io.js"
+				},
+				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
 		</script>
-		<script src="lib/expect.js"></script>
+
 		<script>
-			"use strict";
+			require([
+				"jquery",
+				"socket.io",
+				"lib/tests",
+				"lib/mocha",
+				"lib/expect"
+			], function ($, io, tests) {
+				mocha.setup({
+					setup : "bdd",
+					reporter : "html"
+				});
 
-			$(document).ready(function () {
-				var flex = $("#flex-target");
-				var flexProp = "-webkit-flex";
+				var socket = io.connect("http://0.0.0.0:9999");
+				socket.on("datachange", function (data) {
+					window.location.reload();
+				});
 
-				var children = flex.children();
+				$(document).ready(function () {
 
-				$.getJSON("data/flex.js", function (json) {
-					var property, values, value,
-						types, container, items,
-						rect, i, j, child;
+					tests.run().then(function () {
+						var runner = mocha.run();
 
-					var buildTest = function (el, rect, val) {
-						it(rect + " should be " + val, function () {
-							var box = el.getBoundingClientRect();
-							expect(box[rect]).to.equal(val);
-							console.log("expect", box[rect], "to equal", val);
+						runner.on("end", function () {
+							document.title = "Done.";
 						});
-					};
+					});
 
-					for (property in json) {
-						describe(property, function () {
-							var p = property;
-							values = json[property];
-
-							before(function () {
-								console.group(p);
-							});
-
-							for (value in values) {
-
-								describe(value, function () {
-									var v = value;
-
-									before(function () {
-										flex.removeAttr("style");
-										flex.css("display", flexProp);
-										flex.css(p, v);
-
-										console.group(v);
-									});
-
-									types = values[value];
-									container = types.container;
-									items = types.items;
-
-									describe("container", function () {
-										before(function () {
-											console.group("container");
-										});
-
-										for (rect in container) {
-											var val = window.parseFloat(container[rect]);
-											buildTest(flex[0], rect, val);
-										}
-
-
-										for (i = 0, j = items.length; i < j; i++) {
-											var name = ":nth-child(" + (i + 1) + ")";
-
-											describe(name, function () {
-												var n = name;
-
-												before(function () {
-													console.group(n);
-												});
-
-												child = items[i];
-
-												for (rect in child) {
-													var val = window.parseFloat(child[rect]);
-													buildTest(children[i], rect, val);
-												}
-
-												after(function () {
-													console.groupEnd(n);
-												});
-											});
-										}
-
-										after(function () {
-											console.groupEnd("container");
-										});
-									});
-
-									after(function () {
-										console.groupEnd(v);
-									});
-								});
-							}
-
-							after(function () {
-								console.groupEnd(p);
-							});
-						});
-					}
-
-					var runner = mocha.run();
 				});
 			});
 		</script>
-
-		<script src="http://0.0.0.0:9999/socket.io/socket.io.js"></script>
-		<script>
-			var socket = io.connect("http://0.0.0.0:9999");
-			socket.on("datachange", function (data) {
-				window.location.reload();
-			});
-		</script>
-
-		<link rel="stylesheet" href="css/runner.css" />
 	</head>
 	<body>
 
