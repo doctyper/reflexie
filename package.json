@@ -8,7 +8,8 @@
 		"express": ">=3.0.1",
 		"ejs": ">=0.8.3",
 		"mocha": ">=1.6.0",
-		"expect.js": ">=0.2.0"
+		"expect.js": ">=0.2.0",
+		"socket.io": ">=0.9.11"
 	},
 	"scripts": {
 		"start": "node test/generate.js"
