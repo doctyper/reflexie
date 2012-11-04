@@ -29,6 +29,12 @@ define([
 
 			var isInline = this.testInlineBlock(properties);
 			utils.cleanWhitespace(this.dom.container);
+
+			if (isInline) {
+				for (i = 0, j = items.length; i < j; i++) {
+					items[i].style.display = "inline-block";
+				}
+			}
 		},
 
 		render : function (settings) {
