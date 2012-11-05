@@ -37,7 +37,7 @@
 
 				$(document).ready(function () {
 
-					tests.run().then(function () {
+					tests.setup().then(function () {
 						var runner = mocha.run();
 
 						runner.on("end", function () {

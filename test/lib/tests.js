@@ -7,128 +7,169 @@ define([
 	"use strict";
 
 	var buildTest = function (el, rect, val) {
+		var box;
+
 		it(rect + " should be " + val, function () {
-			var box = el.getBoundingClientRect();
+			if (typeof el === "number") {
+				el = $("#flex-target").children()[el];
+			}
+
+			box = el.getBoundingClientRect();
 			expect(box[rect]).to.equal(val);
 			console.log("expect", box[rect], "to equal", val);
 		});
 	};
 
+	var appendFlexChildren = function (target, dependencies) {
+		var i, j, idx,
+			set = [], selector, element,
+			children = dependencies.childNodes;
+
+		target.empty();
+
+		for (i = 0, j = children; i < j; i++) {
+			idx = (i + 1);
+			selector = "flex-col-" + idx;
+			element = $('<div id="' + selector + '">Col ' + idx + '</div>');
+
+			set.push({
+				selector: selector,
+				element: element[0]
+			})
+
+			target.append(element);
+		}
+
+		return set;
+	};
+
 	return {
-		run : function () {
+		describeItem : function (item, index, child) {
+			var rect, val;
+
+			before(function () {
+				console.group(item);
+			});
+
+			for (rect in child) {
+				val = window.parseFloat(child[rect]);
+				buildTest(index, rect, val);
+			}
+
+			after(function () {
+				console.groupEnd(item);
+			});
+		},
+
+		describeContainer : function (container, items) {
+			var target = this.target,
+				rect, val, i, j, item;
+
+			before(function () {
+				console.group("container");
+			});
+
+			for (rect in container) {
+				val = window.parseFloat(container[rect]);
+				buildTest(target[0], rect, val);
+			}
+
+			for (i = 0, j = items.length; i < j; i++) {
+				item = ":nth-child(" + (i + 1) + ")";
+
+				describe(item, function () {
+					this.describeItem(item, i, items[i]);
+				}.bind(this));
+			}
+
+			after(function () {
+				console.groupEnd("container");
+			});
+		},
+
+		describeValue : function (property, value, types) {
+			var target = this.target,
+				flexProp = ($.browser.chrome ? "-webkit-" : "") + "flex",
+				container = types.container,
+				items = types.items,
+				dependencies = types.dependencies,
+				set, styles, flex;
+
+			before(function () {
+				set = appendFlexChildren(target, dependencies);
+
+				target.removeAttr("style");
+
+				styles = dependencies.properties || {};
+				styles["display"] = flexProp;
+				styles[property] = value;
+
+				target.css(styles);
+
+				flex = new Flexbox({
+					container: {
+						"element": target[0],
+						"properties": styles
+					},
+
+					items: set
+				});
+
+				console.group(value);
+			});
+
+			describe("container", function () {
+				this.describeContainer(container, items);
+			}.bind(this));
+
+			after(function () {
+				console.groupEnd(value);
+			});
+		},
+
+		describeProperty : function (property, values) {
+			var value;
+
+			before(function () {
+				console.group(property);
+			});
+
+			for (value in values) {
+				describe(value, function () {
+					this.describeValue(property, value, values[value]);
+				}.bind(this));
+			}
+
+			after(function () {
+				console.groupEnd(property);
+			});
+		},
+
+		handleJSON : function (json) {
+			var deferred = $.Deferred(),
+				property;
+
+			for (property in json) {
+				describe(property, function () {
+					this.describeProperty(property, json[property]);
+				}.bind(this));
+			}
+
+			return deferred.resolve();
+		},
+
+		setup : function () {
 			var deferred = $.Deferred();
 
-			var target = $("#flex-target");
-			var flexProp = ($.browser.chrome ? "-webkit-" : "") + "flex";
-
-			var children = target.children();
 			document.title = "Running Tests...";
 
-			$.getJSON("data/flex.js", function (json) {
-				var property, values, value,
-					types, container, items,
-					rect, i, j, child;
+			this.target = $("#flex-target");
 
-				for (property in json) {
-					describe(property, function () {
-						var p = property;
-						values = json[property];
-
-						before(function () {
-							console.group(p);
-						});
-
-						for (value in values) {
-
-							describe(value, function () {
-								var v = value;
-
-								before(function () {
-									target.removeAttr("style");
-									children.removeAttr("style");
-
-									var styles = {};
-									styles["display"] = flexProp;
-									styles[p] = v;
-
-									target.css(styles);
-
-									var flex = new Flexbox({
-										container: {
-											"element": target[0],
-											"properties": styles
-										},
-
-										items: [{
-											"element": children.get(0),
-											"selector": children.eq(0).selector
-										}, {
-											"element": children.get(1),
-											"selector": children.eq(1).selector
-										}, {
-											"element": children.get(2),
-											"selector": children.eq(2).selector
-										}]
-									});
-
-									console.group(v);
-								});
-
-								types = values[value];
-								container = types.container;
-								items = types.items;
-
-								describe("container", function () {
-									before(function () {
-										console.group("container");
-									});
-
-									for (rect in container) {
-										var val = window.parseFloat(container[rect]);
-										buildTest(target[0], rect, val);
-									}
-
-
-									for (i = 0, j = items.length; i < j; i++) {
-										var name = ":nth-child(" + (i + 1) + ")";
-
-										describe(name, function () {
-											var n = name;
-
-											before(function () {
-												console.group(n);
-											});
-
-											child = items[i];
-
-											for (rect in child) {
-												var val = window.parseFloat(child[rect]);
-												buildTest(children[i], rect, val);
-											}
-
-											after(function () {
-												console.groupEnd(n);
-											});
-										});
-									}
-
-									after(function () {
-										console.groupEnd("container");
-									});
-								});
-
-								after(function () {
-									console.groupEnd(v);
-								});
-							});
-						}
-
-						after(function () {
-							console.groupEnd(p);
-						});
-					});
-				}
-
+			$.getJSON("data/flex.js")
+				.then(function (json) {
+					return this.handleJSON(json);
+				}.bind(this))
+			.then(function () {
 				return deferred.resolve();
 			});
 
