@@ -30,6 +30,9 @@
 
 				var flex = $("#flex-target");
 				var items = flex.children();
+				var timer = 150;
+				var tests = {};
+				var x = 0;
 
 				var getFlexValues = function () {
 					var values = $.map(items, function (child) {
@@ -48,9 +51,50 @@
 					};
 				};
 
-				var obj = getFlexValues();
+				var iterateValues = function (values, flex, prop) {
+					var deferred = $.Deferred();
 
-				var tests = {};
+					var parser = (function parseValues(i) {
+						var value = values[i];
+						flex.css(prop.property, values[i]);
+						tests[prop.property][value] = getFlexValues();
+
+						if (values[++i]) {
+							window.setTimeout(function () {
+								parseValues(i);
+							}, timer);
+						} else {
+							return deferred.resolve();
+						}
+					}(0));
+
+					return deferred.promise();
+				};
+
+				var iterateProperties = function (target, props) {
+					var values, prop, value;
+					var flexProp = "-webkit-" + target.initial;
+
+					prop = props[x];
+					values = prop.values;
+
+					flex.removeAttr("style");
+					flex.css(target.property, flexProp);
+
+					tests[prop.property] = tests[prop.property] || {};
+
+					iterateValues(values, flex, prop).then(function () {
+						if (props[++x]) {
+							window.setTimeout(function () {
+								iterateProperties(target, props);
+							}, timer);
+						} else {
+							$.post("/flex", tests, function (data) {
+								document.title = data;
+							});
+						}
+					});
+				};
 
 				document.title = "Generating results...";
 
@@ -60,32 +104,7 @@
 						props = container.properties,
 						shorts = container.shorthands;
 
-					var x = 0, values, prop, value;
-					var flexProp = "-webkit-" + target.initial;
-
-					var _interval = window.setInterval(function () {
-						prop = props[x];
-						values = prop.values;
-
-						flex.removeAttr("style");
-						flex.css(target.property, flexProp);
-
-						tests[prop.property] = tests[prop.property] || {};
-
-						for (i = 0, j = values.length; i < j; i++) {
-							value = values[i];
-							flex.css(prop.property, values[i]);
-							tests[prop.property][value] = getFlexValues();
-						}
-
-						if (!props[++x]) {
-							window.clearInterval(_interval);
-
-							$.post("/flex", tests, function (data) {
-								document.title = data;
-							});
-						}
-					}, 100);
+					iterateProperties(target, props);
 				});
 			});
 		</script>
