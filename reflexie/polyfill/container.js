@@ -2,80 +2,100 @@ define([
 	"../utils"
 ], function (utils) {
 
+	var colArray = ["column", "column-reverse"];
+	var revArray = ["row-reverse", "column-reverse"];
+
+	var revValues = {
+		"left": "right",
+		"top": "bottom"
+	};
+
+	var dimValues = {
+		"left": "width",
+		"top": "height"
+	};
+
 	var Container = function (settings) {
 		this.settings = settings;
 		return this.render(settings);
 	};
 
 	Container.prototype = {
-		dom : {},
-
-		testInlineBlock : function (properties) {
-			var display = properties["display"];
-			var isFlex = (display === "flex");
-
-			var dir = properties["flex-direction"];
-			var isDirection = (dir === "row" || dir === "row-reverse");
-
-			return (isFlex && isDirection);
-		},
-
-		storePositionValues : function (items) {
-			var i, j, items;
+		storePositionValues : function (container, items) {
+			var i, j, items, storedVal, incrementVal = 0,
+				properties = container.properties,
+				direction = properties["flex-direction"],
+				isColumn = utils.assert(direction, colArray),
+				isReverse = utils.assert(direction, revArray),
+				aVal = (isColumn ? "left" : "top"),
+				bVal = (isColumn ? "top" : "left"),
+				revVal = revValues[bVal],
+				dimVal = dimValues[bVal],
+				rects = [], box, obj;
 
 			for (i = 0, j = items.length; i < j; i++) {
-				item = items[i];
-				item.rect = item.element.getBoundingClientRect();
-			}
+				item = items[i].element;
+				box = item.getBoundingClientRect();
 
-			return items;
-		},
-
-		applyPositioning : function (container, items) {
-			var i, j, items, key,
-				increment = 0;
-
-			container.element.style.position = "relative";
-
-			for (i = 0, j = items.length; i < j; i++) {
-				item = items[i];
-				item.element.style.position = "absolute";
-
-				item.rect.top = items[0].rect.top;
-				item.rect.bottom = items[0].rect.bottom;
-				item.rect.left = increment;
-
-				for (key in item.rect) {
-					item.element.style[key] = item.rect[key];
+				if (i === 0) {
+					storedVal = box[aVal];
 				}
 
-				increment += item.rect.width;
+				obj = {};
+
+				obj.position = "absolute";
+				obj[aVal] = storedVal;
+				obj[bVal] = box[bVal] + incrementVal;
+
+				if (isReverse) {
+					obj[revVal] = obj[bVal];
+					delete obj[bVal];
+				}
+
+				rects.push(obj);
+
+				if (!isColumn) {
+					incrementVal += box[dimVal];
+				}
+			}
+
+			return rects;
+		},
+
+		applyPositioning : function (container, items, rects) {
+			var i, j, items, key, rect, element, box;
+
+			element = container.element;
+			box = element.getBoundingClientRect();
+
+			element.style.position = "relative";
+			element.style.width = box.width;
+			element.style.height = box.height;
+
+			for (i = 0, j = items.length; i < j; i++) {
+				item = items[i].element;
+				rect = rects[i];
+
+				for (key in rect) {
+					item.style[key] = rect[key];
+				}
 			}
 
 			return items;
 		},
 
 		setDisplay : function () {
-			var container = this.container;
-			var properties = container.properties;
+			var container = this.container,
+				properties = container.properties,
+				items = this.items,
+				rects = this.storePositionValues(container, items);
 
-			var items = this.items;
-
-			var isInline = this.testInlineBlock(properties);
-			utils.cleanWhitespace(this.dom.container);
-
-			if (isInline) {
-				this.storePositionValues(items);
-				this.applyPositioning(container, items);
-			}
+			this.applyPositioning(container, items, rects);
 		},
 
 		render : function (settings) {
 			this.container = settings.container;
 			this.items = settings.items;
-
-			this.dom.container = this.container.element;
-			this.dom.items = utils.mapItems(this.items);
 
 			this.setDisplay();
 		}

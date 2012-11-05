@@ -4,33 +4,17 @@ define(function (utils) {
 	/*jshint browser:true*/
 
 	var Utils = {
-		mapItems : function (items) {
-			var i, j, domItems = [];
+		assert: function (prop, values) {
+			var i, j, isValue = false;
 
-			for (i = 0, j = items.length; i < j; i++) {
-				domItems.push(items[i].element);
-			}
-
-			return domItems;
-		},
-
-		cleanWhitespace: function (node) {
-			var i, child;
-
-			for (i = 0; i < node.childNodes.length; i++) {
-				child = node.childNodes[i];
-
-				if (child.nodeType === 3 && !(/\S/.test(child.nodeValue))) {
-					node.removeChild(child);
-					i--;
-				}
-
-				if (child.nodeType === 1) {
-					this.cleanWhitespace(child);
+			for (i = 0, j = values.length; i < j; i++) {
+				if (prop === values[i]) {
+					isValue = true;
+					break;
 				}
 			}
 
-			return node;
+			return isValue;
 		}
 	};
 

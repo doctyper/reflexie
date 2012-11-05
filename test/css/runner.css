@@ -26,14 +26,20 @@
 	height: 600px;
 }
 
-#flex-col-1, #flex-col-3 {
+#flex-col-1 {
 	width: 100px;
 	height: 100px;
 	background: #ccc;
 }
 
 #flex-col-2 {
+	width: 150px;
+	height: 150px;
+	background: red;
+}
+
+#flex-col-3 {
 	width: 200px;
 	height: 200px;
-	background: red;
+	background: teal;
 }
