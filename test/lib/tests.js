@@ -1,8 +1,9 @@
 define([
 	"jquery",
+	"reflexie/reflexie",
 	"lib/mocha",
 	"lib/expect"
-], function ($) {
+], function ($, Flexbox) {
 	"use strict";
 
 	var buildTest = function (el, rect, val) {
@@ -17,10 +18,10 @@ define([
 		run : function () {
 			var deferred = $.Deferred();
 
-			var flex = $("#flex-target");
-			var flexProp = "-webkit-flex";
+			var target = $("#flex-target");
+			var flexProp = ($.browser.chrome ? "-webkit-" : "") + "flex";
 
-			var children = flex.children();
+			var children = target.children();
 			document.title = "Running Tests...";
 
 			$.getJSON("data/flex.js", function (json) {
@@ -43,9 +44,32 @@ define([
 								var v = value;
 
 								before(function () {
-									flex.removeAttr("style");
-									flex.css("display", flexProp);
-									flex.css(p, v);
+									target.removeAttr("style");
+									children.removeAttr("style");
+
+									var styles = {};
+									styles["display"] = flexProp;
+									styles[p] = v;
+
+									target.css(styles);
+
+									var flex = new Flexbox({
+										container: {
+											"element": target[0],
+											"properties": styles
+										},
+
+										items: [{
+											"element": children.get(0),
+											"selector": children.eq(0).selector
+										}, {
+											"element": children.get(1),
+											"selector": children.eq(1).selector
+										}, {
+											"element": children.get(2),
+											"selector": children.eq(2).selector
+										}]
+									});
 
 									console.group(v);
 								});
@@ -61,7 +85,7 @@ define([
 
 									for (rect in container) {
 										var val = window.parseFloat(container[rect]);
-										buildTest(flex[0], rect, val);
+										buildTest(target[0], rect, val);
 									}
 
 
