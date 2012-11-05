@@ -31,7 +31,7 @@ define([
 				bVal = (isColumn ? "top" : "left"),
 				revVal = revValues[bVal],
 				dimVal = dimValues[bVal],
-				rects = [], box, obj;
+				rects = [], item, box, obj;
 
 			for (i = 0, j = items.length; i < j; i++) {
 				item = items[i].element;
@@ -63,7 +63,8 @@ define([
 		},
 
 		applyPositioning : function (container, items, rects) {
-			var i, j, items, key, rect, element, box;
+			var i, j, items, key, rect,
+				item, element, box;
 
 			element = container.element;
 			box = element.getBoundingClientRect();
