@@ -10,32 +10,45 @@
 			"property": "flex-direction",
 			"values": ["row", "row-reverse", "column", "column-reverse"],
 			"initial": "row",
-			"inherited": false
+			"inherited": false,
+			"dependencies": {
+				"childNodes": 3
+			}
 		}, {
 			"property": "flex-wrap",
 			"values": ["nowrap", "wrap", "wrap-reverse"],
 			"initial": "nowrap",
-			"inherited": false
+			"inherited": false,
+			"dependencies": {
+				"childNodes": 6
+			}
 		}, {
 			"property": "justify-content",
 			"values": ["flex-start", "flex-end", "center", "space-between", "space-around"],
 			"initial": "flex-start",
-			"inherited": false
+			"inherited": false,
+			"dependencies": {
+				"childNodes": 3
+			}
 		}, {
 			"property": "align-items",
 			"values": ["flex-start", "flex-end", "center", "baseline", "stretch"],
 			"initial": "stretch",
-			"inherited": false
-		}, {
-			"property": "align-self",
-			"values": ["auto", "flex-start", "flex-end", "center", "baseline", "stretch"],
-			"initial": "auto",
-			"inherited": false
+			"inherited": false,
+			"dependencies": {
+				"childNodes": 3
+			}
 		}, {
 			"property": "align-content",
 			"values": ["flex-start", "flex-end", "center", "space-between", "space-around", "stretch"],
 			"initial": "stretch",
-			"inherited": false
+			"inherited": false,
+			"dependencies": {
+				"childNodes": 6,
+				"properties": {
+					"flex-wrap": "wrap"
+				}
+			}
 		}],
 
 		"shorthands": [{
@@ -47,6 +60,11 @@
 
 	"items": {
 		"properties": [{
+			"property": "align-self",
+			"values": ["auto", "flex-start", "flex-end", "center", "baseline", "stretch"],
+			"initial": "auto",
+			"inherited": false
+		}, {
 			"property": "order",
 			"values": ["<number>"],
 			"initial": 0,
@@ -59,7 +77,7 @@
 		}, {
 			"property": "flex-shrink",
 			"values": ["<number>"],
-			"initial": 0,
+			"initial": 1,
 			"inherited": false
 		}, {
 			"property": "flex-basis",

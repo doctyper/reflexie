@@ -7,7 +7,7 @@
 
 		<div id="flex-container">
 			<div id="flex-target">
-				<div id="flex-col-1">
+				<!-- <div id="flex-col-1">
 					<h2>Col 1</h2>
 				</div>
 				<div id="flex-col-2">
@@ -15,7 +15,7 @@
 				</div>
 				<div id="flex-col-3">
 					<h2>Col 3</h2>
-				</div>
+				</div> -->
 			</div>
 		</div>
 
@@ -29,12 +29,13 @@
 				}
 
 				var flex = $("#flex-target");
-				var items = flex.children();
 				var timer = 150;
 				var tests = {};
 				var x = 0;
 
-				var getFlexValues = function () {
+				var getFlexValues = function (prop) {
+					var items = flex.children();
+
 					var values = $.map(items, function (child) {
 						var box = child.getBoundingClientRect();
 						delete box.bottom;
@@ -47,8 +48,30 @@
 
 					return {
 						container: flexbox,
-						items: values
+						items: values,
+						dependencies: prop.dependencies
 					};
+				};
+
+				var resetFlexContainer = function (target, prop) {
+					var i, j, idx,
+						children = prop.dependencies.childNodes,
+						properties = prop.dependencies.properties,
+						flexProp = "-webkit-" + target.initial;
+
+					flex.empty();
+
+					for (i = 0, j = children; i < j; i++) {
+						idx = (i + 1);
+						flex.append('<div id="flex-col-' + idx + '">Col ' + idx + '</div>');
+					}
+
+					flex.removeAttr("style");
+					flex.css(target.property, flexProp);
+
+					if (properties) {
+						flex.css(properties);
+					}
 				};
 
 				var iterateValues = function (values, flex, prop) {
@@ -56,8 +79,9 @@
 
 					var parser = (function parseValues(i) {
 						var value = values[i];
+
 						flex.css(prop.property, values[i]);
-						tests[prop.property][value] = getFlexValues();
+						tests[prop.property][value] = getFlexValues(prop);
 
 						if (values[++i]) {
 							window.setTimeout(function () {
@@ -73,14 +97,11 @@
 
 				var iterateProperties = function (target, props) {
 					var values, prop, value;
-					var flexProp = "-webkit-" + target.initial;
 
 					prop = props[x];
 					values = prop.values;
 
-					flex.removeAttr("style");
-					flex.css(target.property, flexProp);
-
+					resetFlexContainer(target, prop);
 					tests[prop.property] = tests[prop.property] || {};
 
 					iterateValues(values, flex, prop).then(function () {
