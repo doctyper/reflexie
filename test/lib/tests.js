@@ -95,12 +95,23 @@ define([
 				dependencies = types.dependencies,
 				set, styles, flex;
 
+			var styles = {
+				"flex-direction": "row",
+				"flex-wrap": "nowrap",
+				"justify-content": "flex-start",
+				"align-items": "stretch",
+				"align-content": "stretch"
+			};
+
 			before(function () {
 				set = appendFlexChildren(target, dependencies);
 
 				target.removeAttr("style");
 
-				styles = dependencies.properties || {};
+				for (var key in dependencies.properties) {
+					styles[key] = dependencies.properties[key];
+				}
+
 				styles["display"] = flexProp;
 				styles[property] = value;
 
