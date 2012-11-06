@@ -4,7 +4,7 @@ define(function (utils) {
 	/*jshint browser:true*/
 
 	var Utils = {
-		assert: function (prop, values) {
+		assert : function (prop, values) {
 			var i, j, isValue = false;
 
 			for (i = 0, j = values.length; i < j; i++) {
@@ -15,6 +15,12 @@ define(function (utils) {
 			}
 
 			return isValue;
+		},
+
+		toCamelCase : function (str) {
+			return str.replace(/\W+(.)/g, function (x, chr) {
+				return chr.toUpperCase();
+			});
 		}
 	};
 
