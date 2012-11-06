@@ -16,15 +16,10 @@ io.configure(function () {
 
 io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
-	var flex = __dirname + "/data/flex.js";
 	var data = __dirname + "/data/flex-properties.js";
 
 	fs.watchFile(css, function (curr, prev) {
 		socket.emit("csschange");
-	});
-
-	fs.watchFile(flex, function (curr, prev) {
-		socket.emit("datachange");
 	});
 
 	fs.watchFile(data, function (curr, prev) {
@@ -71,6 +66,7 @@ app.post("/flex", function (req, res) {
 	var json = JSON.stringify(req.body, null, "\t");
 	fs.writeFileSync(dataFile, json);
 
+	io.sockets.emit("datachange");
 	res.send("Success!");
 });
 
