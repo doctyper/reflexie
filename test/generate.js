@@ -10,6 +10,10 @@ var io = require("socket.io").listen(server);
 
 server.listen(9999);
 
+io.configure(function () {
+	io.set("log level", 1);
+});
+
 io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
 	var flex = __dirname + "/data/flex.js";
