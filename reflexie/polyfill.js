@@ -3,6 +3,8 @@ define([
 	"./polyfill/items",
 	"./support"
 ], function (Container, Items, support) {
+	"use strict";
+
 	var Flexbox = function (options) {
 		this.options = options;
 		return this.box(options);

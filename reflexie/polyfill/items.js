@@ -1,4 +1,5 @@
 define(function () {
+	"use strict";
 
 	var Items = function (properties) {
 		this.properties = properties;

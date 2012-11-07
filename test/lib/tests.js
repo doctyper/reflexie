@@ -33,9 +33,9 @@ define([
 			element = $('<div id="' + selector + '">Col ' + idx + '</div>');
 
 			set.push({
-				selector: selector,
+				selector: "#" + selector,
 				element: element[0]
-			})
+			});
 
 			target.append(element);
 		}
@@ -93,7 +93,7 @@ define([
 				container = types.container,
 				items = types.items,
 				dependencies = types.dependencies,
-				set, styles, flex;
+				set, flex;
 
 			var styles = {
 				"flex-direction": "row",
@@ -112,7 +112,7 @@ define([
 					styles[key] = dependencies.properties[key];
 				}
 
-				styles["display"] = flexProp;
+				styles.display = flexProp;
 				styles[property] = value;
 
 				target.css(styles);
@@ -120,6 +120,7 @@ define([
 				flex = new Flexbox({
 					container: {
 						"element": target[0],
+						"selector": "#flex-target",
 						"properties": styles
 					},
 

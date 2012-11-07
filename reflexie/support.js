@@ -1,8 +1,6 @@
 define(function () {
 	"use strict";
 
-	/*jshint browser:true*/
-
 	var testProp = "flexWrap";
 	var prefixes = "webkit moz o ms".split(" ");
 	var dummy = document.createElement("flx");
