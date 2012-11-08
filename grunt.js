@@ -43,7 +43,7 @@ module.exports = function (grunt) {
 
 		// conditionally concatenate source
 		this.file.src.forEach(function (filepath) {
-			filepath = "reflexie/" + filepath + ".js";
+			filepath = "src/" + filepath + ".js";
 
 			source = grunt.file.read(filepath);
 
