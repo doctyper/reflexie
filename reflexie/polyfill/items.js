@@ -1,6 +1,4 @@
-define(function () {
-	"use strict";
-
+Flexbox.items = (function () {
 	var Items = function (properties) {
 		this.properties = properties;
 		return this.render(properties);
@@ -13,5 +11,4 @@ define(function () {
 	};
 
 	return Items;
-
-});
+}());

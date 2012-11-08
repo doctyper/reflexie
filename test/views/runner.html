@@ -20,11 +20,10 @@
 			require([
 				"jquery",
 				"socket.io",
-				"reflexie/reflexie",
 				"lib/tests",
 				"lib/mocha",
 				"lib/expect"
-			], function ($, io, Flexbox, tests) {
+			], function ($, io, tests) {
 				mocha.setup({
 					setup : "bdd",
 					reporter : "html"

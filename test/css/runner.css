@@ -39,25 +39,25 @@
 }
 
 #flex-col-3 {
-	width: 200px;
+	width: 175px;
 	height: 200px;
 	background: teal;
 }
 
 #flex-col-4 {
-	width: 250px;
+	width: 180px;
 	height: 250px;
 	background: purple;
 }
 
 #flex-col-5 {
-	width: 150px;
+	width: 140px;
 	height: 150px;
 	background: green;
 }
 
 #flex-col-6 {
-	width: 50px;
+	width: 130px;
 	height: 50px;
 	background: blue;
 }

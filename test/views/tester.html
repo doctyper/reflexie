@@ -12,8 +12,8 @@
 				-webkit-flex-direction: row;
 				flex-direction: row;
 
-				-webkit-flex-wrap: nowrap;
-				flex-wrap: nowrap;
+				-webkit-flex-wrap: wrap;
+				flex-wrap: wrap;
 
 				-webkit-justify-content: flex-start;
 				flex-direction: flex-start;
@@ -21,11 +21,36 @@
 				-webkit-align-items: stretch;
 				flex-align-items: stretch;
 
-				-webkit-align-self: auto;
-				align-self: auto;
+				-webkit-align-content: stretch;
+				align-content: stretch;
+			}
 
-				-webkit-align-content: flex-start;
-				align-content: flex-start;
+			#flex-target div {
+				opacity: 0.5;
+			}
+
+			#flex-col-7 {
+				width: 310px;
+				height: 135px;
+				background: dodgerblue;
+			}
+
+			#flex-col-8 {
+				width: 135px;
+				height: 135px;
+				background: pink;
+			}
+
+			#flex-col-9 {
+				width: 310px;
+				height: 135px;
+				background: dodgerblue;
+			}
+
+			#flex-col-10 {
+				width: 310px;
+				height: 135px;
+				background: pink;
 			}
 		</style>
 
@@ -38,55 +63,128 @@
 
 		<script>
 			require([
-				"reflexie/reflexie"
-			], function (Flexbox) {
+				"dist/reflexie"
+			], function (Flexie) {
+				console.log(Flexie);
 
 				var target = document.querySelector("#flex-target");
 				var items = document.querySelectorAll("#flex-target > *");
 
-				var flex = new Flexbox({
+				var flex = new Flexie({
 					container: {
 						"element": target,
 						"selector": "#flex-target",
 						"properties": {
 							"display": "flex",
 							"flex-direction": "row",
-							"flex-wrap": "nowrap",
+							"flex-wrap": "wrap",
 							"justify-content": "flex-start",
 							"align-items": "stretch",
-							"align-self": "auto",
-							"align-content": "flex-start"
+							"align-content": "stretch"
 						}
 					},
 
 					items: [{
 						"element": items[0],
-						"selector": "#flex-target > *",
+						"selector": "#flex-col-1",
 						"properties": {
 							"order": 0,
 							"flex-grow": 0,
 							"flex-shrink": 0,
-							"flex-basis": "auto"
+							"flex-basis": "auto",
+							"align-self": "auto"
 						}
 					}, {
 						"element": items[1],
-						"selector": "#flex-target > *",
+						"selector": "#flex-col-2",
 						"properties": {
 							"order": 0,
 							"flex-grow": 0,
 							"flex-shrink": 0,
-							"flex-basis": "auto"
+							"flex-basis": "auto",
+							"align-self": "auto"
 						}
 					}, {
 						"element": items[2],
-						"selector": "#flex-target > *",
+						"selector": "#flex-col-3",
 						"properties": {
 							"order": 0,
 							"flex-grow": 0,
 							"flex-shrink": 0,
-							"flex-basis": "auto"
+							"flex-basis": "auto",
+							"align-self": "auto"
 						}
-					}]
+					}, {
+						"element": items[3],
+						"selector": "#flex-col-4",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto",
+							"align-self": "auto"
+						}
+					}, {
+						"element": items[4],
+						"selector": "#flex-col-5",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto",
+							"align-self": "auto"
+						}
+					}, {
+						"element": items[5],
+						"selector": "#flex-col-6",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto",
+							"align-self": "auto"
+						}
+					}/*, {
+						"element": items[6],
+						"selector": "#flex-col-7",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto",
+							"align-self": "auto"
+						}
+					}, {
+						"element": items[7],
+						"selector": "#flex-col-8",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto",
+							"align-self": "auto"
+						}
+					}, {
+						"element": items[8],
+						"selector": "#flex-col-9",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto",
+							"align-self": "auto"
+						}
+					}, {
+						"element": items[9],
+						"selector": "#flex-col-10",
+						"properties": {
+							"order": 0,
+							"flex-grow": 0,
+							"flex-shrink": 0,
+							"flex-basis": "auto",
+							"align-self": "auto"
+						}
+					}*/]
 				});
 
 			});
@@ -105,6 +203,27 @@
 				<div id="flex-col-3">
 					<h2>Col 3</h2>
 				</div>
+				<div id="flex-col-4">
+					<h2>Col 4</h2>
+				</div>
+				<div id="flex-col-5">
+					<h2>Col 5</h2>
+				</div>
+				<div id="flex-col-6">
+					<h2>Col 6</h2>
+				</div>
+				<!--<div id="flex-col-7">
+					<h2>Col 7</h2>
+				</div>
+				<div id="flex-col-8">
+					<h2>Col 8</h2>
+				</div>
+				<div id="flex-col-9">
+					<h2>Col 9</h2>
+				</div>
+				<div id="flex-col-10">
+					<h2>Col 10</h2>
+				</div>-->
 			</div>
 		</div>
 

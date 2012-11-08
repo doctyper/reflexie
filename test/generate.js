@@ -32,7 +32,7 @@ app.configure(function () {
 	app.use("/css", express.static(__dirname + "/css"));
 	app.use("/lib", express.static(__dirname + "/lib"));
 	app.use("/data", express.static(__dirname + "/data"));
-	app.use("/reflexie", express.static(__dirname + "../../reflexie"));
+	app.use("/dist", express.static(__dirname + "../../dist"));
 
 	app.set("views", __dirname + "/views");
 	app.engine("html", require("ejs").renderFile);
@@ -73,8 +73,8 @@ app.post("/flex", function (req, res) {
 app.listen(9090);
 console.log("listening to http://0.0.0.0:9090");
 
-var cp = require("child_process");
-var child = cp.spawn("open", [
-	"-a", "/Applications/Google Chrome.app",
-	"http://0.0.0.0:9090/generate"
-]);
+// var cp = require("child_process");
+// var child = cp.spawn("open", [
+	// "-a", "/Applications/Google Chrome.app",
+	// "http://0.0.0.0:9090/generate"
+// ]);

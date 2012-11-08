@@ -1,14 +1,13 @@
-define([
-	"../utils"
-], function (utils) {
-	"use strict";
+Flexbox.container = (function () {
+	var utils = Flexbox.utils;
+	var models = Flexbox.models;
 
-	var dimValues = {
+	Flexbox.dimValues = {
 		"left": "width",
 		"top": "height"
 	};
 
-	var applyPositioning = function (id, container, items, values) {
+	Flexbox.applyPositioning = function (id, container, items, values) {
 		var rects = values.items,
 			box = values.container,
 			i, j, key, rect, item, element;
@@ -27,7 +26,7 @@ define([
 		}
 	};
 
-	var getPristineBox = function (element, position) {
+	Flexbox.getPristineBox = function (element, position) {
 		position = position || "absolute";
 		var box = element.getBoundingClientRect();
 
@@ -40,13 +39,13 @@ define([
 		};
 	};
 
-	var storePositionValues = function (container, items) {
+	Flexbox.storePositionValues = function (container, items) {
 		var i, j;
-		var box = getPristineBox(container.element, "relative");
+		var box = Flexbox.getPristineBox(container.element, "relative");
 		var children = [];
 
 		for (i = 0, j = items.length; i < j; i++) {
-			children.push(getPristineBox(items[i].element));
+			children.push(Flexbox.getPristineBox(items[i].element));
 		}
 
 		return {
@@ -55,7 +54,7 @@ define([
 		};
 	};
 
-	var clonePositionValues = function (values) {
+	Flexbox.clonePositionValues = function (values) {
 		var key, i, j, newItem;
 
 		var newValues = {
@@ -87,103 +86,11 @@ define([
 
 	Container.prototype = {
 		model : {
-			flexDirection : function (direction, properties) {
-				var values = this.values,
-					containerValues = values.container,
-					itemValues = values.items,
-					i, j, item, incrementVal = 0,
-					colArray = ["column", "column-reverse"],
-					revArray = ["row-reverse", "column-reverse"],
-					isColumn = utils.assert(direction, colArray),
-					isReverse = utils.assert(direction, revArray),
-					needsIncrement = (!isColumn || isReverse),
-					primaryAxis = (isColumn ? "left" : "top"),
-					secondaryAxis = (isColumn ? "top" : "left"),
-					primaryDimension = dimValues[secondaryAxis],
-					secondaryDimension = dimValues[primaryAxis],
-					storedVal = itemValues[0][primaryAxis],
-					containerVal = containerValues[primaryDimension];
-
-				for (i = 0, j = itemValues.length; i < j; i++) {
-					item = itemValues[i];
-					item[primaryAxis] = storedVal;
-
-					if (isReverse) {
-						item[secondaryAxis] = (containerVal - item[primaryDimension]) - incrementVal;
-					} else {
-						item[secondaryAxis] = item[secondaryAxis] + incrementVal;
-					}
-
-					if (needsIncrement) {
-						incrementVal += item[primaryDimension];
-					}
-				}
-
-				// flex-direction sets which properties need updates
-				// Expose these for use later.
-				this.primaryAxis = primaryAxis;
-				this.secondaryAxis = secondaryAxis;
-
-				this.primaryDimension = primaryDimension;
-				this.secondaryDimension = secondaryDimension;
-			},
-
-			flexWrap : function (wrap, properties) {
-				// var container = this.container;
-				// var items = this.items;
-				var values = this.values;
-				var itemValues = values.items;
-
-				var i, j;
-
-				var primaryAxis = this.primaryAxis;
-				var secondaryAxis = this.secondaryAxis;
-
-				var primaryDimension = this.primaryDimension;
-				var secondaryDimension = this.secondaryDimension;
-
-				var containerSize = values.container[primaryDimension];
-
-				if (wrap === "wrap" || wrap === "wrap-reverse") {
-					var storedVal = itemValues[0][secondaryAxis],
-						breakpoint = containerSize,
-						maxSecondaryAxis = 0,
-						persistAxis, size, item,
-						itemSecondaryAxis, prevSize,
-						currPrimaryDimension,
-						currSecondaryDimension;
-
-					for (i = 0, j = itemValues.length; i < j; i++) {
-						item = itemValues[i];
-
-						currPrimaryDimension = item[primaryDimension];
-						currSecondaryDimension = item[secondaryDimension];
-						itemSecondaryAxis = item[secondaryAxis];
-						size = itemSecondaryAxis + currPrimaryDimension;
-
-						if (size > breakpoint) {
-							if (!persistAxis) {
-								persistAxis = maxSecondaryAxis;
-								storedVal += itemSecondaryAxis;
-							}
-
-							if (size > (breakpoint + containerSize)) {
-								persistAxis += maxSecondaryAxis;
-								breakpoint += (containerSize - prevSize);
-								storedVal = itemSecondaryAxis;
-
-								maxSecondaryAxis = 0;
-							}
-
-							item[primaryAxis] = persistAxis;
-							item[secondaryAxis] -= storedVal;
-						}
-
-						maxSecondaryAxis = Math.max(maxSecondaryAxis, currSecondaryDimension);
-						prevSize = item[secondaryAxis] + item[primaryDimension];
-					}
-				}
-			}
+			flexDirection : models.flexDirection,
+			flexWrap : models.flexWrap,
+			justifyContent : models.justifyContent,
+			alignItems : models.alignItems,
+			alignContent : models.alignContent
 		},
 
 		generateUID : function (container) {
@@ -211,8 +118,8 @@ define([
 			this.items = settings.items;
 
 			this.dom = this.dom || {};
-			this.dom.values = storePositionValues(this.container, this.items);
-			this.values = clonePositionValues(this.dom.values);
+			this.dom.values = Flexbox.storePositionValues(this.container, this.items);
+			this.values = Flexbox.clonePositionValues(this.dom.values);
 
 			var properties = this.container.properties;
 			var model = this.model;
@@ -227,10 +134,10 @@ define([
 			this.model.flexDirection.call(this, properties["flex-direction"], properties);
 			this.model.flexWrap.call(this, properties["flex-wrap"], properties);
 
-			applyPositioning(this.uid, this.container, this.items, this.values);
+			Flexbox.applyPositioning(this.uid, this.container, this.items, this.values);
 		}
 	};
 
 	return Container;
 
-});
+}());

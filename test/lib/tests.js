@@ -1,9 +1,9 @@
 define([
 	"jquery",
-	"reflexie/reflexie",
+	"dist/reflexie",
 	"lib/mocha",
 	"lib/expect"
-], function ($, Flexbox) {
+], function ($, Flexie) {
 	"use strict";
 
 	var buildTest = function (el, rect, val) {
@@ -117,7 +117,7 @@ define([
 
 				target.css(styles);
 
-				flex = new Flexbox({
+				flex = new Flexie({
 					container: {
 						"element": target[0],
 						"selector": "#flex-target",

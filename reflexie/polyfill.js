@@ -1,25 +1,14 @@
-define([
-	"./polyfill/container",
-	"./polyfill/items",
-	"./support"
-], function (Container, Items, support) {
-	"use strict";
+Flexie = function (options) {
+	this.options = options;
+	return this.box(options);
+};
 
-	var Flexbox = function (options) {
-		this.options = options;
-		return this.box(options);
-	};
-
-	Flexbox.prototype = {
-		box : function (options) {
-			if (support === true) {
-				return true;
-			}
-
-			var container = new Container(options);
+Flexie.prototype = {
+	box : function (options) {
+		if (Flexbox.support === true) {
+			return true;
 		}
-	};
 
-	return Flexbox;
-
-});
+		var container = new Flexbox.container(options);
+	}
+};
