@@ -2,17 +2,18 @@
 	"name": "reflexie",
 	"version": "0.0.0",
 	"description": "A grown-up polyfill for a grown-up flexbox.",
-	"main": "reflexie.js",
+	"main": "dist/reflexie.js",
 	"dependencies": {},
 	"devDependencies": {
 		"express": ">=3.0.1",
 		"ejs": ">=0.8.3",
 		"mocha": ">=1.6.0",
 		"expect.js": ">=0.2.0",
-		"socket.io": ">=0.9.11"
+		"socket.io": ">=0.9.11",
+		"grunt": "0.3.x"
 	},
 	"scripts": {
-		"start": "node test/generate.js"
+		"start": "grunt build && node test/generate.js"
 	},
 	"repository": {
 		"type": "git",

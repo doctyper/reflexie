@@ -1,8 +1,4 @@
-define(function () {
-	"use strict";
-
-	/*jshint browser:true*/
-
+Flexbox.support = (function () {
 	var testProp = "flexWrap";
 	var prefixes = "webkit moz o ms".split(" ");
 	var dummy = document.createElement("flx");
@@ -22,10 +18,10 @@ define(function () {
 			flexboxSupport = typeTest(prop);
 
 			if (flexboxSupport) {
-				break;
+				return flexboxSupport;
 			}
 		}
 	}
 
 	return flexboxSupport;
-});
+}());

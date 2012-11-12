@@ -1,110 +1,230 @@
 define([
 	"jquery",
+	"dist/reflexie",
 	"lib/mocha",
 	"lib/expect"
-], function ($) {
+], function ($, Flexie) {
 	"use strict";
 
+	var DEBUG = false;
+
 	var buildTest = function (el, rect, val) {
+		var box;
+		val = Math.floor(val);
+
 		it(rect + " should be " + val, function () {
-			var box = el.getBoundingClientRect();
-			expect(box[rect]).to.equal(val);
-			console.log("expect", box[rect], "to equal", val);
+			if (typeof el === "number") {
+				el = $("#flex-target").children()[el];
+			}
+
+			box = el.getBoundingClientRect();
+			expect(Math.floor(box[rect])).to.equal(val);
+			logger.log("expect", Math.floor(box[rect]), "to equal", val);
 		});
 	};
 
+	var appendFlexChildren = function (target, dependencies) {
+		var i, j, idx,
+			set = [], selector, element,
+			children = dependencies.childNodes;
+
+		target.empty();
+
+		for (i = 0, j = children; i < j; i++) {
+			idx = (i + 1);
+			selector = "flex-col-" + idx;
+			element = $('<div id="' + selector + '">Col ' + idx + '</div>');
+
+			set.push({
+				selector: "#" + selector,
+				element: element[0]
+			});
+
+			target.append(element);
+		}
+
+		return set;
+	};
+
+	var logger = {
+		log : function () {
+			if (DEBUG) {
+				console.log.apply(console, arguments);
+			}
+		},
+
+		group : function (name) {
+			if (DEBUG) {
+				console.group(name);
+			}
+		},
+
+		groupEnd : function (name) {
+			if (DEBUG) {
+				console.groupEnd(name);
+			}
+		}
+	};
+
 	return {
-		run : function () {
-			var deferred = $.Deferred();
+		describeItem : function (item, index, child) {
+			var rect, val;
 
-			var flex = $("#flex-target");
-			var flexProp = "-webkit-flex";
+			before(function () {
+				logger.group(item);
+			});
 
-			var children = flex.children();
-			document.title = "Running Tests...";
+			for (rect in child) {
+				val = window.parseFloat(child[rect]);
+				buildTest(index, rect, val);
+			}
 
-			$.getJSON("data/flex.js", function (json) {
-				var property, values, value,
-					types, container, items,
-					rect, i, j, child;
+			after(function () {
+				logger.groupEnd(item);
+			});
+		},
 
-				for (property in json) {
-					describe(property, function () {
-						var p = property;
-						values = json[property];
+		buildItemDescription : function (description, iterator, index) {
+			describe(description, function () {
+				this.describeItem(description, index, iterator[index]);
+			}.bind(this));
+		},
 
-						before(function () {
-							console.group(p);
-						});
+		describeContainer : function (container, items) {
+			var target = this.target,
+				rect, val, i, j, item;
 
-						for (value in values) {
+			before(function () {
+				logger.group("container");
+			});
 
-							describe(value, function () {
-								var v = value;
+			for (rect in container) {
+				val = window.parseFloat(container[rect]);
+				buildTest(target[0], rect, val);
+			}
 
-								before(function () {
-									flex.removeAttr("style");
-									flex.css("display", flexProp);
-									flex.css(p, v);
+			for (i = 0, j = items.length; i < j; i++) {
+				item = ":nth-child(" + (i + 1) + ")";
+				this.buildItemDescription(item, items, i);
+			}
 
-									console.group(v);
-								});
+			after(function () {
+				logger.groupEnd("container");
+			});
+		},
 
-								types = values[value];
-								container = types.container;
-								items = types.items;
+		describeValue : function (property, value, types, extra) {
+			var target = this.target,
+				flexProp = ($.browser.chrome ? "-webkit-" : "") + "flex",
+				container = types.container,
+				items = types.items,
+				dependencies = types.dependencies,
+				set, flex;
 
-								describe("container", function () {
-									before(function () {
-										console.group("container");
-									});
+			var styles = {
+				"flex-direction": "row",
+				"flex-wrap": "nowrap",
+				"justify-content": "flex-start",
+				"align-items": "stretch",
+				"align-content": "stretch"
+			};
 
-									for (rect in container) {
-										var val = window.parseFloat(container[rect]);
-										buildTest(flex[0], rect, val);
-									}
-
-
-									for (i = 0, j = items.length; i < j; i++) {
-										var name = ":nth-child(" + (i + 1) + ")";
-
-										describe(name, function () {
-											var n = name;
-
-											before(function () {
-												console.group(n);
-											});
-
-											child = items[i];
-
-											for (rect in child) {
-												var val = window.parseFloat(child[rect]);
-												buildTest(children[i], rect, val);
-											}
-
-											after(function () {
-												console.groupEnd(n);
-											});
-										});
-									}
-
-									after(function () {
-										console.groupEnd("container");
-									});
-								});
-
-								after(function () {
-									console.groupEnd(v);
-								});
-							});
-						}
-
-						after(function () {
-							console.groupEnd(p);
-						});
-					});
+			before(function () {
+				if (extra) {
+					extra = value.split(";")[0];
 				}
 
+				set = appendFlexChildren(target, dependencies);
+
+				target.removeAttr("style");
+
+				for (var key in dependencies.properties) {
+					styles[key] = dependencies.properties[key];
+				}
+
+				styles.display = flexProp;
+				styles[property] = extra || value;
+
+				target.css(styles);
+
+				if (extra && dependencies.map && dependencies.map[extra]) {
+					target.children().css(dependencies.map[extra]);
+				}
+
+				flex = new Flexie({
+					container: {
+						"element": target[0],
+						"selector": "#flex-target",
+						"properties": styles
+					},
+
+					items: set
+				});
+
+				logger.group(extra || value);
+			});
+
+			describe("container", function () {
+				this.describeContainer(container, items);
+			}.bind(this));
+
+			after(function () {
+				logger.groupEnd(value);
+			});
+		},
+
+		buildValueDescription : function (value, property, values) {
+			describe(value, function () {
+				var extra = value.indexOf(";") !== -1;
+				this.describeValue(property, value, values[value], extra);
+			}.bind(this));
+		},
+
+		describeProperty : function (property, values) {
+			var value, extra;
+
+			before(function () {
+				logger.group(property);
+			});
+
+			for (value in values) {
+				this.buildValueDescription(value, property, values);
+			}
+
+			after(function () {
+				logger.groupEnd(property);
+			});
+		},
+
+		buildPropertyDescription : function (property, value) {
+			describe(property, function () {
+				this.describeProperty(property, value);
+			}.bind(this));
+		},
+
+		handleJSON : function (json) {
+			var deferred = $.Deferred(),
+				property;
+
+			for (property in json) {
+				this.buildPropertyDescription(property, json[property]);
+			}
+
+			return deferred.resolve();
+		},
+
+		setup : function () {
+			var deferred = $.Deferred();
+
+			document.title = "Running Tests...";
+
+			this.target = $("#flex-target");
+
+			$.getJSON("data/flex.js?" + new Date().getTime())
+				.then(function (json) {
+					return this.handleJSON(json);
+				}.bind(this))
+			.then(function () {
 				return deferred.resolve();
 			});
 

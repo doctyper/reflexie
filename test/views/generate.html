@@ -6,17 +6,7 @@
 	<body>
 
 		<div id="flex-container">
-			<div id="flex-target">
-				<div id="flex-col-1">
-					<h2>Col 1</h2>
-				</div>
-				<div id="flex-col-2">
-					<h2>Col 2</h2>
-				</div>
-				<div id="flex-col-3">
-					<h2>Col 3</h2>
-				</div>
-			</div>
+			<div id="flex-target"></div>
 		</div>
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -29,9 +19,20 @@
 				}
 
 				var flex = $("#flex-target");
-				var items = flex.children();
+				var timer = 150;
+				var tests = {};
+				var x = 0;
 
-				var getFlexValues = function () {
+				var sizeMap = {
+					"row": "height",
+					"row-reverse": "height",
+					"column": "width",
+					"column-reverse": "width"
+				};
+
+				var getFlexValues = function (prop) {
+					var items = flex.children();
+
 					var values = $.map(items, function (child) {
 						var box = child.getBoundingClientRect();
 						delete box.bottom;
@@ -44,48 +45,103 @@
 
 					return {
 						container: flexbox,
-						items: values
+						items: values,
+						dependencies: prop.dependencies
 					};
 				};
 
-				var obj = getFlexValues();
+				var resetFlexContainer = function (target, prop) {
+					var i, j, idx,
+						children = prop.dependencies.childNodes,
+						properties = prop.dependencies.properties,
+						flexProp = "-webkit-" + target.initial;
 
-				var tests = {};
+					flex.empty();
+
+					for (i = 0, j = children; i < j; i++) {
+						idx = (i + 1);
+						flex.append('<div id="flex-col-' + idx + '">Col ' + idx + '</div>');
+					}
+
+					flex.removeAttr("style");
+					flex.css(target.property, flexProp);
+
+					if (properties) {
+						flex.css(properties);
+					}
+				};
+
+				var iterateValues = function (values, flex, prop) {
+					var deferred = $.Deferred();
+
+					var parser = (function parseValues(i) {
+						var value = values[i];
+
+						flex.css(prop.property, values[i]);
+
+						var map = prop.dependencies.map;
+
+						tests[prop.property][value] = getFlexValues(prop);
+
+						if (map && value in map) {
+							for (var key in map[value]) {
+								var p = map[value][key];
+
+								if (key === "size") {
+									var o = key;
+									key = sizeMap[flex.css("flex-direction")];
+									prop.dependencies.map[value][key] = p;
+									delete prop.dependencies.map[value][o];
+								}
+
+								flex.children().css(key, p);
+								tests[prop.property][value + "; " + key + ": " + p] = getFlexValues(prop);
+							}
+						}
+
+						if (values[++i]) {
+							window.setTimeout(function () {
+								parseValues(i);
+							}, timer);
+						} else {
+							return deferred.resolve();
+						}
+					}(0));
+
+					return deferred.promise();
+				};
+
+				var iterateProperties = function (target, props) {
+					var values, prop, value;
+
+					prop = props[x];
+					values = prop.values;
+
+					resetFlexContainer(target, prop);
+					tests[prop.property] = tests[prop.property] || {};
+
+					iterateValues(values, flex, prop).then(function () {
+						if (props[++x]) {
+							window.setTimeout(function () {
+								iterateProperties(target, props);
+							}, timer);
+						} else {
+							$.post("/flex", tests, function (data) {
+								document.title = data;
+							});
+						}
+					});
+				};
 
 				document.title = "Generating results...";
 
-				$.getJSON("/properties").then(function (json) {
+				$.getJSON("/properties?" + new Date().getTime()).then(function (json) {
 					var target = json.target,
 						container = json.container,
 						props = container.properties,
 						shorts = container.shorthands;
 
-					var x = 0, values, prop, value;
-					var flexProp = "-webkit-" + target.initial;
-
-					var _interval = window.setInterval(function () {
-						prop = props[x];
-						values = prop.values;
-
-						flex.removeAttr("style");
-						flex.css(target.property, flexProp);
-
-						tests[prop.property] = tests[prop.property] || {};
-
-						for (i = 0, j = values.length; i < j; i++) {
-							value = values[i];
-							flex.css(prop.property, values[i]);
-							tests[prop.property][value] = getFlexValues();
-						}
-
-						if (!props[++x]) {
-							window.clearInterval(_interval);
-
-							$.post("/flex", tests, function (data) {
-								document.title = data;
-							});
-						}
-					}, 100);
+					iterateProperties(target, props);
 				});
 			});
 		</script>

@@ -26,14 +26,38 @@
 	height: 600px;
 }
 
-#flex-col-1, #flex-col-3 {
+#flex-col-1 {
 	width: 100px;
 	height: 100px;
 	background: #ccc;
 }
 
 #flex-col-2 {
-	width: 200px;
-	height: 200px;
+	width: 150px;
+	height: 150px;
 	background: red;
+}
+
+#flex-col-3 {
+	width: 175px;
+	height: 200px;
+	background: teal;
+}
+
+#flex-col-4 {
+	width: 180px;
+	height: 250px;
+	background: purple;
+}
+
+#flex-col-5 {
+	width: 140px;
+	height: 150px;
+	background: green;
+}
+
+#flex-col-6 {
+	width: 130px;
+	height: 50px;
+	background: blue;
 }

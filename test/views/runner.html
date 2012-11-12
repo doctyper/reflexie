@@ -20,14 +20,14 @@
 			require([
 				"jquery",
 				"socket.io",
-				"reflexie/reflexie",
 				"lib/tests",
 				"lib/mocha",
 				"lib/expect"
-			], function ($, io, reflexie, tests) {
+			], function ($, io, tests) {
 				mocha.setup({
 					setup : "bdd",
-					reporter : "html"
+					reporter : "html",
+					ignoreLeaks : true
 				});
 
 				var socket = io.connect("http://0.0.0.0:9999");
@@ -37,15 +37,24 @@
 
 				$(document).ready(function () {
 
-					tests.run().then(function () {
+					tests.setup().then(function () {
 						var runner = mocha.run();
 
 						runner.on("end", function () {
 							document.title = "Done.";
 						});
 
-						runner.on("fail", function (e) {
-							throw new Error(e.title);
+						runner.on("suite end", function (suite) {
+							var tests = suite.tests,
+								i, j, test;
+
+							for (i = 0, j = tests.length; i < j; i++) {
+								test = tests[i];
+
+								if (test.state === "failed") {
+									throw new Error();
+								}
+							}
 						});
 					});
 
@@ -56,17 +65,7 @@
 	<body>
 
 		<div id="flex-container">
-			<div id="flex-target">
-				<div id="flex-col-1">
-					<h2>Col 1</h2>
-				</div>
-				<div id="flex-col-2">
-					<h2>Col 2</h2>
-				</div>
-				<div id="flex-col-3">
-					<h2>Col 3</h2>
-				</div>
-			</div>
+			<div id="flex-target"></div>
 		</div>
 
 		<div id="mocha"></div>

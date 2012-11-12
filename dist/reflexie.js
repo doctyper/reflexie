@@ -1,0 +1,707 @@
+/*!
+ * Reflexie 0.0.0
+ *
+ * Copyright (c) Richard Herrera
+
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Date: 11-12-2012
+ */
+(function (window, undefined) {
+
+	"use strict";
+
+	var Flexie;
+
+	var Flexbox = {};
+	Flexbox.models = {};
+	
+	Flexbox.utils = {
+		assert : function (prop, values) {
+			var i, j, isValue = false;
+
+			for (i = 0, j = values.length; i < j; i++) {
+				if (prop === values[i]) {
+					isValue = true;
+					break;
+				}
+			}
+
+			return isValue;
+		},
+
+		toCamelCase : function (str) {
+			return str.replace(/\W+(.)/g, function (x, chr) {
+				return chr.toUpperCase();
+			});
+		},
+
+		testValue : function (val) {
+			var dimensions = ["left", "top", "right", "bottom", "width", "height"],
+				i, j;
+
+			for (i = 0, j = dimensions.length; i < j; i++) {
+				if (dimensions[i] === val) {
+					return true;
+				}
+			}
+
+			return false;
+		},
+
+		applyPositioning : function (id, container, items, values) {
+			var rects = values.items,
+				box = values.container,
+				i, j, key, rect, item, element;
+
+			this.applyStyles(id, container.selector, {
+				"position": "relative",
+				"width": box.width,
+				"height": box.height
+			});
+
+			for (i = 0, j = items.length; i < j; i++) {
+				item = items[i];
+				rect = rects[i];
+
+				this.applyStyles(id, item.selector, rect);
+			}
+		},
+
+		detectAuto : function (element, box, prop) {
+			var autoBox,
+				autoWidth = false,
+				autoHeight = false;
+
+			element.style.width = "auto";
+			element.style.height = "auto";
+
+			autoBox = element.getBoundingClientRect();
+			autoWidth = autoBox.width === box.width;
+			autoHeight = autoBox.height === box.height;
+
+			element.style.width = "";
+			element.style.height = "";
+
+			if (element.getAttribute("style") === "") {
+				element.removeAttribute("style");
+			}
+
+			return {
+				width: autoWidth,
+				height: autoHeight
+			};
+		},
+
+		getPristineBox : function (element, position) {
+			position = position || "absolute";
+			var box = element.getBoundingClientRect();
+
+			return {
+				position: position,
+				left: box.left,
+				top: box.top,
+				width: box.width,
+				height: box.height,
+				auto: this.detectAuto(element, box)
+			};
+		},
+
+		storePositionValues : function (container, items) {
+			var i, j;
+			var box = this.getPristineBox(container.element, "relative");
+			var children = [];
+
+			for (i = 0, j = items.length; i < j; i++) {
+				children.push(this.getPristineBox(items[i].element));
+			}
+
+			return {
+				container: box,
+				items: children
+			};
+		},
+
+		clonePositionValues : function (values) {
+			var key, i, j, newItem;
+
+			var newValues = {
+				container: {},
+				items: []
+			};
+
+			for (key in values.container) {
+				newValues.container[key] = values.container[key];
+			}
+
+			for (i = 0, j = values.items.length; i < j; i++) {
+				newItem = {};
+
+				for (key in values.items[i]) {
+					newItem[key] = values.items[i][key];
+				}
+
+				newValues.items.push(newItem);
+			}
+
+			return newValues;
+		},
+
+		JSONToStyles : function (selector, styles) {
+			var rules = [selector + " {"];
+			var value, isDimension;
+
+			for (var key in styles) {
+				value = styles[key];
+
+				if (typeof value === typeof {}) {
+					break;
+				}
+
+				isDimension = this.testValue(key);
+
+				if (isDimension && typeof value === "number") {
+					value = value.toString() + "px";
+				}
+
+				rules.push(key + ": " + value + ";");
+			}
+
+			rules = "\n" + rules.join("\n\t") + "\n}" + "\n";
+			return rules;
+		},
+
+		removeStyles : function (id) {
+			var existing = document.getElementById(id);
+
+			if (existing) {
+				existing.parentNode.removeChild(existing);
+			}
+		},
+
+		applyStyles : function (id, selector, styles) {
+			var css = this.JSONToStyles(selector, styles),
+				head = document.getElementsByTagName("head")[0],
+				existing = document.getElementById(id),
+				style = existing || document.createElement("style");
+
+			if (!existing) {
+				style.id = id;
+				style.type = "text/css";
+			}
+
+			// console.log(css);
+
+			if (style.styleSheet) {
+				style.styleSheet.cssText += css;
+			} else {
+				style.appendChild(document.createTextNode(css));
+			}
+
+			head.appendChild(style);
+		}
+	};
+	
+	Flexbox.support = (function () {
+		var testProp = "flexWrap";
+		var prefixes = "webkit moz o ms".split(" ");
+		var dummy = document.createElement("flx");
+		var i, j, prop;
+
+		var typeTest = function (prop) {
+			return typeof dummy.style[prop] !== "undefined";
+		};
+
+		var flexboxSupport = typeTest(testProp);
+
+		if (!flexboxSupport) {
+			testProp = testProp.charAt(0).toUpperCase() + testProp.slice(1);
+
+			for (i = 0, j = prefixes.length; i < j; i++) {
+				prop = prefixes[i] + testProp;
+				flexboxSupport = typeTest(prop);
+
+				if (flexboxSupport) {
+					return flexboxSupport;
+				}
+			}
+		}
+
+		return flexboxSupport;
+	}());
+	
+	
+	Flexbox.models.flexDirection = function (direction, properties) {
+		var values = this.values,
+			utils = Flexbox.utils,
+			containerValues = values.container,
+			itemValues = values.items,
+			i, j, item, incrementVal = 0,
+			colArray = ["column", "column-reverse"],
+			revArray = ["row-reverse", "column-reverse"],
+			isColumn = utils.assert(direction, colArray),
+			isReverse = utils.assert(direction, revArray),
+			needsIncrement = (!isColumn || isReverse),
+			primaryAxis = (isColumn ? "left" : "top"),
+			secondaryAxis = (isColumn ? "top" : "left"),
+			primaryDimension = Flexbox.dimValues[secondaryAxis],
+			secondaryDimension = Flexbox.dimValues[primaryAxis],
+			storedVal = itemValues[0][primaryAxis],
+			containerVal = containerValues[primaryDimension];
+
+		for (i = 0, j = itemValues.length; i < j; i++) {
+			item = itemValues[i];
+			item[primaryAxis] = storedVal;
+
+			if (isReverse) {
+				item[secondaryAxis] = (containerVal - item[primaryDimension]) - incrementVal;
+			} else {
+				item[secondaryAxis] = item[secondaryAxis] + incrementVal;
+			}
+
+			if (needsIncrement) {
+				incrementVal += item[primaryDimension];
+			}
+		}
+
+		// flex-direction sets which properties need updates
+		// Expose these for use later.
+		this.primaryAxis = primaryAxis;
+		this.secondaryAxis = secondaryAxis;
+
+		this.primaryDimension = primaryDimension;
+		this.secondaryDimension = secondaryDimension;
+	};
+	
+	Flexbox.models.flexWrap = function (wrap, properties) {
+		var values = this.values;
+		var itemValues = values.items;
+
+		var i, j;
+
+		var isWrap = (wrap === "wrap");
+		var isWrapReverse = (wrap === "wrap-reverse");
+
+		var primaryAxis = this.primaryAxis;
+		var secondaryAxis = this.secondaryAxis;
+
+		var primaryDimension = this.primaryDimension;
+		var secondaryDimension = this.secondaryDimension;
+
+		var containerSize = values.container[primaryDimension];
+		var lines = [];
+
+		var line = {
+			items: [],
+			totalSize: 0,
+			maxItemSize: 0
+		};
+
+		// TODO: Implement `flex-wrap: wrap-reverse;`
+		if (isWrap || isWrapReverse) {
+			var storedVal = itemValues[0][secondaryAxis],
+				breakpoint = containerSize,
+				maxSecondaryAxis = 0,
+				persistAxis, size, item,
+				itemSecondaryAxis, prevSize,
+				currPrimaryDimension,
+				currSecondaryDimension;
+
+			for (i = 0, j = itemValues.length; i < j; i++) {
+				item = itemValues[i];
+
+				currPrimaryDimension = item[primaryDimension];
+				currSecondaryDimension = item[secondaryDimension];
+				itemSecondaryAxis = item[secondaryAxis];
+				size = itemSecondaryAxis + currPrimaryDimension;
+
+				if (size > breakpoint) {
+					if (!persistAxis) {
+						persistAxis = maxSecondaryAxis;
+						storedVal += itemSecondaryAxis;
+
+						lines.push(line);
+
+						line = {
+							items: [],
+							totalSize: 0,
+							maxItemSize: 0
+						};
+					}
+
+					if (size > (breakpoint + containerSize)) {
+						persistAxis += maxSecondaryAxis;
+						breakpoint += (containerSize - prevSize);
+						storedVal = itemSecondaryAxis;
+
+						maxSecondaryAxis = 0;
+
+						lines.push(line);
+
+						line = {
+							items: [],
+							totalSize: 0,
+							maxItemSize: 0
+						};
+					}
+
+					item[primaryAxis] = persistAxis;
+					item[secondaryAxis] -= storedVal;
+				}
+
+				line.items.push(item);
+
+				line.totalSize += item[primaryDimension];
+				line.maxItemSize = Math.max(line.maxItemSize, item[primaryDimension]);
+
+				maxSecondaryAxis = Math.max(maxSecondaryAxis, currSecondaryDimension);
+				prevSize = item[secondaryAxis] + item[primaryDimension];
+			}
+		} else {
+			line.items = values.items;
+		}
+
+		lines.push(line);
+
+		// Expose lines
+		this.lines = lines;
+	};
+	
+	Flexbox.models.justifyContent = function (justification, properties) {
+		var values = this.values,
+			containerValues = values.container,
+			secondaryAxis = this.secondaryAxis,
+			primaryDimension = this.primaryDimension,
+			containerSize = containerValues[primaryDimension],
+			isStart = (justification === "flex-start"),
+			isCenter = (justification === "center"),
+			isBetween = (justification === "space-between"),
+			isAround = (justification === "space-around"),
+			lines = this.lines,
+			i, j, k, l, line, eol, items,
+			lineEnd, lineRemainder,
+			multiplier = 1, x, y;
+
+		if (isStart) {
+			return;
+		}
+
+		if (isCenter) {
+			multiplier = 0.5;
+		}
+
+		for (i = 0, j = lines.length; i < j; i++) {
+			k = 0;
+			x = 0;
+			line = lines[i];
+			items = line.items;
+			l = items.length;
+			eol = items[l - 1];
+
+			lineEnd = eol[secondaryAxis] + eol[primaryDimension];
+			lineRemainder = (containerSize - lineEnd) * multiplier;
+
+			if (isBetween || isAround) {
+				k = 1;
+				lineRemainder /= (l - (isBetween ? 1 : 0));
+				x = lineRemainder;
+
+				if (isAround) {
+					y = (lineRemainder * 0.5);
+					items[0][secondaryAxis] += y;
+					lineRemainder += y;
+				}
+			}
+
+			for (; k < l; k++) {
+				items[k][secondaryAxis] += lineRemainder;
+				lineRemainder += x;
+			}
+		}
+	};
+	
+	Flexbox.models.alignItems = function (alignment, properties) {
+		var primaryAxis = this.primaryAxis,
+			secondaryDimension = this.secondaryDimension,
+			multiplier = 1,
+			lines = this.lines,
+			i, j, k, l, line, items, item,
+			lineRemainder;
+
+		var values = this.values;
+		var primaryDimension = this.primaryDimension;
+		var containerSize = values.container[primaryDimension];
+
+		if (alignment === "stretch") {
+			items = values.items;
+			lineRemainder = values.container[secondaryDimension] / lines.length;
+
+			for (i = 0, j = lines.length; i < j; i++) {
+				line = lines[i];
+				items = line.items;
+				l = items.length;
+
+				for (k = 0; k < l; k++) {
+					item = items[k];
+
+					if (item.auto[secondaryDimension]) {
+						if (i) {
+							item[primaryAxis] += (lineRemainder * i) - item[secondaryDimension];
+						}
+
+						item[secondaryDimension] = lineRemainder;
+					}
+				}
+			}
+		}
+
+		if (alignment === "stretch" || alignment === "flex-start" || alignment === "baseline") {
+			return;
+		}
+
+		if (alignment === "center") {
+			multiplier = 0.5;
+		}
+
+		var remainderSize = containerSize;
+
+		for (i = 0, j = lines.length; i < j; i++) {
+			line = lines[i];
+			items = line.items;
+			l = items.length;
+
+			for (k = 0; k < l; k++) {
+				line.maxItemSize = Math.max(line.maxItemSize, items[k][secondaryDimension]);
+			}
+
+			remainderSize -= line.maxItemSize;
+		}
+
+		remainderSize /= lines.length;
+
+		if (alignment === "center") {
+			remainderSize *= 0.5;
+		}
+
+		for (i = 0, j = lines.length; i < j; i++) {
+			line = lines[i];
+			items = line.items;
+			l = items.length;
+			lineRemainder = line.maxItemSize;
+
+			for (k = 0; k < l; k++) {
+				items[k][primaryAxis] += remainderSize + (lineRemainder - items[k][secondaryDimension]) * multiplier;
+			}
+		}
+	};
+	
+	Flexbox.models.alignContent = function (alignment, properties) {
+		var values = this.values,
+			containerValues = values.container,
+
+			primaryAxis = this.primaryAxis,
+			secondaryAxis = this.secondaryAxis,
+
+			primaryDimension = this.primaryDimension,
+			secondaryDimension = this.secondaryDimension,
+
+			containerSize = containerValues[secondaryDimension],
+			isStart = (alignment === "flex-start"),
+			isCenter = (alignment === "center"),
+			isBetween = (alignment === "space-between"),
+			isAround = (alignment === "space-around"),
+			isStretch = (alignment === "stretch"),
+			lines = this.lines,
+			i, j, k, l, line, items, item,
+			lineEnd, lineRemainder,
+			multiplier = 1, x, y;
+
+		if (isStart) {
+			return;
+		}
+
+		if (isCenter) {
+			multiplier = 0.5;
+		}
+
+		lineRemainder = containerSize;
+
+		for (i = 0, j = lines.length; i < j; i++) {
+			x = 0;
+			line = lines[i].items;
+
+			for (k = 0, l = line.length; k < l; k++) {
+				x = Math.max(x, line[k][secondaryDimension]);
+			}
+
+			lineRemainder -= x;
+		}
+
+		i = 0;
+
+		if (isBetween || isAround || isStretch) {
+			i = 1;
+			lineRemainder /= (l - (isBetween ? 2 : 1));
+			x = lineRemainder;
+
+			if (isAround) {
+				y = (lineRemainder * 0.5);
+				items = lines[0].items;
+
+				for (x = 0, j = items.length; x < j; x++) {
+					items[x][primaryAxis] += y;
+				}
+
+				lineRemainder += y;
+			}
+		}
+
+		for (j = lines.length; i < j; i++) {
+			item = lines[i].items;
+
+			for (k = 0, l = item.length; k < l; k++) {
+				item[k][primaryAxis] += (lineRemainder * multiplier);
+			}
+		}
+	};
+	
+	Flexbox.container = (function () {
+		var utils = Flexbox.utils;
+		var models = Flexbox.models;
+
+		Flexbox.dimValues = {
+			"left": "width",
+			"top": "height"
+		};
+
+		var container = function (settings) {
+			this.settings = settings;
+			return this.render(settings);
+		};
+
+		container.prototype = {
+			models : {
+				flexDirection : models.flexDirection,
+				flexWrap : models.flexWrap,
+				justifyContent : models.justifyContent,
+				alignItems : models.alignItems,
+				alignContent : models.alignContent
+			},
+
+			generateUID : function (container) {
+				if (this.uid) {
+					return this.uid;
+				}
+
+				var selector = container.selector;
+				selector = selector.replace(/\#/g, "id-");
+				selector = selector.replace(/\./g, "class-");
+				selector = selector.replace(/\:/g, "pseudo-");
+				selector = selector.replace(/\s/g, "-");
+
+				this.uid = "flexie-" + selector;
+				return this.uid;
+			},
+
+			render : function (settings) {
+				this.uid = this.generateUID(settings.container);
+
+				// Clean DOM, remove pre-existing styles
+				utils.removeStyles(this.uid);
+
+				this.container = settings.container;
+				this.items = settings.items;
+
+				this.dom = this.dom || {};
+				this.dom.values = utils.storePositionValues(this.container, this.items);
+				this.values = utils.clonePositionValues(this.dom.values);
+
+				var properties = this.container.properties;
+				var models = this.models;
+
+				// So the way this works:
+				//
+				// All properties get a chance to override each other, in this order:
+				// - flex-direction
+				// - flex-wrap
+				// - justify-content
+				// - align-content
+				// - align-items
+				//
+				// `this.items` is modified (if needed) by each property method,
+				// adjusting for positioning (if necessary).
+				//
+				// The result is then written to the DOM using only one write cycle.
+
+				for (var key in properties) {
+					var func = utils.toCamelCase(key);
+
+					if (models[func]) {
+						models[func].call(this, properties[key], properties);
+					}
+				}
+
+				utils.applyPositioning(this.uid, this.container, this.items, this.values);
+			}
+		};
+
+		return container;
+
+	}());
+	
+	Flexbox.items = (function () {
+		var Items = function (properties) {
+			this.properties = properties;
+			return this.render(properties);
+		};
+
+		Items.prototype = {
+			render : function () {
+
+			}
+		};
+
+		return Items;
+	}());
+	
+	Flexie = function (options) {
+		this.options = options;
+		return this.box(options);
+	};
+
+	Flexie.prototype = {
+		box : function (options) {
+			if (Flexbox.support === true) {
+				return true;
+			}
+
+			var container = new Flexbox.container(options);
+		}
+	};
+	
+	// Uses AMD or browser globals to create a module.
+	if (typeof define === "function" && define.amd) {
+		define(function () {
+			return Flexie;
+		});
+	} else {
+		window.Flexie = Flexie;
+	}
+	
+})(window);

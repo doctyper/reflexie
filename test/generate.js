@@ -10,17 +10,16 @@ var io = require("socket.io").listen(server);
 
 server.listen(9999);
 
+io.configure(function () {
+	io.set("log level", 1);
+});
+
 io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
-	var flex = __dirname + "/data/flex.js";
 	var data = __dirname + "/data/flex-properties.js";
 
 	fs.watchFile(css, function (curr, prev) {
 		socket.emit("csschange");
-	});
-
-	fs.watchFile(flex, function (curr, prev) {
-		socket.emit("datachange");
 	});
 
 	fs.watchFile(data, function (curr, prev) {
@@ -33,7 +32,7 @@ app.configure(function () {
 	app.use("/css", express.static(__dirname + "/css"));
 	app.use("/lib", express.static(__dirname + "/lib"));
 	app.use("/data", express.static(__dirname + "/data"));
-	app.use("/reflexie", express.static(__dirname + "../../reflexie"));
+	app.use("/dist", express.static(__dirname + "../../dist"));
 
 	app.set("views", __dirname + "/views");
 	app.engine("html", require("ejs").renderFile);
@@ -67,14 +66,15 @@ app.post("/flex", function (req, res) {
 	var json = JSON.stringify(req.body, null, "\t");
 	fs.writeFileSync(dataFile, json);
 
+	io.sockets.emit("datachange");
 	res.send("Success!");
 });
 
 app.listen(9090);
 console.log("listening to http://0.0.0.0:9090");
 
-var cp = require("child_process");
-var child = cp.spawn("open", [
-	"-a", "/Applications/Google Chrome.app",
-	"http://0.0.0.0:9090/generate"
-]);
+// var cp = require("child_process");
+// var child = cp.spawn("open", [
+	// "-a", "/Applications/Google Chrome.app",
+	// "http://0.0.0.0:9090/generate"
+// ]);
