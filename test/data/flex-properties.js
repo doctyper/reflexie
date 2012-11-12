@@ -36,7 +36,12 @@
 			"initial": "stretch",
 			"inherited": false,
 			"dependencies": {
-				"childNodes": 3
+				"childNodes": 3,
+				"map": {
+					"stretch": {
+						"size": "auto"
+					}
+				}
 			}
 		}, {
 			"property": "align-content",
@@ -47,6 +52,11 @@
 				"childNodes": 6,
 				"properties": {
 					"flex-wrap": "wrap"
+				},
+				"map": {
+					"stretch": {
+						"size": "auto"
+					}
 				}
 			}
 		}],

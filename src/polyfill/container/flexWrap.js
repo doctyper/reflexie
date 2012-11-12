@@ -1,10 +1,11 @@
 Flexbox.models.flexWrap = function (wrap, properties) {
-	// var container = this.container;
-	// var items = this.items;
 	var values = this.values;
 	var itemValues = values.items;
 
 	var i, j;
+
+	var isWrap = (wrap === "wrap");
+	var isWrapReverse = (wrap === "wrap-reverse");
 
 	var primaryAxis = this.primaryAxis;
 	var secondaryAxis = this.secondaryAxis;
@@ -13,8 +14,16 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	var secondaryDimension = this.secondaryDimension;
 
 	var containerSize = values.container[primaryDimension];
+	var lines = [];
 
-	if (wrap === "wrap" || wrap === "wrap-reverse") {
+	var line = {
+		items: [],
+		totalSize: 0,
+		maxItemSize: 0
+	};
+
+	// TODO: Implement `flex-wrap: wrap-reverse;`
+	if (isWrap || isWrapReverse) {
 		var storedVal = itemValues[0][secondaryAxis],
 			breakpoint = containerSize,
 			maxSecondaryAxis = 0,
@@ -35,6 +44,14 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 				if (!persistAxis) {
 					persistAxis = maxSecondaryAxis;
 					storedVal += itemSecondaryAxis;
+
+					lines.push(line);
+
+					line = {
+						items: [],
+						totalSize: 0,
+						maxItemSize: 0
+					};
 				}
 
 				if (size > (breakpoint + containerSize)) {
@@ -43,14 +60,34 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 					storedVal = itemSecondaryAxis;
 
 					maxSecondaryAxis = 0;
+
+					lines.push(line);
+
+					line = {
+						items: [],
+						totalSize: 0,
+						maxItemSize: 0
+					};
 				}
 
 				item[primaryAxis] = persistAxis;
 				item[secondaryAxis] -= storedVal;
 			}
 
+			line.items.push(item);
+
+			line.totalSize += item[primaryDimension];
+			line.maxItemSize = Math.max(line.maxItemSize, item[primaryDimension]);
+
 			maxSecondaryAxis = Math.max(maxSecondaryAxis, currSecondaryDimension);
 			prevSize = item[secondaryAxis] + item[primaryDimension];
 		}
+	} else {
+		line.items = values.items;
 	}
+
+	lines.push(line);
+
+	// Expose lines
+	this.lines = lines;
 };

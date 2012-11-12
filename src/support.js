@@ -18,7 +18,7 @@ Flexbox.support = (function () {
 			flexboxSupport = typeTest(prop);
 
 			if (flexboxSupport) {
-				break;
+				return flexboxSupport;
 			}
 		}
 	}

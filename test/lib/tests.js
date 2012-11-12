@@ -6,8 +6,11 @@ define([
 ], function ($, Flexie) {
 	"use strict";
 
+	var DEBUG = false;
+
 	var buildTest = function (el, rect, val) {
 		var box;
+		val = Math.floor(val);
 
 		it(rect + " should be " + val, function () {
 			if (typeof el === "number") {
@@ -15,8 +18,8 @@ define([
 			}
 
 			box = el.getBoundingClientRect();
-			expect(box[rect]).to.equal(val);
-			console.log("expect", box[rect], "to equal", val);
+			expect(Math.floor(box[rect])).to.equal(val);
+			logger.log("expect", Math.floor(box[rect]), "to equal", val);
 		});
 	};
 
@@ -43,12 +46,32 @@ define([
 		return set;
 	};
 
+	var logger = {
+		log : function () {
+			if (DEBUG) {
+				console.log.apply(console, arguments);
+			}
+		},
+
+		group : function (name) {
+			if (DEBUG) {
+				console.group(name);
+			}
+		},
+
+		groupEnd : function (name) {
+			if (DEBUG) {
+				console.groupEnd(name);
+			}
+		}
+	};
+
 	return {
 		describeItem : function (item, index, child) {
 			var rect, val;
 
 			before(function () {
-				console.group(item);
+				logger.group(item);
 			});
 
 			for (rect in child) {
@@ -57,8 +80,14 @@ define([
 			}
 
 			after(function () {
-				console.groupEnd(item);
+				logger.groupEnd(item);
 			});
+		},
+
+		buildItemDescription : function (description, iterator, index) {
+			describe(description, function () {
+				this.describeItem(description, index, iterator[index]);
+			}.bind(this));
 		},
 
 		describeContainer : function (container, items) {
@@ -66,7 +95,7 @@ define([
 				rect, val, i, j, item;
 
 			before(function () {
-				console.group("container");
+				logger.group("container");
 			});
 
 			for (rect in container) {
@@ -76,18 +105,15 @@ define([
 
 			for (i = 0, j = items.length; i < j; i++) {
 				item = ":nth-child(" + (i + 1) + ")";
-
-				describe(item, function () {
-					this.describeItem(item, i, items[i]);
-				}.bind(this));
+				this.buildItemDescription(item, items, i);
 			}
 
 			after(function () {
-				console.groupEnd("container");
+				logger.groupEnd("container");
 			});
 		},
 
-		describeValue : function (property, value, types) {
+		describeValue : function (property, value, types, extra) {
 			var target = this.target,
 				flexProp = ($.browser.chrome ? "-webkit-" : "") + "flex",
 				container = types.container,
@@ -104,6 +130,10 @@ define([
 			};
 
 			before(function () {
+				if (extra) {
+					extra = value.split(";")[0];
+				}
+
 				set = appendFlexChildren(target, dependencies);
 
 				target.removeAttr("style");
@@ -113,9 +143,13 @@ define([
 				}
 
 				styles.display = flexProp;
-				styles[property] = value;
+				styles[property] = extra || value;
 
 				target.css(styles);
+
+				if (extra && dependencies.map && dependencies.map[extra]) {
+					target.children().css(dependencies.map[extra]);
+				}
 
 				flex = new Flexie({
 					container: {
@@ -127,7 +161,7 @@ define([
 					items: set
 				});
 
-				console.group(value);
+				logger.group(extra || value);
 			});
 
 			describe("container", function () {
@@ -135,26 +169,37 @@ define([
 			}.bind(this));
 
 			after(function () {
-				console.groupEnd(value);
+				logger.groupEnd(value);
 			});
 		},
 
+		buildValueDescription : function (value, property, values) {
+			describe(value, function () {
+				var extra = value.indexOf(";") !== -1;
+				this.describeValue(property, value, values[value], extra);
+			}.bind(this));
+		},
+
 		describeProperty : function (property, values) {
-			var value;
+			var value, extra;
 
 			before(function () {
-				console.group(property);
+				logger.group(property);
 			});
 
 			for (value in values) {
-				describe(value, function () {
-					this.describeValue(property, value, values[value]);
-				}.bind(this));
+				this.buildValueDescription(value, property, values);
 			}
 
 			after(function () {
-				console.groupEnd(property);
+				logger.groupEnd(property);
 			});
+		},
+
+		buildPropertyDescription : function (property, value) {
+			describe(property, function () {
+				this.describeProperty(property, value);
+			}.bind(this));
 		},
 
 		handleJSON : function (json) {
@@ -162,9 +207,7 @@ define([
 				property;
 
 			for (property in json) {
-				describe(property, function () {
-					this.describeProperty(property, json[property]);
-				}.bind(this));
+				this.buildPropertyDescription(property, json[property]);
 			}
 
 			return deferred.resolve();
@@ -177,7 +220,7 @@ define([
 
 			this.target = $("#flex-target");
 
-			$.getJSON("data/flex.js")
+			$.getJSON("data/flex.js?" + new Date().getTime())
 				.then(function (json) {
 					return this.handleJSON(json);
 				}.bind(this))

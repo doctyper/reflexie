@@ -19,7 +19,6 @@ module.exports = function (grunt) {
 				"polyfill/container/alignItems",
 				"polyfill/container/alignContent",
 				"polyfill/container",
-				"polyfill/container",
 				"polyfill/items",
 				"polyfill",
 				"exports",
@@ -28,7 +27,7 @@ module.exports = function (grunt) {
 		},
 
 		watch: {
-			files: ["reflexie/**/*.js"],
+			files: ["src/**/*.js"],
 			tasks: "build"
 		}
 	});
@@ -48,7 +47,7 @@ module.exports = function (grunt) {
 			source = grunt.file.read(filepath);
 
 			if (!(/(in|ou)tro\.js$/).test(filepath)) {
-				source = ("\n" + source).replace(/\n/gm, "\n\t");
+				source = ("\n" + source).replace(/\n/gm, "\n\t").replace(/\n\t\n/gm, "\n\n");
 			}
 
 			compiled += source;

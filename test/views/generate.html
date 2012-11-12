@@ -19,9 +19,16 @@
 				}
 
 				var flex = $("#flex-target");
-				var timer = 100;
+				var timer = 150;
 				var tests = {};
 				var x = 0;
+
+				var sizeMap = {
+					"row": "height",
+					"row-reverse": "height",
+					"column": "width",
+					"column-reverse": "width"
+				};
 
 				var getFlexValues = function (prop) {
 					var items = flex.children();
@@ -71,7 +78,26 @@
 						var value = values[i];
 
 						flex.css(prop.property, values[i]);
+
+						var map = prop.dependencies.map;
+
 						tests[prop.property][value] = getFlexValues(prop);
+
+						if (map && value in map) {
+							for (var key in map[value]) {
+								var p = map[value][key];
+
+								if (key === "size") {
+									var o = key;
+									key = sizeMap[flex.css("flex-direction")];
+									prop.dependencies.map[value][key] = p;
+									delete prop.dependencies.map[value][o];
+								}
+
+								flex.children().css(key, p);
+								tests[prop.property][value + "; " + key + ": " + p] = getFlexValues(prop);
+							}
+						}
 
 						if (values[++i]) {
 							window.setTimeout(function () {
@@ -109,7 +135,7 @@
 
 				document.title = "Generating results...";
 
-				$.getJSON("/properties").then(function (json) {
+				$.getJSON("/properties?" + new Date().getTime()).then(function (json) {
 					var target = json.target,
 						container = json.container,
 						props = container.properties,

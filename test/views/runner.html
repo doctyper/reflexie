@@ -26,7 +26,8 @@
 			], function ($, io, tests) {
 				mocha.setup({
 					setup : "bdd",
-					reporter : "html"
+					reporter : "html",
+					ignoreLeaks : true
 				});
 
 				var socket = io.connect("http://0.0.0.0:9999");
@@ -43,8 +44,17 @@
 							document.title = "Done.";
 						});
 
-						runner.on("fail", function (e) {
-							throw new Error(e.title);
+						runner.on("suite end", function (suite) {
+							var tests = suite.tests,
+								i, j, test;
+
+							for (i = 0, j = tests.length; i < j; i++) {
+								test = tests[i];
+
+								if (test.state === "failed") {
+									throw new Error();
+								}
+							}
 						});
 					});
 
