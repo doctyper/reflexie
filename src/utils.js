@@ -67,10 +67,6 @@ Flexbox.utils = {
 		element.style.width = oWidth;
 		element.style.height = oHeight;
 
-		if (element.getAttribute("style") === "") {
-			element.removeAttribute("style");
-		}
-
 		return {
 			width: autoWidth,
 			height: autoHeight
@@ -79,7 +75,27 @@ Flexbox.utils = {
 
 	getPristineBox : function (element, position) {
 		position = position || "absolute";
+
+		var style = element.style;
+
+		var oPos = style.position;
+		var oFloat = style.cssFloat;
+		var oClear = style.clear;
+
+		style.position = "relative";
+		style.cssFloat = "left";
+		style.clear = "both";
+
 		var box = element.getBoundingClientRect();
+		var autoValues = this.detectAuto(element, box);
+
+		style.position = oPos;
+		style.cssFloat = oFloat;
+		style.clear = oClear;
+
+		if (element.getAttribute("style") === "") {
+			element.removeAttribute("style");
+		}
 
 		return {
 			position: position,
@@ -87,7 +103,7 @@ Flexbox.utils = {
 			top: box.top,
 			width: box.width,
 			height: box.height,
-			auto: this.detectAuto(element, box)
+			auto: autoValues
 		};
 	},
 
