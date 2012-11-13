@@ -8,6 +8,34 @@ define([
 
 	var DEBUG = false;
 
+	var hasSupport = (function () {
+		var testProp = "flexWrap";
+		var prefixes = "webkit moz o ms".split(" ");
+		var dummy = document.createElement("flx");
+		var i, j, prop;
+
+		var typeTest = function (prop) {
+			return typeof dummy.style[prop] !== "undefined";
+		};
+
+		var flexboxSupport = typeTest(testProp);
+
+		if (!flexboxSupport) {
+			testProp = testProp.charAt(0).toUpperCase() + testProp.slice(1);
+
+			for (i = 0, j = prefixes.length; i < j; i++) {
+				prop = prefixes[i] + testProp;
+				flexboxSupport = typeTest(prop);
+
+				if (flexboxSupport) {
+					return flexboxSupport;
+				}
+			}
+		}
+
+		return flexboxSupport;
+	}());
+
 	var appendFlexChildren = function (target, children) {
 		var i, j, idx,
 			set = [], selector, element;
@@ -92,10 +120,11 @@ define([
 				describe(children, function () {
 					before(function () {
 						var rules = data.rules;
-						var children = flex.children();
 
-						// flex.css("display", "-webkit-flex");
-						// flex.css(rules);
+						if (hasSupport) {
+							flex.css("display", "-webkit-flex");
+							flex.css(rules);
+						}
 
 						var isStretch = (rules["align-items"] === "stretch");
 						isStretch = isStretch || (rules["align-content"] === "stretch");
