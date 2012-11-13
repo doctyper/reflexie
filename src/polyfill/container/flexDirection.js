@@ -41,7 +41,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 
 	console.log("crossStart", this.crossStart);
 	console.log("mainStart", this.mainStart);
-	console.log("mainSize", this.mainSize);
 	console.log("crossSize", this.crossSize);
+	console.log("mainSize", this.mainSize);
 
 };

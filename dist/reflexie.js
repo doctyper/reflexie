@@ -290,8 +290,8 @@
 
 		console.log("crossStart", this.crossStart);
 		console.log("mainStart", this.mainStart);
-		console.log("mainSize", this.mainSize);
 		console.log("crossSize", this.crossSize);
+		console.log("mainSize", this.mainSize);
 
 	};
 	
@@ -537,6 +537,17 @@
 			i, j, k, l, line, items, item,
 			lineEnd, lineRemainder,
 			multiplier = 1, x, y;
+
+		// http://www.w3.org/TR/css3-flexbox/#align-content-property
+		//  Note, this property has no effect when the flexbox has only a single line.
+		if (lines.length <= 1) {
+			if (properties["flex-wrap"] === "nowrap") {
+				return;
+			} else if (isAround) {
+				isAround = false;
+				isCenter = true;
+			}
+		}
 
 		if (isStart) {
 			return;
