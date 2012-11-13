@@ -86,6 +86,8 @@
 
 		detectAuto : function (element, box, prop) {
 			var autoBox,
+				oWidth = element.style.width,
+				oHeight = element.style.height,
 				autoWidth = false,
 				autoHeight = false;
 
@@ -96,8 +98,8 @@
 			autoWidth = autoBox.width === box.width;
 			autoHeight = autoBox.height === box.height;
 
-			element.style.width = "";
-			element.style.height = "";
+			element.style.width = oWidth;
+			element.style.height = oHeight;
 
 			if (element.getAttribute("style") === "") {
 				element.removeAttribute("style");
@@ -180,7 +182,7 @@
 					value = value.toString() + "px";
 				}
 
-				rules.push(key + ": " + value + ";");
+				rules.push(key + ": " + value + " !important;");
 			}
 
 			rules = "\n" + rules.join("\n\t") + "\n}" + "\n";
@@ -288,10 +290,10 @@
 		this.mainSize = mainSize;
 		this.crossSize = crossSize;
 
-		console.log("crossStart", this.crossStart);
-		console.log("mainStart", this.mainStart);
-		console.log("crossSize", this.crossSize);
-		console.log("mainSize", this.mainSize);
+		// console.log("crossStart", this.crossStart);
+		// console.log("mainStart", this.mainStart);
+		// console.log("crossSize", this.crossSize);
+		// console.log("mainSize", this.mainSize);
 
 	};
 	
@@ -454,7 +456,15 @@
 		var mainSize = this.mainSize;
 		var containerSize = values.container[mainSize];
 
-		if (alignment === "stretch") {
+		var isStretch = (alignment === "stretch");
+		var isStart = (alignment === "flex-start");
+		var isBaseline = (alignment === "baseline");
+		var isCenter = (alignment === "center");
+
+		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
+		var isAlignContentStretch = properties["align-content"] === "stretch";
+
+		if (isStretch && (isNotFlexWrap || isAlignContentStretch)) {
 			items = values.items;
 			lineRemainder = values.container[crossSize] / lines.length;
 
@@ -477,11 +487,11 @@
 			}
 		}
 
-		if (alignment === "stretch" || alignment === "flex-start" || alignment === "baseline") {
+		if (isStretch || isStart || isBaseline) {
 			return;
 		}
 
-		if (alignment === "center") {
+		if (isCenter) {
 			multiplier = 0.5;
 		}
 
@@ -501,8 +511,12 @@
 
 		remainderSize /= lines.length;
 
-		if (alignment === "center") {
+		if (isCenter) {
 			remainderSize *= 0.5;
+		}
+
+		if (lines.length <= 1 && !isNotFlexWrap && !isAlignContentStretch) {
+			remainderSize = 0;
 		}
 
 		for (i = 0, j = lines.length; i < j; i++) {
@@ -533,6 +547,7 @@
 			isBetween = (alignment === "space-between"),
 			isAround = (alignment === "space-around"),
 			isStretch = (alignment === "stretch"),
+			isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 			lines = this.lines,
 			i, j, k, l, line, items, item,
 			lineEnd, lineRemainder,
@@ -541,7 +556,7 @@
 		// http://www.w3.org/TR/css3-flexbox/#align-content-property
 		//  Note, this property has no effect when the flexbox has only a single line.
 		if (lines.length <= 1) {
-			if (properties["flex-wrap"] === "nowrap") {
+			if (isNotFlexWrap) {
 				return;
 			} else if (isAround) {
 				isAround = false;
