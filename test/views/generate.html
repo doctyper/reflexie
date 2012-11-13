@@ -18,7 +18,7 @@
 					return;
 				}
 
-				var flex = $("#flex-target");
+				/*var flex = $("#flex-target");
 				var timer = 150;
 				var tests = {};
 				var x = 0;
@@ -71,13 +71,19 @@
 					}
 				};
 
-				var iterateValues = function (values, flex, prop) {
+				var iterateValues = function (values, flex, prop, props) {
 					var deferred = $.Deferred();
+
+					props = props.filter(function (opts) {
+						return opts.property !== prop.property;
+					});
+
+					console.log(prop.property, props);
 
 					var parser = (function parseValues(i) {
 						var value = values[i];
 
-						flex.css(prop.property, values[i]);
+						flex.css(prop.property, value);
 
 						var map = prop.dependencies.map;
 
@@ -120,7 +126,7 @@
 					resetFlexContainer(target, prop);
 					tests[prop.property] = tests[prop.property] || {};
 
-					iterateValues(values, flex, prop).then(function () {
+					iterateValues(values, flex, prop, props).then(function () {
 						if (props[++x]) {
 							window.setTimeout(function () {
 								iterateProperties(target, props);
@@ -131,9 +137,178 @@
 							});
 						}
 					});
+				};*/
+
+				var sizeMap = {
+					"row": "height",
+					"row-reverse": "height",
+					"column": "width",
+					"column-reverse": "width"
 				};
 
+				var flex = $("#flex-target");
+				var tests = {};
+
 				document.title = "Generating results...";
+
+				var getFlexValues = function (rules) {
+					var items = flex.children();
+
+					var values = $.map(items, function (child) {
+						var box = child.getBoundingClientRect();
+						delete box.bottom;
+
+						return box;
+					});
+
+					var flexbox = flex[0].getBoundingClientRect();
+					delete flexbox.bottom;
+
+					return {
+						container: flexbox,
+						items: values,
+						rules: JSON.parse(JSON.stringify(rules))
+					};
+				};
+
+				var toString = function (rules) {
+					var arr = [];
+					var key;
+
+					var keys = Object.keys(rules).sort();
+					var i, j;
+
+					for (i = 0, j = keys.length; i < j; i++) {
+						key = keys[i];
+						arr.push(key + ": " + rules[key]);
+					}
+
+					return arr.join("; ");
+				};
+
+				var resetFlexContainer = function (target, children) {
+					var i, j, idx,
+						flexProp = "-webkit-" + target.initial;
+
+					flex.empty();
+
+					for (i = 0, j = children; i < j; i++) {
+						idx = (i + 1);
+						flex.append('<div id="flex-col-' + idx + '">Col ' + idx + '</div>');
+					}
+
+					flex.removeAttr("style");
+					flex.css(target.property, flexProp);
+				};
+
+				var loopOfDoom = function (target, props, childLength) {
+					var children = flex.children();
+					var childStr = "x" + childLength;
+
+					console.log(childLength);
+
+					var direction = props[0],
+						wrap = props[1],
+						justify = props[2],
+						items = props[3],
+						content = props[4];
+
+					var a = 0,
+						b, c, d, e;
+
+					var rules;
+					var str;
+
+					var flexProp = "-webkit-" + target.initial;
+					var isStretch;
+					var currDir;
+
+					while (direction.values[a]) {
+						tests[direction.values[a]] = tests[direction.values[a]] || {};
+						tests[direction.values[a]][childStr] = tests[direction.values[a]][childStr] || {
+							children: childLength
+						};
+
+						rules = {};
+
+						// console.group(direction.property, direction.values[a]);
+						rules[direction.property] = direction.values[a];
+						b = 0;
+
+						while (wrap.values[b]) {
+							// console.group(wrap.property, wrap.values[b]);
+							rules[wrap.property] = wrap.values[b];
+							c = 0;
+
+							while (justify.values[c]) {
+								// console.group(justify.property, justify.values[c]);
+								rules[justify.property] = justify.values[c];
+								d = 0;
+
+								while (items.values[d]) {
+									// console.group(items.property, items.values[d]);
+									rules[items.property] = items.values[d];
+									e = 0;
+
+									while (content.values[e]) {
+										// console.log(content.property, content.values[e]);
+										rules[content.property] = content.values[e];
+										// console.log(rules);
+
+										flex.removeAttr("style");
+										flex.css(target.property, flexProp);
+										flex.css(rules);
+
+										isStretch = rules["align-items"] === "stretch";
+										isStretch = isStretch || rules["align-content"] === "stretch";
+
+										if (isStretch) {
+											currDir = sizeMap[rules["flex-direction"]];
+											children.css(currDir, "auto");
+										}
+
+										// TOO. MUCH. DATA!!~!
+										// Part this out in four sections (for now?)
+
+										str = toString(rules);
+										tests[direction.values[a]][childStr][str] = getFlexValues(rules);
+
+										if (isStretch) {
+											children.css(currDir, "");
+										}
+
+										e++;
+									}
+
+									// console.groupEnd(items.property, items.values[d]);
+									d++;
+								}
+
+								// console.groupEnd(justify.property, justify.values[c]);
+								c++;
+							}
+
+							// console.groupEnd(wrap.property, wrap.values[b]);
+							b++;
+						}
+
+						// console.groupEnd(direction.property, direction.values[a]);
+						a++;
+					}
+				};
+
+				var iterateProperties = function (target, props) {
+					var children = [3, 6];
+					var i, j;
+
+					for (i = 0, j = children.length; i < j; i++) {
+						resetFlexContainer(target, children[i]);
+						loopOfDoom(target, props, children[i]);
+					}
+
+					console.log(tests);
+					return tests;
+				};
 
 				$.getJSON("/properties?" + new Date().getTime()).then(function (json) {
 					var target = json.target,
@@ -141,7 +316,17 @@
 						props = container.properties,
 						shorts = container.shorthands;
 
-					iterateProperties(target, props);
+					var tests = iterateProperties(target, props);
+					console.log(tests);
+					for (var key in tests) {
+						var direction = tests[key];
+
+						for (var count in direction) {
+							$.post("/flex/" + key + "-" + count, direction[count], function (data) {
+								document.title = data;
+							});
+						}
+					}
 				});
 			});
 		</script>
