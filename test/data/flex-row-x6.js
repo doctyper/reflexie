@@ -1,6 +1,6 @@
 {
 	"children": "6",
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -60,7 +60,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -120,7 +120,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -180,7 +180,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -240,7 +240,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -300,7 +300,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -360,7 +360,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -420,7 +420,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -480,7 +480,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -540,7 +540,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -600,7 +600,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -660,7 +660,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -720,7 +720,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -780,7 +780,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -840,7 +840,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -900,7 +900,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -960,7 +960,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1020,7 +1020,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1080,7 +1080,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1140,7 +1140,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1200,7 +1200,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1260,7 +1260,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1320,7 +1320,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1380,7 +1380,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1440,7 +1440,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1500,7 +1500,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1560,7 +1560,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1620,7 +1620,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1680,7 +1680,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1740,7 +1740,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1800,7 +1800,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1860,7 +1860,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1920,7 +1920,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -1980,7 +1980,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2040,7 +2040,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2100,7 +2100,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2160,7 +2160,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2220,7 +2220,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2280,7 +2280,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2340,7 +2340,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2400,7 +2400,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2460,7 +2460,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2520,7 +2520,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2580,7 +2580,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2640,7 +2640,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2700,7 +2700,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2760,7 +2760,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2820,7 +2820,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2880,7 +2880,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -2940,7 +2940,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3000,7 +3000,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3060,7 +3060,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3120,7 +3120,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3180,7 +3180,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3240,7 +3240,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3300,7 +3300,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3360,7 +3360,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3420,7 +3420,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3480,7 +3480,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3540,7 +3540,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3600,7 +3600,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3660,7 +3660,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3720,7 +3720,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3780,7 +3780,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3840,7 +3840,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3900,7 +3900,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -3960,7 +3960,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4020,7 +4020,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4080,7 +4080,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4140,7 +4140,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4200,7 +4200,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4260,7 +4260,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4320,7 +4320,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4380,7 +4380,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4440,7 +4440,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4500,7 +4500,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4560,7 +4560,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4620,7 +4620,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4680,7 +4680,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4740,7 +4740,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4800,7 +4800,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4860,7 +4860,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4920,7 +4920,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -4980,7 +4980,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5040,7 +5040,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5100,7 +5100,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5160,7 +5160,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5220,7 +5220,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5280,7 +5280,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5340,7 +5340,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5400,7 +5400,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5460,7 +5460,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5520,7 +5520,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5580,7 +5580,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5640,7 +5640,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5700,7 +5700,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5760,7 +5760,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5820,7 +5820,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5880,7 +5880,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -5940,7 +5940,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6000,7 +6000,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6060,7 +6060,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6120,7 +6120,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6180,7 +6180,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6240,7 +6240,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6300,7 +6300,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6360,7 +6360,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6420,7 +6420,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6480,7 +6480,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6540,7 +6540,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6600,7 +6600,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6660,7 +6660,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6720,7 +6720,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6780,7 +6780,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6840,7 +6840,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6900,7 +6900,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -6960,7 +6960,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7020,7 +7020,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7080,7 +7080,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7140,7 +7140,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7200,7 +7200,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7260,7 +7260,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7320,7 +7320,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7380,7 +7380,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7440,7 +7440,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7500,7 +7500,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7560,7 +7560,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7620,7 +7620,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7680,7 +7680,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7740,7 +7740,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7800,7 +7800,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7860,7 +7860,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7920,7 +7920,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -7980,7 +7980,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8040,7 +8040,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8100,7 +8100,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8160,7 +8160,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8220,7 +8220,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8280,7 +8280,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8340,7 +8340,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8400,7 +8400,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8460,7 +8460,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8520,7 +8520,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8580,7 +8580,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8640,7 +8640,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8700,7 +8700,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8760,7 +8760,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8820,7 +8820,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8880,7 +8880,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -8940,7 +8940,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: nowrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9000,7 +9000,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9060,7 +9060,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9120,7 +9120,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9180,7 +9180,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9240,7 +9240,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9300,7 +9300,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9360,7 +9360,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9420,7 +9420,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9480,7 +9480,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9540,7 +9540,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9600,7 +9600,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9660,7 +9660,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9720,7 +9720,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9780,7 +9780,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9840,7 +9840,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9900,7 +9900,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -9960,7 +9960,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10020,7 +10020,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10080,7 +10080,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10140,7 +10140,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10200,7 +10200,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10260,7 +10260,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10320,7 +10320,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10380,7 +10380,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10440,7 +10440,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10500,7 +10500,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10560,7 +10560,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10620,7 +10620,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10680,7 +10680,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10740,7 +10740,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-start": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10800,7 +10800,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10860,7 +10860,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10920,7 +10920,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -10980,7 +10980,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11040,7 +11040,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11100,7 +11100,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11160,7 +11160,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11220,7 +11220,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11280,7 +11280,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11340,7 +11340,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11400,7 +11400,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11460,7 +11460,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11520,7 +11520,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11580,7 +11580,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11640,7 +11640,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11700,7 +11700,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11760,7 +11760,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11820,7 +11820,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11880,7 +11880,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -11940,7 +11940,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12000,7 +12000,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12060,7 +12060,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12120,7 +12120,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12180,7 +12180,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12240,7 +12240,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12300,7 +12300,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12360,7 +12360,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12420,7 +12420,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12480,7 +12480,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12540,7 +12540,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: flex-end": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12600,7 +12600,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12660,7 +12660,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12720,7 +12720,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12780,7 +12780,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12840,7 +12840,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12900,7 +12900,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -12960,7 +12960,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13020,7 +13020,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13080,7 +13080,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13140,7 +13140,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13200,7 +13200,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13260,7 +13260,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13320,7 +13320,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13380,7 +13380,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13440,7 +13440,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13500,7 +13500,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13560,7 +13560,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13620,7 +13620,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13680,7 +13680,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13740,7 +13740,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13800,7 +13800,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13860,7 +13860,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13920,7 +13920,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -13980,7 +13980,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14040,7 +14040,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14100,7 +14100,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14160,7 +14160,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14220,7 +14220,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14280,7 +14280,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14340,7 +14340,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: center": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14400,7 +14400,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14460,7 +14460,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14520,7 +14520,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14580,7 +14580,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14640,7 +14640,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14700,7 +14700,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14760,7 +14760,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14820,7 +14820,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14880,7 +14880,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -14940,7 +14940,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15000,7 +15000,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15060,7 +15060,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15120,7 +15120,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15180,7 +15180,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15240,7 +15240,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15300,7 +15300,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15360,7 +15360,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15420,7 +15420,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15480,7 +15480,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15540,7 +15540,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15600,7 +15600,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15660,7 +15660,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15720,7 +15720,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15780,7 +15780,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15840,7 +15840,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15900,7 +15900,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -15960,7 +15960,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16020,7 +16020,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16080,7 +16080,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16140,7 +16140,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16200,7 +16200,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-start; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16260,7 +16260,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-start; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16320,7 +16320,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-start; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16380,7 +16380,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-start; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16440,7 +16440,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-start; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16500,7 +16500,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-start; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-start; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16560,7 +16560,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-end; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16620,7 +16620,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-end; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16680,7 +16680,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-end; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16740,7 +16740,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-end; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16800,7 +16800,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-end; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16860,7 +16860,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: flex-end; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: flex-end; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16920,7 +16920,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: center; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -16980,7 +16980,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: center; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17040,7 +17040,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: center; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17100,7 +17100,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: center; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17160,7 +17160,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: center; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17220,7 +17220,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: center; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17280,7 +17280,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: baseline; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17340,7 +17340,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: baseline; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17400,7 +17400,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: baseline; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17460,7 +17460,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: baseline; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17520,7 +17520,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: baseline; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17580,7 +17580,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: baseline; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: baseline; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17640,7 +17640,7 @@
 			"align-content": "stretch"
 		}
 	},
-	"align-content: flex-start; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: stretch; align-content: flex-start": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17700,7 +17700,7 @@
 			"align-content": "flex-start"
 		}
 	},
-	"align-content: flex-end; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: stretch; align-content: flex-end": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17760,7 +17760,7 @@
 			"align-content": "flex-end"
 		}
 	},
-	"align-content: center; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: stretch; align-content: center": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17820,7 +17820,7 @@
 			"align-content": "center"
 		}
 	},
-	"align-content: space-between; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: stretch; align-content: space-between": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17880,7 +17880,7 @@
 			"align-content": "space-between"
 		}
 	},
-	"align-content: space-around; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: stretch; align-content: space-around": {
 		"container": {
 			"height": "600",
 			"width": "600",
@@ -17940,7 +17940,7 @@
 			"align-content": "space-around"
 		}
 	},
-	"align-content: stretch; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-around": {
+	"flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: stretch; align-content: stretch": {
 		"container": {
 			"height": "600",
 			"width": "600",
