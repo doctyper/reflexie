@@ -101,10 +101,6 @@
 			element.style.width = oWidth;
 			element.style.height = oHeight;
 
-			if (element.getAttribute("style") === "") {
-				element.removeAttribute("style");
-			}
-
 			return {
 				width: autoWidth,
 				height: autoHeight
@@ -113,7 +109,27 @@
 
 		getPristineBox : function (element, position) {
 			position = position || "absolute";
+
+			var style = element.style;
+
+			var oPos = style.position;
+			var oFloat = style.cssFloat;
+			var oClear = style.clear;
+
+			style.position = "relative";
+			style.cssFloat = "left";
+			style.clear = "both";
+
 			var box = element.getBoundingClientRect();
+			var autoValues = this.detectAuto(element, box);
+
+			style.position = oPos;
+			style.cssFloat = oFloat;
+			style.clear = oClear;
+
+			if (element.getAttribute("style") === "") {
+				element.removeAttribute("style");
+			}
 
 			return {
 				position: position,
@@ -121,7 +137,7 @@
 				top: box.top,
 				width: box.width,
 				height: box.height,
-				auto: this.detectAuto(element, box)
+				auto: autoValues
 			};
 		},
 
@@ -317,55 +333,52 @@
 
 		var line = {
 			items: [],
-			totalSize: 0,
-			maxItemSize: 0
+			totalSize: 0
 		};
 
 		// TODO: Implement `flex-wrap: wrap-reverse;`
 		if (isWrap || isWrapReverse) {
 			var storedVal = itemValues[0][mainStart],
 				breakpoint = containerSize,
-				maxSecondaryAxis = 0,
+				maxMainStart = 0,
 				persistAxis, size, item,
-				itemSecondaryAxis, prevSize,
-				currPrimaryDimension,
-				currSecondaryDimension;
+				itemMainStart, prevSize,
+				currMainSize,
+				currCrossSize;
 
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
 
-				currPrimaryDimension = item[mainSize];
-				currSecondaryDimension = item[crossSize];
-				itemSecondaryAxis = item[mainStart];
-				size = itemSecondaryAxis + currPrimaryDimension;
+				currMainSize = item[mainSize];
+				currCrossSize = item[crossSize];
+				itemMainStart = item[mainStart];
+				size = itemMainStart + currMainSize;
 
 				if (size > breakpoint) {
 					if (!persistAxis) {
-						persistAxis = maxSecondaryAxis;
-						storedVal += itemSecondaryAxis;
+						persistAxis = maxMainStart;
+						storedVal += itemMainStart;
 
 						lines.push(line);
 
 						line = {
 							items: [],
-							totalSize: 0,
-							maxItemSize: 0
+							totalSize: 0
 						};
 					}
 
 					if (size > (breakpoint + containerSize)) {
-						persistAxis += maxSecondaryAxis;
+						persistAxis += maxMainStart;
 						breakpoint += (containerSize - prevSize);
-						storedVal = itemSecondaryAxis;
+						storedVal = itemMainStart;
 
-						maxSecondaryAxis = 0;
+						maxMainStart = 0;
 
 						lines.push(line);
 
 						line = {
 							items: [],
-							totalSize: 0,
-							maxItemSize: 0
+							totalSize: 0
 						};
 					}
 
@@ -376,9 +389,8 @@
 				line.items.push(item);
 
 				line.totalSize += item[mainSize];
-				line.maxItemSize = Math.max(line.maxItemSize, item[mainSize]);
 
-				maxSecondaryAxis = Math.max(maxSecondaryAxis, currSecondaryDimension);
+				maxMainStart = Math.max(maxMainStart, currCrossSize);
 				prevSize = item[mainStart] + item[mainSize];
 			}
 		} else {
@@ -503,7 +515,7 @@
 			l = items.length;
 
 			for (k = 0; k < l; k++) {
-				line.maxItemSize = Math.max(line.maxItemSize, items[k][crossSize]);
+				line.maxItemSize = Math.max(line.maxItemSize || 0, items[k][crossSize]);
 			}
 
 			remainderSize -= line.maxItemSize;
