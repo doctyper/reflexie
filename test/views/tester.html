@@ -9,6 +9,13 @@
 				z-index: 1;
 			}
 
+			#flex-target div {
+				height: auto;
+				opacity: 0.5;
+			}
+		</style>
+
+		<style data-flex-values="container">
 			#flex-target {
 				-webkit-flex-direction: row;
 				flex-direction: row;
@@ -22,47 +29,20 @@
 				-webkit-align-items: stretch;
 				align-items: stretch;
 
-				-webkit-align-content: stretch;
-				align-content: stretch;
+				-webkit-align-content: flex-start;
+				align-content: flex-start;
 			}
-
-			#flex-target div {
-				opacity: 0.5;
-			}
-
-			#flex-col-1, #flex-col-2, #flex-col-3,
-			#flex-col-4, #flex-col-5, #flex-col-6 {
-				height: auto;
-			}
-
-			/*#flex-col-3 {
-				width: 50px;
-			}
-
-			#flex-col-7 {
-				width: 310px;
-				height: 135px;
-				background: dodgerblue;
-			}
-
-			#flex-col-8 {
-				width: 135px;
-				height: 135px;
-				background: pink;
-			}
-
-			#flex-col-9 {
-				width: 310px;
-				height: 135px;
-				background: dodgerblue;
-			}
-
-			#flex-col-10 {
-				width: 310px;
-				height: 135px;
-				background: pink;
-			}*/
 		</style>
+		<script data-flex-values="container">
+			window.flexContainer = {
+				"display": "flex",
+				"flex-direction": "row",
+				"flex-wrap": "wrap",
+				"justify-content": "flex-start",
+				"align-items": "stretch",
+				"align-content": "flex-start"
+			};
+		</script>
 
 		<script src="lib/require.js"></script>
 		<script>
@@ -82,14 +62,7 @@
 					container: {
 						"element": target,
 						"selector": "#flex-target",
-						"properties": {
-							"display": "flex",
-							"flex-direction": "row",
-							"flex-wrap": "wrap-reverse",
-							"justify-content": "flex-start",
-							"align-items": "stretch",
-							"align-content": "stretch"
-						}
+						"properties": window.flexContainer
 					},
 
 					items: [{
@@ -122,7 +95,7 @@
 							"flex-basis": "auto",
 							"align-self": "auto"
 						}
-					}, {
+					}/*, {
 						"element": items[3],
 						"selector": "#flex-col-4",
 						"properties": {
@@ -152,46 +125,6 @@
 							"flex-basis": "auto",
 							"align-self": "auto"
 						}
-					}/*, {
-						"element": items[6],
-						"selector": "#flex-col-7",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[7],
-						"selector": "#flex-col-8",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[8],
-						"selector": "#flex-col-9",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[9],
-						"selector": "#flex-col-10",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
 					}*/]
 				});
 
@@ -211,7 +144,7 @@
 				<div id="flex-col-3">
 					<h2>Col 3</h2>
 				</div>
-				<div id="flex-col-4">
+				<!--<div id="flex-col-4">
 					<h2>Col 4</h2>
 				</div>
 				<div id="flex-col-5">
@@ -219,18 +152,6 @@
 				</div>
 				<div id="flex-col-6">
 					<h2>Col 6</h2>
-				</div>
-				<!--<div id="flex-col-7">
-					<h2>Col 7</h2>
-				</div>
-				<div id="flex-col-8">
-					<h2>Col 8</h2>
-				</div>
-				<div id="flex-col-9">
-					<h2>Col 9</h2>
-				</div>
-				<div id="flex-col-10">
-					<h2>Col 10</h2>
 				</div>-->
 			</div>
 		</div>

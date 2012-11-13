@@ -8,25 +8,37 @@ define([
 
 	var DEBUG = false;
 
-	var buildTest = function (el, rect, val) {
-		var box;
-		val = Math.floor(val);
+	var hasSupport = (function () {
+		var testProp = "flexWrap";
+		var prefixes = "webkit moz o ms".split(" ");
+		var dummy = document.createElement("flx");
+		var i, j, prop;
 
-		it(rect + " should be " + val, function () {
-			if (typeof el === "number") {
-				el = $("#flex-target").children()[el];
+		var typeTest = function (prop) {
+			return typeof dummy.style[prop] !== "undefined";
+		};
+
+		var flexboxSupport = typeTest(testProp);
+
+		if (!flexboxSupport) {
+			testProp = testProp.charAt(0).toUpperCase() + testProp.slice(1);
+
+			for (i = 0, j = prefixes.length; i < j; i++) {
+				prop = prefixes[i] + testProp;
+				flexboxSupport = typeTest(prop);
+
+				if (flexboxSupport) {
+					return flexboxSupport;
+				}
 			}
+		}
 
-			box = el.getBoundingClientRect();
-			expect(Math.floor(box[rect])).to.equal(val);
-			logger.log("expect", Math.floor(box[rect]), "to equal", val);
-		});
-	};
+		return flexboxSupport;
+	}());
 
-	var appendFlexChildren = function (target, dependencies) {
+	var appendFlexChildren = function (target, children) {
 		var i, j, idx,
-			set = [], selector, element,
-			children = dependencies.childNodes;
+			set = [], selector, element;
 
 		target.empty();
 
@@ -67,148 +79,87 @@ define([
 	};
 
 	return {
-		describeItem : function (item, index, child) {
-			var rect, val;
+		handleJSON : function (json) {
+			var deferred = $.Deferred();
 
-			before(function () {
-				logger.group(item);
-			});
+			var flex = $("#flex-target");
 
-			for (rect in child) {
-				val = window.parseFloat(child[rect]);
-				buildTest(index, rect, val);
-			}
+			var count = json.children;
+			delete json.children;
 
-			after(function () {
-				logger.groupEnd(item);
-			});
-		},
+			var set = appendFlexChildren(flex, count);
+			var childNodes = flex.children();
 
-		buildItemDescription : function (description, iterator, index) {
-			describe(description, function () {
-				this.describeItem(description, index, iterator[index]);
-			}.bind(this));
-		},
-
-		describeContainer : function (container, items) {
-			var target = this.target,
-				rect, val, i, j, item;
-
-			before(function () {
-				logger.group("container");
-			});
-
-			for (rect in container) {
-				val = window.parseFloat(container[rect]);
-				buildTest(target[0], rect, val);
-			}
-
-			for (i = 0, j = items.length; i < j; i++) {
-				item = ":nth-child(" + (i + 1) + ")";
-				this.buildItemDescription(item, items, i);
-			}
-
-			after(function () {
-				logger.groupEnd("container");
-			});
-		},
-
-		describeValue : function (property, value, types, extra) {
-			var target = this.target,
-				flexProp = ($.browser.chrome ? "-webkit-" : "") + "flex",
-				container = types.container,
-				items = types.items,
-				dependencies = types.dependencies,
-				set, flex;
-
-			var styles = {
-				"flex-direction": "row",
-				"flex-wrap": "nowrap",
-				"justify-content": "flex-start",
-				"align-items": "stretch",
-				"align-content": "stretch"
+			var sizeMap = {
+				"row": "height",
+				"row-reverse": "height",
+				"column": "width",
+				"column-reverse": "width"
 			};
 
-			before(function () {
-				if (extra) {
-					extra = value.split(";")[0];
-				}
+			var buildItemExpectancy = function (idx, key, value) {
+				var val = Math.floor(value);
 
-				set = appendFlexChildren(target, dependencies);
-
-				target.removeAttr("style");
-
-				for (var key in dependencies.properties) {
-					styles[key] = dependencies.properties[key];
-				}
-
-				styles.display = flexProp;
-				styles[property] = extra || value;
-
-				target.css(styles);
-
-				if (extra && dependencies.map && dependencies.map[extra]) {
-					target.children().css(dependencies.map[extra]);
-				}
-
-				flex = new Flexie({
-					container: {
-						"element": target[0],
-						"selector": "#flex-target",
-						"properties": styles
-					},
-
-					items: set
+				it(key + " should be " + val, function () {
+					var box = childNodes[idx].getBoundingClientRect();
+					expect(Math.floor(box[key])).to.be.within(val - 1,  val + 1);
 				});
+			};
 
-				logger.group(extra || value);
+			var buildItemDescription = function (idx, item) {
+				describe(":nth-child(" + (idx + 1) + ")", function () {
+					var child = childNodes[idx];
+
+					for (var key in item) {
+						buildItemExpectancy(idx, key, item[key]);
+					}
+				});
+			};
+
+			var buildChildDescription = function (children, data) {
+				describe(children, function () {
+					before(function () {
+						var rules = data.rules;
+
+						if (hasSupport) {
+							flex.css("display", "-webkit-flex");
+							flex.css(rules);
+						}
+
+						var isStretch = (rules["align-items"] === "stretch");
+						isStretch = isStretch || (rules["align-content"] === "stretch");
+
+						if (isStretch) {
+							flex.children().addClass(sizeMap[rules["flex-direction"]]);
+						}
+
+						var flx = new Flexie({
+							container: {
+								"element": flex[0],
+								"selector": "#flex-target",
+								"properties": rules
+							},
+
+							items: set
+						});
+					});
+
+					for (var i = 0, j = data.items.length; i < j; i++) {
+						buildItemDescription(i, data.items[i]);
+					}
+
+					after(function () {
+						var rules = data.rules;
+						flex.children().removeClass(sizeMap[rules["flex-direction"]]);
+					});
+				});
+			};
+
+			describe("flex-direction: row, 3 child nodes", function () {
+				for (var children in json) {
+					buildChildDescription(children, json[children]);
+				}
 			});
-
-			describe("container", function () {
-				this.describeContainer(container, items);
-			}.bind(this));
-
-			after(function () {
-				logger.groupEnd(value);
-			});
-		},
-
-		buildValueDescription : function (value, property, values) {
-			describe(value, function () {
-				var extra = value.indexOf(";") !== -1;
-				this.describeValue(property, value, values[value], extra);
-			}.bind(this));
-		},
-
-		describeProperty : function (property, values) {
-			var value, extra;
-
-			before(function () {
-				logger.group(property);
-			});
-
-			for (value in values) {
-				this.buildValueDescription(value, property, values);
-			}
-
-			after(function () {
-				logger.groupEnd(property);
-			});
-		},
-
-		buildPropertyDescription : function (property, value) {
-			describe(property, function () {
-				this.describeProperty(property, value);
-			}.bind(this));
-		},
-
-		handleJSON : function (json) {
-			var deferred = $.Deferred(),
-				property;
-
-			for (property in json) {
-				this.buildPropertyDescription(property, json[property]);
-			}
 
 			return deferred.resolve();
 		},
@@ -220,7 +171,7 @@ define([
 
 			this.target = $("#flex-target");
 
-			$.getJSON("data/flex.js?" + new Date().getTime())
+			$.getJSON("data/flex-row-x3.js?" + new Date().getTime())
 				.then(function (json) {
 					return this.handleJSON(json);
 				}.bind(this))

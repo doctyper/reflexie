@@ -1,18 +1,26 @@
 Flexbox.models.alignItems = function (alignment, properties) {
-	var primaryAxis = this.primaryAxis,
-		secondaryDimension = this.secondaryDimension,
+	var crossStart = this.crossStart,
+		crossSize = this.crossSize,
 		multiplier = 1,
 		lines = this.lines,
 		i, j, k, l, line, items, item,
 		lineRemainder;
 
 	var values = this.values;
-	var primaryDimension = this.primaryDimension;
-	var containerSize = values.container[primaryDimension];
+	var mainSize = this.mainSize;
+	var containerSize = values.container[mainSize];
 
-	if (alignment === "stretch") {
+	var isStretch = (alignment === "stretch");
+	var isStart = (alignment === "flex-start");
+	var isBaseline = (alignment === "baseline");
+	var isCenter = (alignment === "center");
+
+	var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
+	var isAlignContentStretch = properties["align-content"] === "stretch";
+
+	if (isStretch && (isNotFlexWrap || isAlignContentStretch)) {
 		items = values.items;
-		lineRemainder = values.container[secondaryDimension] / lines.length;
+		lineRemainder = values.container[crossSize] / lines.length;
 
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
@@ -22,22 +30,22 @@ Flexbox.models.alignItems = function (alignment, properties) {
 			for (k = 0; k < l; k++) {
 				item = items[k];
 
-				if (item.auto[secondaryDimension]) {
+				if (item.auto[crossSize]) {
 					if (i) {
-						item[primaryAxis] += (lineRemainder * i) - item[secondaryDimension];
+						item[crossStart] += (lineRemainder * i) - item[crossSize];
 					}
 
-					item[secondaryDimension] = lineRemainder;
+					item[crossSize] = lineRemainder;
 				}
 			}
 		}
 	}
 
-	if (alignment === "stretch" || alignment === "flex-start" || alignment === "baseline") {
+	if (isStretch || isStart || isBaseline) {
 		return;
 	}
 
-	if (alignment === "center") {
+	if (isCenter) {
 		multiplier = 0.5;
 	}
 
@@ -49,7 +57,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 		l = items.length;
 
 		for (k = 0; k < l; k++) {
-			line.maxItemSize = Math.max(line.maxItemSize, items[k][secondaryDimension]);
+			line.maxItemSize = Math.max(line.maxItemSize || 0, items[k][crossSize]);
 		}
 
 		remainderSize -= line.maxItemSize;
@@ -57,8 +65,12 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 	remainderSize /= lines.length;
 
-	if (alignment === "center") {
+	if (isCenter) {
 		remainderSize *= 0.5;
+	}
+
+	if (lines.length <= 1 && !isNotFlexWrap && !isAlignContentStretch) {
+		remainderSize = 0;
 	}
 
 	for (i = 0, j = lines.length; i < j; i++) {
@@ -68,7 +80,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 		lineRemainder = line.maxItemSize;
 
 		for (k = 0; k < l; k++) {
-			items[k][primaryAxis] += remainderSize + (lineRemainder - items[k][secondaryDimension]) * multiplier;
+			items[k][crossStart] += remainderSize + (lineRemainder - items[k][crossSize]) * multiplier;
 		}
 	}
 };

@@ -1,9 +1,9 @@
 Flexbox.models.justifyContent = function (justification, properties) {
 	var values = this.values,
 		containerValues = values.container,
-		secondaryAxis = this.secondaryAxis,
-		primaryDimension = this.primaryDimension,
-		containerSize = containerValues[primaryDimension],
+		mainStart = this.mainStart,
+		mainSize = this.mainSize,
+		containerSize = containerValues[mainSize],
 		isStart = (justification === "flex-start"),
 		isCenter = (justification === "center"),
 		isBetween = (justification === "space-between"),
@@ -29,7 +29,7 @@ Flexbox.models.justifyContent = function (justification, properties) {
 		l = items.length;
 		eol = items[l - 1];
 
-		lineEnd = eol[secondaryAxis] + eol[primaryDimension];
+		lineEnd = eol[mainStart] + eol[mainSize];
 		lineRemainder = (containerSize - lineEnd) * multiplier;
 
 		if (isBetween || isAround) {
@@ -39,13 +39,13 @@ Flexbox.models.justifyContent = function (justification, properties) {
 
 			if (isAround) {
 				y = (lineRemainder * 0.5);
-				items[0][secondaryAxis] += y;
+				items[0][mainStart] += y;
 				lineRemainder += y;
 			}
 		}
 
 		for (; k < l; k++) {
-			items[k][secondaryAxis] += lineRemainder;
+			items[k][mainStart] += lineRemainder;
 			lineRemainder += x;
 		}
 	}

@@ -7,80 +7,76 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	var isWrap = (wrap === "wrap");
 	var isWrapReverse = (wrap === "wrap-reverse");
 
-	var primaryAxis = this.primaryAxis;
-	var secondaryAxis = this.secondaryAxis;
+	var crossStart = this.crossStart;
+	var mainStart = this.mainStart;
 
-	var primaryDimension = this.primaryDimension;
-	var secondaryDimension = this.secondaryDimension;
+	var mainSize = this.mainSize;
+	var crossSize = this.crossSize;
 
-	var containerSize = values.container[primaryDimension];
+	var containerSize = values.container[mainSize];
 	var lines = [];
 
 	var line = {
 		items: [],
-		totalSize: 0,
-		maxItemSize: 0
+		totalSize: 0
 	};
 
 	// TODO: Implement `flex-wrap: wrap-reverse;`
 	if (isWrap || isWrapReverse) {
-		var storedVal = itemValues[0][secondaryAxis],
+		var storedVal = itemValues[0][mainStart],
 			breakpoint = containerSize,
-			maxSecondaryAxis = 0,
+			maxMainStart = 0,
 			persistAxis, size, item,
-			itemSecondaryAxis, prevSize,
-			currPrimaryDimension,
-			currSecondaryDimension;
+			itemMainStart, prevSize,
+			currMainSize,
+			currCrossSize;
 
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
 
-			currPrimaryDimension = item[primaryDimension];
-			currSecondaryDimension = item[secondaryDimension];
-			itemSecondaryAxis = item[secondaryAxis];
-			size = itemSecondaryAxis + currPrimaryDimension;
+			currMainSize = item[mainSize];
+			currCrossSize = item[crossSize];
+			itemMainStart = item[mainStart];
+			size = itemMainStart + currMainSize;
 
 			if (size > breakpoint) {
 				if (!persistAxis) {
-					persistAxis = maxSecondaryAxis;
-					storedVal += itemSecondaryAxis;
+					persistAxis = maxMainStart;
+					storedVal += itemMainStart;
 
 					lines.push(line);
 
 					line = {
 						items: [],
-						totalSize: 0,
-						maxItemSize: 0
+						totalSize: 0
 					};
 				}
 
 				if (size > (breakpoint + containerSize)) {
-					persistAxis += maxSecondaryAxis;
+					persistAxis += maxMainStart;
 					breakpoint += (containerSize - prevSize);
-					storedVal = itemSecondaryAxis;
+					storedVal = itemMainStart;
 
-					maxSecondaryAxis = 0;
+					maxMainStart = 0;
 
 					lines.push(line);
 
 					line = {
 						items: [],
-						totalSize: 0,
-						maxItemSize: 0
+						totalSize: 0
 					};
 				}
 
-				item[primaryAxis] = persistAxis;
-				item[secondaryAxis] -= storedVal;
+				item[crossStart] = persistAxis;
+				item[mainStart] -= storedVal;
 			}
 
 			line.items.push(item);
 
-			line.totalSize += item[primaryDimension];
-			line.maxItemSize = Math.max(line.maxItemSize, item[primaryDimension]);
+			line.totalSize += item[mainSize];
 
-			maxSecondaryAxis = Math.max(maxSecondaryAxis, currSecondaryDimension);
-			prevSize = item[secondaryAxis] + item[primaryDimension];
+			maxMainStart = Math.max(maxMainStart, currCrossSize);
+			prevSize = item[mainStart] + item[mainSize];
 		}
 	} else {
 		line.items = values.items;

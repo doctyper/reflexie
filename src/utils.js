@@ -52,6 +52,8 @@ Flexbox.utils = {
 
 	detectAuto : function (element, box, prop) {
 		var autoBox,
+			oWidth = element.style.width,
+			oHeight = element.style.height,
 			autoWidth = false,
 			autoHeight = false;
 
@@ -62,12 +64,8 @@ Flexbox.utils = {
 		autoWidth = autoBox.width === box.width;
 		autoHeight = autoBox.height === box.height;
 
-		element.style.width = "";
-		element.style.height = "";
-
-		if (element.getAttribute("style") === "") {
-			element.removeAttribute("style");
-		}
+		element.style.width = oWidth;
+		element.style.height = oHeight;
 
 		return {
 			width: autoWidth,
@@ -77,7 +75,27 @@ Flexbox.utils = {
 
 	getPristineBox : function (element, position) {
 		position = position || "absolute";
+
+		var style = element.style;
+
+		var oPos = style.position;
+		var oFloat = style.cssFloat;
+		var oClear = style.clear;
+
+		style.position = "relative";
+		style.cssFloat = "left";
+		style.clear = "both";
+
 		var box = element.getBoundingClientRect();
+		var autoValues = this.detectAuto(element, box);
+
+		style.position = oPos;
+		style.cssFloat = oFloat;
+		style.clear = oClear;
+
+		if (element.getAttribute("style") === "") {
+			element.removeAttribute("style");
+		}
 
 		return {
 			position: position,
@@ -85,7 +103,7 @@ Flexbox.utils = {
 			top: box.top,
 			width: box.width,
 			height: box.height,
-			auto: this.detectAuto(element, box)
+			auto: autoValues
 		};
 	},
 
@@ -146,7 +164,7 @@ Flexbox.utils = {
 				value = value.toString() + "px";
 			}
 
-			rules.push(key + ": " + value + ";");
+			rules.push(key + ": " + value + " !important;");
 		}
 
 		rules = "\n" + rules.join("\n\t") + "\n}" + "\n";

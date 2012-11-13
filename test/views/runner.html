@@ -55,6 +55,12 @@
 									throw new Error();
 								}
 							}
+
+							var s = document.querySelector("#report .suite .suite");
+
+							if (s) {
+								s.parentNode.removeChild(s);
+							}
 						});
 					});
 
