@@ -102,7 +102,7 @@ define([
 
 				it(key + " should be " + val, function () {
 					var box = childNodes[idx].getBoundingClientRect();
-					expect(Math.floor(box[key])).to.equal(val);
+					expect(Math.floor(box[key])).to.be.within(val - 1,  val + 1);
 				});
 			};
 
