@@ -57,7 +57,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 		l = items.length;
 
 		for (k = 0; k < l; k++) {
-			line.maxItemSize = Math.max(line.maxItemSize, items[k][crossSize]);
+			line.maxItemSize = Math.max(line.maxItemSize || 0, items[k][crossSize]);
 		}
 
 		remainderSize -= line.maxItemSize;
