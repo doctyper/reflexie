@@ -52,6 +52,8 @@ Flexbox.utils = {
 
 	detectAuto : function (element, box, prop) {
 		var autoBox,
+			oWidth = element.style.width,
+			oHeight = element.style.height,
 			autoWidth = false,
 			autoHeight = false;
 
@@ -62,8 +64,8 @@ Flexbox.utils = {
 		autoWidth = autoBox.width === box.width;
 		autoHeight = autoBox.height === box.height;
 
-		element.style.width = "";
-		element.style.height = "";
+		element.style.width = oWidth;
+		element.style.height = oHeight;
 
 		if (element.getAttribute("style") === "") {
 			element.removeAttribute("style");
