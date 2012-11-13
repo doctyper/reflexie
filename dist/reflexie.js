@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 11-12-2012
+ * Date: 11-13-2012
  */
 (function (window, undefined) {
 
@@ -258,35 +258,41 @@
 			isColumn = utils.assert(direction, colArray),
 			isReverse = utils.assert(direction, revArray),
 			needsIncrement = (!isColumn || isReverse),
-			primaryAxis = (isColumn ? "left" : "top"),
-			secondaryAxis = (isColumn ? "top" : "left"),
-			primaryDimension = Flexbox.dimValues[secondaryAxis],
-			secondaryDimension = Flexbox.dimValues[primaryAxis],
-			storedVal = itemValues[0][primaryAxis],
-			containerVal = containerValues[primaryDimension];
+			crossStart = (isColumn ? "left" : "top"),
+			mainStart = (isColumn ? "top" : "left"),
+			mainSize = Flexbox.dimValues[mainStart],
+			crossSize = Flexbox.dimValues[crossStart],
+			storedVal = itemValues[0][crossStart],
+			containerVal = containerValues[mainSize];
 
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
-			item[primaryAxis] = storedVal;
+			item[crossStart] = storedVal;
 
 			if (isReverse) {
-				item[secondaryAxis] = (containerVal - item[primaryDimension]) - incrementVal;
+				item[mainStart] = (containerVal - item[mainSize]) - incrementVal;
 			} else {
-				item[secondaryAxis] = item[secondaryAxis] + incrementVal;
+				item[mainStart] = item[mainStart] + incrementVal;
 			}
 
 			if (needsIncrement) {
-				incrementVal += item[primaryDimension];
+				incrementVal += item[mainSize];
 			}
 		}
 
 		// flex-direction sets which properties need updates
 		// Expose these for use later.
-		this.primaryAxis = primaryAxis;
-		this.secondaryAxis = secondaryAxis;
+		this.crossStart = crossStart;
+		this.mainStart = mainStart;
 
-		this.primaryDimension = primaryDimension;
-		this.secondaryDimension = secondaryDimension;
+		this.mainSize = mainSize;
+		this.crossSize = crossSize;
+
+		console.log("crossStart", this.crossStart);
+		console.log("mainStart", this.mainStart);
+		console.log("mainSize", this.mainSize);
+		console.log("crossSize", this.crossSize);
+
 	};
 	
 	Flexbox.models.flexWrap = function (wrap, properties) {
@@ -298,13 +304,13 @@
 		var isWrap = (wrap === "wrap");
 		var isWrapReverse = (wrap === "wrap-reverse");
 
-		var primaryAxis = this.primaryAxis;
-		var secondaryAxis = this.secondaryAxis;
+		var crossStart = this.crossStart;
+		var mainStart = this.mainStart;
 
-		var primaryDimension = this.primaryDimension;
-		var secondaryDimension = this.secondaryDimension;
+		var mainSize = this.mainSize;
+		var crossSize = this.crossSize;
 
-		var containerSize = values.container[primaryDimension];
+		var containerSize = values.container[mainSize];
 		var lines = [];
 
 		var line = {
@@ -315,7 +321,7 @@
 
 		// TODO: Implement `flex-wrap: wrap-reverse;`
 		if (isWrap || isWrapReverse) {
-			var storedVal = itemValues[0][secondaryAxis],
+			var storedVal = itemValues[0][mainStart],
 				breakpoint = containerSize,
 				maxSecondaryAxis = 0,
 				persistAxis, size, item,
@@ -326,9 +332,9 @@
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
 
-				currPrimaryDimension = item[primaryDimension];
-				currSecondaryDimension = item[secondaryDimension];
-				itemSecondaryAxis = item[secondaryAxis];
+				currPrimaryDimension = item[mainSize];
+				currSecondaryDimension = item[crossSize];
+				itemSecondaryAxis = item[mainStart];
 				size = itemSecondaryAxis + currPrimaryDimension;
 
 				if (size > breakpoint) {
@@ -361,17 +367,17 @@
 						};
 					}
 
-					item[primaryAxis] = persistAxis;
-					item[secondaryAxis] -= storedVal;
+					item[crossStart] = persistAxis;
+					item[mainStart] -= storedVal;
 				}
 
 				line.items.push(item);
 
-				line.totalSize += item[primaryDimension];
-				line.maxItemSize = Math.max(line.maxItemSize, item[primaryDimension]);
+				line.totalSize += item[mainSize];
+				line.maxItemSize = Math.max(line.maxItemSize, item[mainSize]);
 
 				maxSecondaryAxis = Math.max(maxSecondaryAxis, currSecondaryDimension);
-				prevSize = item[secondaryAxis] + item[primaryDimension];
+				prevSize = item[mainStart] + item[mainSize];
 			}
 		} else {
 			line.items = values.items;
@@ -386,9 +392,9 @@
 	Flexbox.models.justifyContent = function (justification, properties) {
 		var values = this.values,
 			containerValues = values.container,
-			secondaryAxis = this.secondaryAxis,
-			primaryDimension = this.primaryDimension,
-			containerSize = containerValues[primaryDimension],
+			mainStart = this.mainStart,
+			mainSize = this.mainSize,
+			containerSize = containerValues[mainSize],
 			isStart = (justification === "flex-start"),
 			isCenter = (justification === "center"),
 			isBetween = (justification === "space-between"),
@@ -414,7 +420,7 @@
 			l = items.length;
 			eol = items[l - 1];
 
-			lineEnd = eol[secondaryAxis] + eol[primaryDimension];
+			lineEnd = eol[mainStart] + eol[mainSize];
 			lineRemainder = (containerSize - lineEnd) * multiplier;
 
 			if (isBetween || isAround) {
@@ -424,33 +430,33 @@
 
 				if (isAround) {
 					y = (lineRemainder * 0.5);
-					items[0][secondaryAxis] += y;
+					items[0][mainStart] += y;
 					lineRemainder += y;
 				}
 			}
 
 			for (; k < l; k++) {
-				items[k][secondaryAxis] += lineRemainder;
+				items[k][mainStart] += lineRemainder;
 				lineRemainder += x;
 			}
 		}
 	};
 	
 	Flexbox.models.alignItems = function (alignment, properties) {
-		var primaryAxis = this.primaryAxis,
-			secondaryDimension = this.secondaryDimension,
+		var crossStart = this.crossStart,
+			crossSize = this.crossSize,
 			multiplier = 1,
 			lines = this.lines,
 			i, j, k, l, line, items, item,
 			lineRemainder;
 
 		var values = this.values;
-		var primaryDimension = this.primaryDimension;
-		var containerSize = values.container[primaryDimension];
+		var mainSize = this.mainSize;
+		var containerSize = values.container[mainSize];
 
 		if (alignment === "stretch") {
 			items = values.items;
-			lineRemainder = values.container[secondaryDimension] / lines.length;
+			lineRemainder = values.container[crossSize] / lines.length;
 
 			for (i = 0, j = lines.length; i < j; i++) {
 				line = lines[i];
@@ -460,12 +466,12 @@
 				for (k = 0; k < l; k++) {
 					item = items[k];
 
-					if (item.auto[secondaryDimension]) {
+					if (item.auto[crossSize]) {
 						if (i) {
-							item[primaryAxis] += (lineRemainder * i) - item[secondaryDimension];
+							item[crossStart] += (lineRemainder * i) - item[crossSize];
 						}
 
-						item[secondaryDimension] = lineRemainder;
+						item[crossSize] = lineRemainder;
 					}
 				}
 			}
@@ -487,7 +493,7 @@
 			l = items.length;
 
 			for (k = 0; k < l; k++) {
-				line.maxItemSize = Math.max(line.maxItemSize, items[k][secondaryDimension]);
+				line.maxItemSize = Math.max(line.maxItemSize, items[k][crossSize]);
 			}
 
 			remainderSize -= line.maxItemSize;
@@ -506,7 +512,7 @@
 			lineRemainder = line.maxItemSize;
 
 			for (k = 0; k < l; k++) {
-				items[k][primaryAxis] += remainderSize + (lineRemainder - items[k][secondaryDimension]) * multiplier;
+				items[k][crossStart] += remainderSize + (lineRemainder - items[k][crossSize]) * multiplier;
 			}
 		}
 	};
@@ -515,13 +521,13 @@
 		var values = this.values,
 			containerValues = values.container,
 
-			primaryAxis = this.primaryAxis,
-			secondaryAxis = this.secondaryAxis,
+			crossStart = this.crossStart,
+			mainStart = this.mainStart,
 
-			primaryDimension = this.primaryDimension,
-			secondaryDimension = this.secondaryDimension,
+			mainSize = this.mainSize,
+			crossSize = this.crossSize,
 
-			containerSize = containerValues[secondaryDimension],
+			containerSize = containerValues[crossSize],
 			isStart = (alignment === "flex-start"),
 			isCenter = (alignment === "center"),
 			isBetween = (alignment === "space-between"),
@@ -547,7 +553,7 @@
 			line = lines[i].items;
 
 			for (k = 0, l = line.length; k < l; k++) {
-				x = Math.max(x, line[k][secondaryDimension]);
+				x = Math.max(x, line[k][crossSize]);
 			}
 
 			lineRemainder -= x;
@@ -565,7 +571,7 @@
 				items = lines[0].items;
 
 				for (x = 0, j = items.length; x < j; x++) {
-					items[x][primaryAxis] += y;
+					items[x][crossStart] += y;
 				}
 
 				lineRemainder += y;
@@ -576,7 +582,7 @@
 			item = lines[i].items;
 
 			for (k = 0, l = item.length; k < l; k++) {
-				item[k][primaryAxis] += (lineRemainder * multiplier);
+				item[k][crossStart] += (lineRemainder * multiplier);
 			}
 		}
 	};

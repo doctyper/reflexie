@@ -9,33 +9,39 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		isColumn = utils.assert(direction, colArray),
 		isReverse = utils.assert(direction, revArray),
 		needsIncrement = (!isColumn || isReverse),
-		primaryAxis = (isColumn ? "left" : "top"),
-		secondaryAxis = (isColumn ? "top" : "left"),
-		primaryDimension = Flexbox.dimValues[secondaryAxis],
-		secondaryDimension = Flexbox.dimValues[primaryAxis],
-		storedVal = itemValues[0][primaryAxis],
-		containerVal = containerValues[primaryDimension];
+		crossStart = (isColumn ? "left" : "top"),
+		mainStart = (isColumn ? "top" : "left"),
+		mainSize = Flexbox.dimValues[mainStart],
+		crossSize = Flexbox.dimValues[crossStart],
+		storedVal = itemValues[0][crossStart],
+		containerVal = containerValues[mainSize];
 
 	for (i = 0, j = itemValues.length; i < j; i++) {
 		item = itemValues[i];
-		item[primaryAxis] = storedVal;
+		item[crossStart] = storedVal;
 
 		if (isReverse) {
-			item[secondaryAxis] = (containerVal - item[primaryDimension]) - incrementVal;
+			item[mainStart] = (containerVal - item[mainSize]) - incrementVal;
 		} else {
-			item[secondaryAxis] = item[secondaryAxis] + incrementVal;
+			item[mainStart] = item[mainStart] + incrementVal;
 		}
 
 		if (needsIncrement) {
-			incrementVal += item[primaryDimension];
+			incrementVal += item[mainSize];
 		}
 	}
 
 	// flex-direction sets which properties need updates
 	// Expose these for use later.
-	this.primaryAxis = primaryAxis;
-	this.secondaryAxis = secondaryAxis;
+	this.crossStart = crossStart;
+	this.mainStart = mainStart;
 
-	this.primaryDimension = primaryDimension;
-	this.secondaryDimension = secondaryDimension;
+	this.mainSize = mainSize;
+	this.crossSize = crossSize;
+
+	console.log("crossStart", this.crossStart);
+	console.log("mainStart", this.mainStart);
+	console.log("mainSize", this.mainSize);
+	console.log("crossSize", this.crossSize);
+
 };

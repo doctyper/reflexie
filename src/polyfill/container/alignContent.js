@@ -2,13 +2,13 @@ Flexbox.models.alignContent = function (alignment, properties) {
 	var values = this.values,
 		containerValues = values.container,
 
-		primaryAxis = this.primaryAxis,
-		secondaryAxis = this.secondaryAxis,
+		crossStart = this.crossStart,
+		mainStart = this.mainStart,
 
-		primaryDimension = this.primaryDimension,
-		secondaryDimension = this.secondaryDimension,
+		mainSize = this.mainSize,
+		crossSize = this.crossSize,
 
-		containerSize = containerValues[secondaryDimension],
+		containerSize = containerValues[crossSize],
 		isStart = (alignment === "flex-start"),
 		isCenter = (alignment === "center"),
 		isBetween = (alignment === "space-between"),
@@ -34,7 +34,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		line = lines[i].items;
 
 		for (k = 0, l = line.length; k < l; k++) {
-			x = Math.max(x, line[k][secondaryDimension]);
+			x = Math.max(x, line[k][crossSize]);
 		}
 
 		lineRemainder -= x;
@@ -52,7 +52,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 			items = lines[0].items;
 
 			for (x = 0, j = items.length; x < j; x++) {
-				items[x][primaryAxis] += y;
+				items[x][crossStart] += y;
 			}
 
 			lineRemainder += y;
@@ -63,7 +63,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		item = lines[i].items;
 
 		for (k = 0, l = item.length; k < l; k++) {
-			item[k][primaryAxis] += (lineRemainder * multiplier);
+			item[k][crossStart] += (lineRemainder * multiplier);
 		}
 	}
 };
