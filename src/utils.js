@@ -148,7 +148,7 @@ Flexbox.utils = {
 				value = value.toString() + "px";
 			}
 
-			rules.push(key + ": " + value + ";");
+			rules.push(key + ": " + value + " !important;");
 		}
 
 		rules = "\n" + rules.join("\n\t") + "\n}" + "\n";
