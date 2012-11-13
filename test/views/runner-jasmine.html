@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>Jasmine Spec Runner</title>
+
+		<link rel="shortcut icon" type="image/png" href="lib/jasmine-1.2.0/jasmine_favicon.png">
+		<link rel="stylesheet" type="text/css" href="lib/jasmine-1.2.0/jasmine.css">
+		<link rel="stylesheet" href="css/runner.css" />
+
+		<script src="lib/require.js"></script>
+		<script>
+			require.config({
+				baseUrl : "/",
+				paths: {
+					"jquery": "http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min",
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io.js"
+				},
+				urlArgs : "cacheBust=" + (new Date()).getTime()
+			});
+		</script>
+
+		<script>
+			require([
+				"jquery",
+				"socket.io",
+				"lib/tests",
+				"lib/jasmine-1.2.0/jasmine.js",
+				"lib/jasmine-1.2.0/jasmine-html.js"
+			], function ($, io, tests) {
+				console.log(jasmine, window.jasmine);
+				var socket = io.connect("http://0.0.0.0:9999");
+				socket.on("datachange", function (data) {
+					window.location.reload();
+				});
+
+				$(document).ready(function () {
+
+					tests.setup().then(function () {
+						var jasmineEnv = jasmine.getEnv();
+						jasmineEnv.updateInterval = 1000;
+
+						var htmlReporter = new jasmine.HtmlReporter();
+
+						jasmineEnv.addReporter(htmlReporter);
+
+						jasmineEnv.specFilter = function (spec) {
+							return htmlReporter.specFilter(spec);
+						};
+
+						jasmineEnv.execute();
+					});
+
+				});
+			});
+		</script>
+	</head>
+	<body>
+
+		<div id="flex-container">
+			<div id="flex-target"></div>
+		</div>
+
+		<div id="mocha"></div>
+	</body>
+</html>

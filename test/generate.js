@@ -51,6 +51,10 @@ app.get("/runner", function (req, res) {
 	res.render("runner.html");
 });
 
+app.get("/runner-jasmine", function (req, res) {
+	res.render("runner-jasmine.html");
+});
+
 app.get("/tester", function (req, res) {
 	res.render("tester.html");
 });
