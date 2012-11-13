@@ -101,7 +101,7 @@ define([
 						isStretch = isStretch || (rules["align-content"] === "stretch");
 
 						if (isStretch) {
-							children.css(sizeMap[rules["flex-direction"]], "auto");
+							flex.children().addClass(sizeMap[rules["flex-direction"]]);
 						}
 
 						var flx = new Flexie({
@@ -120,7 +120,8 @@ define([
 					}
 
 					after(function () {
-						flex.children().removeAttr("style");
+						var rules = data.rules;
+						flex.children().removeClass(sizeMap[rules["flex-direction"]]);
 					});
 				});
 			};
