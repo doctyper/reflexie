@@ -10,7 +10,15 @@ Flexbox.models.alignItems = function (alignment, properties) {
 	var mainSize = this.mainSize;
 	var containerSize = values.container[mainSize];
 
-	if (alignment === "stretch") {
+	var isStretch = (alignment === "stretch");
+	var isStart = (alignment === "flex-start");
+	var isBaseline = (alignment === "baseline");
+	var isCenter = (alignment === "center");
+
+	var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
+	var isAlignContentStretch = properties["align-content"] === "stretch";
+
+	if (isStretch && (isNotFlexWrap || isAlignContentStretch)) {
 		items = values.items;
 		lineRemainder = values.container[crossSize] / lines.length;
 
@@ -33,11 +41,11 @@ Flexbox.models.alignItems = function (alignment, properties) {
 		}
 	}
 
-	if (alignment === "stretch" || alignment === "flex-start" || alignment === "baseline") {
+	if (isStretch || isStart || isBaseline) {
 		return;
 	}
 
-	if (alignment === "center") {
+	if (isCenter) {
 		multiplier = 0.5;
 	}
 
@@ -57,8 +65,12 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 	remainderSize /= lines.length;
 
-	if (alignment === "center") {
+	if (isCenter) {
 		remainderSize *= 0.5;
+	}
+
+	if (lines.length <= 1 && !isNotFlexWrap && !isAlignContentStretch) {
+		remainderSize = 0;
 	}
 
 	for (i = 0, j = lines.length; i < j; i++) {

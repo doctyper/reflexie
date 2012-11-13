@@ -14,6 +14,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		isBetween = (alignment === "space-between"),
 		isAround = (alignment === "space-around"),
 		isStretch = (alignment === "stretch"),
+		isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 		lines = this.lines,
 		i, j, k, l, line, items, item,
 		lineEnd, lineRemainder,
@@ -22,7 +23,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 	// http://www.w3.org/TR/css3-flexbox/#align-content-property
 	//  Note, this property has no effect when the flexbox has only a single line.
 	if (lines.length <= 1) {
-		if (properties["flex-wrap"] === "nowrap") {
+		if (isNotFlexWrap) {
 			return;
 		} else if (isAround) {
 			isAround = false;
