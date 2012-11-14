@@ -37,12 +37,22 @@ Flexbox.models.justifyContent = function (justification, properties) {
 			lineRemainder -= items[k][mainSize];
 		}
 
+		if (isAround && lineRemainder < 0) {
+			isAround = false;
+			isCenter = true;
+			multiplier = 0.5;
+		}
+
 		lineRemainder *= multiplier;
+
 		k = 0;
 
 		if (isBetween || isAround) {
 			k = 1;
+
+			lineRemainder = Math.max(0, lineRemainder);
 			lineRemainder /= (l - (isBetween ? 1 : 0));
+
 			x = lineRemainder;
 
 			if (isAround) {

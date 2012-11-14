@@ -102,7 +102,7 @@ define([
 
 				it(key + " should be " + val, function () {
 					var box = childNodes[idx].getBoundingClientRect();
-					expect(Math.floor(box[key])).to.be.within(val - 1,  val + 1);
+					expect(Math.floor(box[key])).to.be.within(val - 2,  val + 2);
 				});
 			};
 
@@ -171,7 +171,7 @@ define([
 
 			this.target = $("#flex-target");
 
-			$.getJSON("data/flex-row-x3.js?" + new Date().getTime())
+			$.getJSON("data/flex-row-x6.js?" + new Date().getTime())
 				.then(function (json) {
 					return this.handleJSON(json);
 				}.bind(this))

@@ -17,12 +17,17 @@ io.configure(function () {
 io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
 	var data = __dirname + "/data/flex-properties.js";
+	var test = __dirname + "/lib/tests.js";
 
 	fs.watchFile(css, function (curr, prev) {
 		socket.emit("csschange");
 	});
 
 	fs.watchFile(data, function (curr, prev) {
+		socket.emit("datachange");
+	});
+
+	fs.watchFile(test, function (curr, prev) {
 		socket.emit("datachange");
 	});
 });

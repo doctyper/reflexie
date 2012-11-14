@@ -46,20 +46,26 @@
 
 						runner.on("suite end", function (suite) {
 							var tests = suite.tests,
-								i, j, test;
+								i, j, test, err;
 
 							for (i = 0, j = tests.length; i < j; i++) {
 								test = tests[i];
 
 								if (test.state === "failed") {
-									throw new Error();
+									err = true;
+									break;
 								}
 							}
 
-							var s = document.querySelector("#report .suite .suite");
+							if (err) {
+								console.error(suite);
+								throw new Error();
+							} else {
+								var s = document.querySelector("#report .suite .suite");
 
-							if (s) {
-								s.parentNode.removeChild(s);
+								if (s) {
+									s.parentNode.removeChild(s);
+								}
 							}
 						});
 					});

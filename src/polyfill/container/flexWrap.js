@@ -21,12 +21,16 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 		totalSize: 0
 	};
 
+	var utils = Flexbox.utils,
+		revArray = ["row-reverse", "column-reverse"],
+		isReverse = utils.assert(properties["flex-direction"], revArray);
+
 	// TODO: Implement `flex-wrap: wrap-reverse;`
 	if (isWrap || isWrapReverse) {
 		var storedVal = itemValues[0][mainStart],
-			breakpoint = containerSize,
+			breakpoint = !isReverse ? containerSize : 0,
 			maxMainStart = 0,
-			persistAxis, size, item,
+			persistAxis, size, items, item,
 			itemMainStart, prevSize,
 			currMainSize,
 			currCrossSize;
@@ -34,15 +38,21 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
 
-			currMainSize = item[mainSize];
+			currMainSize = !isReverse ? item[mainSize] : 0;
 			currCrossSize = item[crossSize];
 			itemMainStart = item[mainStart];
 			size = itemMainStart + currMainSize;
 
-			if (size > breakpoint) {
+			if ((!isReverse && size > breakpoint) || (isReverse && size < breakpoint)) {
 				if (!persistAxis) {
 					persistAxis = maxMainStart;
-					storedVal += itemMainStart;
+
+					if (!isReverse) {
+						storedVal += itemMainStart;
+					} else {
+						items = line.items;
+						storedVal = containerSize - items[items.length - 1][mainStart];
+					}
 
 					lines.push(line);
 
@@ -68,7 +78,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 				}
 
 				item[crossStart] = persistAxis;
-				item[mainStart] -= storedVal;
+				item[mainStart] -= storedVal * (isReverse ? -1 : 1);
 			}
 
 			line.items.push(item);

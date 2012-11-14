@@ -69,7 +69,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 		remainderSize *= 0.5;
 	}
 
-	if (lines.length <= 1 && !isNotFlexWrap && !isAlignContentStretch) {
+	if (!isNotFlexWrap && !isAlignContentStretch) {
 		remainderSize = 0;
 	}
 
