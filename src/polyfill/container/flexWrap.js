@@ -17,8 +17,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	var lines = [];
 
 	var line = {
-		items: [],
-		totalSize: 0
+		items: []
 	};
 
 	var utils = Flexbox.utils,
@@ -27,66 +26,40 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 
 	// TODO: Implement `flex-wrap: wrap-reverse;`
 	if (isWrap || isWrapReverse) {
-		var storedVal = itemValues[0][mainStart],
-			breakpoint = !isReverse ? containerSize : 0,
-			maxMainStart = 0,
-			persistAxis, size, items, item,
-			itemMainStart, prevSize,
-			currMainSize,
-			currCrossSize;
+		var breakPoint = containerSize;
+		var item;
+
+		var currMainStart = 0;
+		var prevMainStart = 0;
+		var currCrossStart = 0;
+		var prevCrossStart = 0;
+
+		var multiplier = isReverse ? -1 : 1;
 
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
 
-			currMainSize = !isReverse ? item[mainSize] : 0;
-			currCrossSize = item[crossSize];
-			itemMainStart = item[mainStart];
-			size = itemMainStart + currMainSize;
+			if (currMainStart + item[mainSize] > breakPoint) {
+				lines.push(line);
 
-			if ((!isReverse && size > breakpoint) || (isReverse && size < breakpoint)) {
-				if (!persistAxis) {
-					persistAxis = maxMainStart;
+				line = {
+					items: []
+				};
 
-					if (!isReverse) {
-						storedVal += itemMainStart;
-					} else {
-						items = line.items;
-						storedVal = containerSize - items[items.length - 1][mainStart];
-					}
+				prevMainStart += currMainStart;
+				prevCrossStart += currCrossStart;
 
-					lines.push(line);
-
-					line = {
-						items: [],
-						totalSize: 0
-					};
-				}
-
-				if (size > (breakpoint + containerSize)) {
-					persistAxis += maxMainStart;
-					breakpoint += (containerSize - prevSize);
-					storedVal = itemMainStart;
-
-					maxMainStart = 0;
-
-					lines.push(line);
-
-					line = {
-						items: [],
-						totalSize: 0
-					};
-				}
-
-				item[crossStart] = persistAxis;
-				item[mainStart] -= storedVal * (isReverse ? -1 : 1);
+				currMainStart = 0;
+				currCrossStart = 0;
 			}
 
+			item[mainStart] -= prevMainStart * multiplier;
+			item[crossStart] += prevCrossStart;
+
+			currMainStart += item[mainSize];
+			currCrossStart = Math.max(currCrossStart, item[crossSize]);
+
 			line.items.push(item);
-
-			line.totalSize += item[mainSize];
-
-			maxMainStart = Math.max(maxMainStart, currCrossSize);
-			prevSize = item[mainStart] + item[mainSize];
 		}
 	} else {
 		line.items = values.items;
