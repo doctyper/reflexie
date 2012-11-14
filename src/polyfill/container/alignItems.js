@@ -32,7 +32,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 				if (item.auto[crossSize]) {
 					if (i) {
-						item[crossStart] += (lineRemainder * i) - item[crossSize];
+						item[crossStart] += (lineRemainder - item[crossSize]) * i;
 					}
 
 					item[crossSize] = lineRemainder;
