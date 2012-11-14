@@ -53,18 +53,21 @@ Flexbox.models.alignContent = function (alignment, properties) {
 	}
 
 	i = 0;
+	x = 0;
 
 	if (isBetween || isAround || isStretch) {
 		i = 1;
-		lineRemainder /= (l - (isBetween ? 2 : 1));
+
+		lineRemainder /= (j - (!isBetween ? 0 : 1));
 		x = lineRemainder;
 
 		if (isAround) {
 			y = (lineRemainder * 0.5);
+
 			items = lines[0].items;
 
-			for (x = 0, j = items.length; x < j; x++) {
-				items[x][crossStart] += y;
+			for (k = 0, l = items.length; k < l; k++) {
+				items[k][crossStart] += y;
 			}
 
 			lineRemainder += y;
@@ -77,5 +80,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		for (k = 0, l = item.length; k < l; k++) {
 			item[k][crossStart] += (lineRemainder * multiplier);
 		}
+
+		lineRemainder += x;
 	}
 };
