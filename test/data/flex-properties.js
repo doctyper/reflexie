@@ -23,7 +23,7 @@
 			"inherited": false
 		}, {
 			"property": "align-items",
-			"values": ["flex-start", "flex-end", "center", "baseline", "stretch"],
+			"values": ["flex-start", "flex-end", "center", "stretch"],
 			"initial": "stretch",
 			"inherited": false
 		}, {
