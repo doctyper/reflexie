@@ -73,6 +73,40 @@ Flexbox.utils = {
 		};
 	},
 
+	getValues : function (element, type) {
+		var i, j;
+		var prop;
+		var computed;
+		var values = {};
+		var properties = ["Top", "Right", "Bottom", "Left"];
+
+		if (window.getComputedStyle) {
+			computed = getComputedStyle(element);
+
+			for (i = 0, j = properties.length; i < j; i++) {
+				prop = properties[i];
+				values[prop.toLowerCase()] = parseFloat(computed[type + prop]);
+			}
+		}
+
+		values.topCombo = values.top + values.bottom;
+		values.leftCombo = values.left + values.right;
+
+		return values;
+	},
+
+	getBorderValues : function (element) {
+		return this.getValues(element, "border");
+	},
+
+	getMarginValues : function (element) {
+		return this.getValues(element, "margin");
+	},
+
+	getPaddingValues : function (element) {
+		return this.getValues(element, "padding");
+	},
+
 	getBoxSizing : function (style) {
 
 		// Come on FF, get with the program
@@ -112,13 +146,36 @@ Flexbox.utils = {
 			element.removeAttribute("style");
 		}
 
+		var border = this.getBorderValues(element);
+		var margin = this.getMarginValues(element);
+		var padding = this.getPaddingValues(element);
+
+		var widthValues = (margin.left + margin.right);
+		widthValues += (padding.left + padding.right);
+		widthValues += (border.left + border.right);
+
+		var heightValues = (margin.top + margin.bottom);
+		heightValues += (padding.top + padding.bottom);
+		heightValues += (border.top + border.bottom);
+
 		return {
 			position: position,
 			left: box.left,
 			top: box.top,
 			width: box.width,
 			height: box.height,
-			auto: autoValues
+			debug: {
+				auto: autoValues,
+				values: {
+					width: widthValues,
+					height: heightValues
+				},
+				border: border,
+				margin: margin,
+				padding: padding,
+				width: box.width + widthValues,
+				height: box.height + heightValues
+			}
 		};
 	},
 

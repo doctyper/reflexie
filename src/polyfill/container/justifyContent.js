@@ -12,7 +12,7 @@ Flexbox.models.justifyContent = function (justification, properties) {
 		revArray = ["row-reverse", "column-reverse"],
 		isReverse = utils.assert(properties["flex-direction"], revArray),
 		lines = this.lines,
-		i, j, k, l, line, items,
+		i, j, k, l, line, items, item,
 		lineRemainder, multiplier = 1, x, y;
 
 	isReverse = (isReverse) ? -1 : 1;
@@ -34,7 +34,8 @@ Flexbox.models.justifyContent = function (justification, properties) {
 		lineRemainder = containerSize;
 
 		for (k = 0; k < l; k++) {
-			lineRemainder -= items[k][mainSize];
+			item = items[k];
+			lineRemainder -= item[mainSize] + item.debug.margin[mainStart + "Combo"];
 		}
 
 		if (isAround && lineRemainder < 0) {

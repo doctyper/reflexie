@@ -13,7 +13,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		mainStart = (isColumn ? "top" : "left"),
 		mainSize = Flexbox.dimValues[mainStart],
 		crossSize = Flexbox.dimValues[crossStart],
-		storedVal = itemValues[0][crossStart],
+		storedVal = 0,
 		containerVal = containerValues[mainSize];
 
 	for (i = 0, j = itemValues.length; i < j; i++) {
@@ -23,11 +23,11 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		if (isReverse) {
 			item[mainStart] = (containerVal - item[mainSize]) - incrementVal;
 		} else {
-			item[mainStart] = item[mainStart] + incrementVal;
+			item[mainStart] = item[mainStart] - item.debug.margin[mainStart] + incrementVal;
 		}
 
 		if (needsIncrement) {
-			incrementVal += item[mainSize];
+			incrementVal += item[mainSize] + item.debug.margin[mainStart + "Combo"];
 		}
 	}
 
