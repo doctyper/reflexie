@@ -134,13 +134,15 @@ Flexbox.utils = {
 		style.clear = "both";
 		style[boxSizing] = "border-box";
 
-		var box = element.getBoundingClientRect();
-		var autoValues = this.detectAuto(element, box);
+		var sizeBox = element.getBoundingClientRect();
+		var autoValues = this.detectAuto(element, sizeBox);
 
 		style.position = oPos;
 		style.cssFloat = oFloat;
 		style.clear = oClear;
 		style[boxSizing] = oSize;
+
+		var marginBox = element.getBoundingClientRect();
 
 		if (element.getAttribute("style") === "") {
 			element.removeAttribute("style");
@@ -160,10 +162,10 @@ Flexbox.utils = {
 
 		return {
 			position: position,
-			left: box.left,
-			top: box.top,
-			width: box.width,
-			height: box.height,
+			left: marginBox.left,
+			top: marginBox.top,
+			width: sizeBox.width,
+			height: sizeBox.height,
 			debug: {
 				auto: autoValues,
 				values: {
@@ -173,8 +175,8 @@ Flexbox.utils = {
 				border: border,
 				margin: margin,
 				padding: padding,
-				width: box.width + widthValues,
-				height: box.height + heightValues
+				width: sizeBox.width + widthValues,
+				height: sizeBox.height + heightValues
 			}
 		};
 	},
