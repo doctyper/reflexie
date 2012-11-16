@@ -20,6 +20,8 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		lineEnd, lineRemainder,
 		multiplier = 1, x, y;
 
+	var isAlignItemsStretch = properties["align-items"] === "stretch";
+
 	// http://www.w3.org/TR/css3-flexbox/#align-content-property
 	//  Note, this property has no effect when the flexbox has only a single line.
 	if (lines.length <= 1) {
@@ -46,7 +48,8 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		line = lines[i].items;
 
 		for (k = 0, l = line.length; k < l; k++) {
-			x = Math.max(x, line[k][crossSize]);
+			item = line[k];
+			x = Math.max(x, item[crossSize] + item.debug.margin[crossStart + "Combo"]);
 		}
 
 		lineRemainder -= x;
@@ -82,5 +85,28 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		}
 
 		lineRemainder += x;
+	}
+
+	if (isStretch && isAlignItemsStretch) {
+		var prevCrossSize = 0;
+
+		for (i = 0, j = lines.length; i < j; i++) {
+			item = lines[i].items;
+
+			var next = lines[i + 1];
+			var lineCrossSize = containerSize;
+
+			if (next) {
+				lineCrossSize = next.items[0][crossStart];
+			}
+
+			lineCrossSize -= prevCrossSize;
+
+			for (k = 0, l = item.length; k < l; k++) {
+				item[k][crossSize] = (lineCrossSize - item[k].debug.margin[crossStart + "Combo"]);
+			}
+
+			prevCrossSize += lineCrossSize;
+		}
 	}
 };

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 11-13-2012
+ * Date: 11-16-2012
  */
 (function (window, undefined) {
 
@@ -107,6 +107,50 @@
 			};
 		},
 
+		getValues : function (element, type) {
+			var i, j;
+			var prop;
+			var computed;
+			var values = {};
+			var properties = ["Top", "Right", "Bottom", "Left"];
+
+			if (window.getComputedStyle) {
+				computed = getComputedStyle(element);
+
+				for (i = 0, j = properties.length; i < j; i++) {
+					prop = properties[i];
+					values[prop.toLowerCase()] = parseFloat(computed[type + prop]);
+				}
+			}
+
+			values.topCombo = values.top + values.bottom;
+			values.leftCombo = values.left + values.right;
+
+			return values;
+		},
+
+		getBorderValues : function (element) {
+			return this.getValues(element, "border");
+		},
+
+		getMarginValues : function (element) {
+			return this.getValues(element, "margin");
+		},
+
+		getPaddingValues : function (element) {
+			return this.getValues(element, "padding");
+		},
+
+		getBoxSizing : function (style) {
+
+			// Come on FF, get with the program
+			if ("MozBoxSizing" in style) {
+				return "MozBoxSizing";
+			}
+
+			return "boxSizing";
+		},
+
 		getPristineBox : function (element, position) {
 			position = position || "absolute";
 
@@ -116,28 +160,58 @@
 			var oFloat = style.cssFloat;
 			var oClear = style.clear;
 
+			var boxSizing = this.getBoxSizing(style);
+			var oSize = style[boxSizing];
+
 			style.position = "relative";
 			style.cssFloat = "left";
 			style.clear = "both";
+			style[boxSizing] = "border-box";
 
-			var box = element.getBoundingClientRect();
-			var autoValues = this.detectAuto(element, box);
+			var sizeBox = element.getBoundingClientRect();
+			var autoValues = this.detectAuto(element, sizeBox);
 
 			style.position = oPos;
 			style.cssFloat = oFloat;
 			style.clear = oClear;
+			style[boxSizing] = oSize;
+
+			var marginBox = element.getBoundingClientRect();
 
 			if (element.getAttribute("style") === "") {
 				element.removeAttribute("style");
 			}
 
+			var border = this.getBorderValues(element);
+			var margin = this.getMarginValues(element);
+			var padding = this.getPaddingValues(element);
+
+			var widthValues = (margin.left + margin.right);
+			widthValues += (padding.left + padding.right);
+			widthValues += (border.left + border.right);
+
+			var heightValues = (margin.top + margin.bottom);
+			heightValues += (padding.top + padding.bottom);
+			heightValues += (border.top + border.bottom);
+
 			return {
 				position: position,
-				left: box.left,
-				top: box.top,
-				width: box.width,
-				height: box.height,
-				auto: autoValues
+				left: marginBox.left,
+				top: marginBox.top,
+				width: sizeBox.width,
+				height: sizeBox.height,
+				debug: {
+					auto: autoValues,
+					values: {
+						width: widthValues,
+						height: heightValues
+					},
+					border: border,
+					margin: margin,
+					padding: padding,
+					width: sizeBox.width + widthValues,
+					height: sizeBox.height + heightValues
+				}
 			};
 		},
 
@@ -280,21 +354,33 @@
 			mainStart = (isColumn ? "top" : "left"),
 			mainSize = Flexbox.dimValues[mainStart],
 			crossSize = Flexbox.dimValues[crossStart],
-			storedVal = itemValues[0][crossStart],
+			storedVal = 0,
 			containerVal = containerValues[mainSize];
+
+		var prevItem;
+		var prevMainStart = 0;
 
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
 			item[crossStart] = storedVal;
 
 			if (isReverse) {
-				item[mainStart] = (containerVal - item[mainSize]) - incrementVal;
+				item[mainStart] = (containerVal - item[mainSize] - item.debug.margin[mainStart + "Combo"]) - incrementVal;
 			} else {
-				item[mainStart] = item[mainStart] + incrementVal;
+				item[mainStart] = item[mainStart] - item.debug.margin[mainStart] + incrementVal;
+
+				if (isColumn) {
+					if (prevItem) {
+						prevMainStart += item.debug.margin[mainStart];
+						item[mainStart] += prevMainStart;
+					}
+
+					prevItem = item;
+				}
 			}
 
 			if (needsIncrement) {
-				incrementVal += item[mainSize];
+				incrementVal += item[mainSize] + item.debug.margin[mainStart + "Combo"];
 			}
 		}
 
@@ -305,12 +391,6 @@
 
 		this.mainSize = mainSize;
 		this.crossSize = crossSize;
-
-		// console.log("crossStart", this.crossStart);
-		// console.log("mainStart", this.mainStart);
-		// console.log("crossSize", this.crossSize);
-		// console.log("mainSize", this.mainSize);
-
 	};
 	
 	Flexbox.models.flexWrap = function (wrap, properties) {
@@ -332,66 +412,49 @@
 		var lines = [];
 
 		var line = {
-			items: [],
-			totalSize: 0
+			items: []
 		};
+
+		var utils = Flexbox.utils,
+			revArray = ["row-reverse", "column-reverse"],
+			isReverse = utils.assert(properties["flex-direction"], revArray);
 
 		// TODO: Implement `flex-wrap: wrap-reverse;`
 		if (isWrap || isWrapReverse) {
-			var storedVal = itemValues[0][mainStart],
-				breakpoint = containerSize,
-				maxMainStart = 0,
-				persistAxis, size, item,
-				itemMainStart, prevSize,
-				currMainSize,
-				currCrossSize;
+			var breakPoint = containerSize;
+			var item;
+
+			var currMainStart = 0;
+			var prevMainStart = 0;
+			var currCrossStart = 0;
+			var prevCrossStart = 0;
+
+			var multiplier = isReverse ? -1 : 1;
 
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
 
-				currMainSize = item[mainSize];
-				currCrossSize = item[crossSize];
-				itemMainStart = item[mainStart];
-				size = itemMainStart + currMainSize;
+				if (currMainStart + item[mainSize] > breakPoint) {
+					lines.push(line);
 
-				if (size > breakpoint) {
-					if (!persistAxis) {
-						persistAxis = maxMainStart;
-						storedVal += itemMainStart;
+					line = {
+						items: []
+					};
 
-						lines.push(line);
+					prevMainStart += currMainStart;
+					prevCrossStart += currCrossStart;
 
-						line = {
-							items: [],
-							totalSize: 0
-						};
-					}
-
-					if (size > (breakpoint + containerSize)) {
-						persistAxis += maxMainStart;
-						breakpoint += (containerSize - prevSize);
-						storedVal = itemMainStart;
-
-						maxMainStart = 0;
-
-						lines.push(line);
-
-						line = {
-							items: [],
-							totalSize: 0
-						};
-					}
-
-					item[crossStart] = persistAxis;
-					item[mainStart] -= storedVal;
+					currMainStart = 0;
+					currCrossStart = 0;
 				}
 
+				item[mainStart] -= prevMainStart * multiplier;
+				item[crossStart] += prevCrossStart;
+
+				currMainStart += item[mainSize] + item.debug.margin[mainStart + "Combo"];
+				currCrossStart = Math.max(currCrossStart, item[crossSize] + item.debug.margin[crossStart + "Combo"]);
+
 				line.items.push(item);
-
-				line.totalSize += item[mainSize];
-
-				maxMainStart = Math.max(maxMainStart, currCrossSize);
-				prevSize = item[mainStart] + item[mainSize];
 			}
 		} else {
 			line.items = values.items;
@@ -417,7 +480,7 @@
 			revArray = ["row-reverse", "column-reverse"],
 			isReverse = utils.assert(properties["flex-direction"], revArray),
 			lines = this.lines,
-			i, j, k, l, line, items,
+			i, j, k, l, line, items, item,
 			lineRemainder, multiplier = 1, x, y;
 
 		isReverse = (isReverse) ? -1 : 1;
@@ -439,15 +502,26 @@
 			lineRemainder = containerSize;
 
 			for (k = 0; k < l; k++) {
-				lineRemainder -= items[k][mainSize];
+				item = items[k];
+				lineRemainder -= item[mainSize] + item.debug.margin[mainStart + "Combo"];
+			}
+
+			if (isAround && lineRemainder < 0) {
+				isAround = false;
+				isCenter = true;
+				multiplier = 0.5;
 			}
 
 			lineRemainder *= multiplier;
+
 			k = 0;
 
 			if (isBetween || isAround) {
 				k = 1;
+
+				lineRemainder = Math.max(0, lineRemainder);
 				lineRemainder /= (l - (isBetween ? 1 : 0));
+
 				x = lineRemainder;
 
 				if (isAround) {
@@ -484,7 +558,10 @@
 		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 		var isAlignContentStretch = properties["align-content"] === "stretch";
 
-		if (isStretch && (isNotFlexWrap || isAlignContentStretch)) {
+		var crossCombo = crossStart + "Combo";
+		var lineCrossSize;
+
+		if (isStretch && isNotFlexWrap) {
 			items = values.items;
 			lineRemainder = values.container[crossSize] / lines.length;
 
@@ -496,12 +573,36 @@
 				for (k = 0; k < l; k++) {
 					item = items[k];
 
-					if (item.auto[crossSize]) {
+					if (item.debug.auto[crossSize]) {
 						if (i) {
-							item[crossStart] += (lineRemainder * i) - item[crossSize];
+							item[crossStart] += (lineRemainder - item[crossSize]) * i;
 						}
 
-						item[crossSize] = lineRemainder;
+						item[crossSize] = lineRemainder - item.debug.margin[crossCombo];
+					}
+				}
+			}
+		} else if (isStretch) {
+			for (i = 0, j = lines.length; i < j; i++) {
+				line = lines[i];
+				items = line.items;
+				l = items.length;
+
+				lineCrossSize = 0;
+
+				for (k = 0; k < l; k++) {
+					item = items[k];
+
+					if (item.debug.auto[crossSize]) {
+						lineCrossSize = Math.max(lineCrossSize, item[crossSize] + item.debug.margin[crossCombo]);
+					}
+				}
+
+				for (k = 0; k < l; k++) {
+					item = items[k];
+
+					if (item.debug.auto[crossSize]) {
+						item[crossSize] = lineCrossSize - item.debug.margin[crossCombo];
 					}
 				}
 			}
@@ -523,7 +624,8 @@
 			l = items.length;
 
 			for (k = 0; k < l; k++) {
-				line.maxItemSize = Math.max(line.maxItemSize || 0, items[k][crossSize]);
+				item = items[k];
+				line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.margin[crossCombo]);
 			}
 
 			remainderSize -= line.maxItemSize;
@@ -535,7 +637,7 @@
 			remainderSize *= 0.5;
 		}
 
-		if (lines.length <= 1 && !isNotFlexWrap && !isAlignContentStretch) {
+		if (!isNotFlexWrap && !isAlignContentStretch) {
 			remainderSize = 0;
 		}
 
@@ -546,7 +648,11 @@
 			lineRemainder = line.maxItemSize;
 
 			for (k = 0; k < l; k++) {
-				items[k][crossStart] += remainderSize + (lineRemainder - items[k][crossSize]) * multiplier;
+				item = items[k];
+
+				// Remove margin from crossStart
+				item[crossStart] -= item.debug.margin[crossCombo] * multiplier;
+				item[crossStart] += remainderSize + (lineRemainder - item[crossSize]) * multiplier;
 			}
 		}
 	};
@@ -572,6 +678,8 @@
 			i, j, k, l, line, items, item,
 			lineEnd, lineRemainder,
 			multiplier = 1, x, y;
+
+		var isAlignItemsStretch = properties["align-items"] === "stretch";
 
 		// http://www.w3.org/TR/css3-flexbox/#align-content-property
 		//  Note, this property has no effect when the flexbox has only a single line.
@@ -599,25 +707,29 @@
 			line = lines[i].items;
 
 			for (k = 0, l = line.length; k < l; k++) {
-				x = Math.max(x, line[k][crossSize]);
+				item = line[k];
+				x = Math.max(x, item[crossSize] + item.debug.margin[crossStart + "Combo"]);
 			}
 
 			lineRemainder -= x;
 		}
 
 		i = 0;
+		x = 0;
 
 		if (isBetween || isAround || isStretch) {
 			i = 1;
-			lineRemainder /= (l - (isBetween ? 2 : 1));
+
+			lineRemainder /= (j - (!isBetween ? 0 : 1));
 			x = lineRemainder;
 
 			if (isAround) {
 				y = (lineRemainder * 0.5);
+
 				items = lines[0].items;
 
-				for (x = 0, j = items.length; x < j; x++) {
-					items[x][crossStart] += y;
+				for (k = 0, l = items.length; k < l; k++) {
+					items[k][crossStart] += y;
 				}
 
 				lineRemainder += y;
@@ -629,6 +741,31 @@
 
 			for (k = 0, l = item.length; k < l; k++) {
 				item[k][crossStart] += (lineRemainder * multiplier);
+			}
+
+			lineRemainder += x;
+		}
+
+		if (isStretch && isAlignItemsStretch) {
+			var prevCrossSize = 0;
+
+			for (i = 0, j = lines.length; i < j; i++) {
+				item = lines[i].items;
+
+				var next = lines[i + 1];
+				var lineCrossSize = containerSize;
+
+				if (next) {
+					lineCrossSize = next.items[0][crossStart];
+				}
+
+				lineCrossSize -= prevCrossSize;
+
+				for (k = 0, l = item.length; k < l; k++) {
+					item[k][crossSize] = (lineCrossSize - item[k].debug.margin[crossStart + "Combo"]);
+				}
+
+				prevCrossSize += lineCrossSize;
 			}
 		}
 	};
