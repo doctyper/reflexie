@@ -56,8 +56,8 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 			item[mainStart] -= prevMainStart * multiplier;
 			item[crossStart] += prevCrossStart;
 
-			currMainStart += item[mainSize];
-			currCrossStart = Math.max(currCrossStart, item[crossSize]);
+			currMainStart += item[mainSize] + item.debug.margin[mainStart + "Combo"];
+			currCrossStart = Math.max(currCrossStart, item[crossSize] + item.debug.margin[crossStart + "Combo"]);
 
 			line.items.push(item);
 		}

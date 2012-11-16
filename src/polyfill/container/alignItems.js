@@ -19,8 +19,9 @@ Flexbox.models.alignItems = function (alignment, properties) {
 	var isAlignContentStretch = properties["align-content"] === "stretch";
 
 	var crossCombo = crossStart + "Combo";
+	var lineCrossSize;
 
-	if (isStretch && (isNotFlexWrap || isAlignContentStretch)) {
+	if (isStretch && isNotFlexWrap) {
 		items = values.items;
 		lineRemainder = values.container[crossSize] / lines.length;
 
@@ -41,15 +42,13 @@ Flexbox.models.alignItems = function (alignment, properties) {
 				}
 			}
 		}
-	}
-
-	if (isStretch) {
+	} else if (isStretch) {
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
 			items = line.items;
 			l = items.length;
 
-			var lineCrossSize = 0;
+			lineCrossSize = 0;
 
 			for (k = 0; k < l; k++) {
 				item = items[k];
@@ -86,7 +85,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 		for (k = 0; k < l; k++) {
 			item = items[k];
-			line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize]);
+			line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.margin[crossCombo]);
 		}
 
 		remainderSize -= line.maxItemSize;
@@ -112,7 +111,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 			item = items[k];
 
 			// Remove margin from crossStart
-			item[crossStart] -= item.debug.margin[crossStart + "Combo"] * multiplier;
+			item[crossStart] -= item.debug.margin[crossCombo] * multiplier;
 			item[crossStart] += remainderSize + (lineRemainder - item[crossSize]) * multiplier;
 		}
 	}
