@@ -21,7 +21,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		item[crossStart] = storedVal;
 
 		if (isReverse) {
-			item[mainStart] = (containerVal - item[mainSize]) - incrementVal;
+			item[mainStart] = (containerVal - item[mainSize] - item.debug.margin[mainStart + "Combo"]) - incrementVal;
 		} else {
 			item[mainStart] = item[mainStart] - item.debug.margin[mainStart] + incrementVal;
 		}
