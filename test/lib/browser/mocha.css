@@ -1,6 +1,7 @@
 @charset "UTF-8";
-body {
-  font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+#mocha {
+  /*font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+  font: 18px/1.35 "Anonymous Pro", Monaco, monospace;
   padding: 60px 50px;
 }
 
@@ -18,9 +19,10 @@ body {
 }
 
 #mocha h1 {
-  margin-top: 15px;
-  font-size: 1em;
+  /*margin-top: 15px;*/
+  font-size: 0.6em;
   font-weight: 200;
+  white-space: pre;
 }
 
 #mocha h1 a {
@@ -48,7 +50,23 @@ body {
 }
 
 #mocha .suite {
+  padding-left: 12px;
+  overflow: hidden;
   margin-left: 15px;
+}
+
+#mocha .suite.pass {
+  padding-left: 0;
+  opacity: 0.35;
+}
+
+#mocha .suite.pass::before {
+  content: '✓';
+  font-size: 12px;
+  display: block;
+  float: left;
+  margin-right: 5px;
+  color: #00d6b2;
 }
 
 #mocha .test {
@@ -130,7 +148,7 @@ body {
 
 #mocha .test pre {
   display: inline-block;
-  font: 12px/1.5 monaco, monospace;
+  font: 11px/1.35 "Anonymous Pro", Monaco, monospace;
   margin: 5px;
   padding: 15px;
   border: 1px solid #eee;

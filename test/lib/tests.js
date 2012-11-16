@@ -155,11 +155,9 @@ define([
 				});
 			};
 
-			describe("flex-direction: row, 3 child nodes", function () {
-				for (var children in json) {
-					buildChildDescription(children, json[children]);
-				}
-			});
+			for (var children in json) {
+				buildChildDescription(children, json[children]);
+			}
 
 			return deferred.resolve();
 		},
@@ -171,7 +169,7 @@ define([
 
 			this.target = $("#flex-target");
 
-			$.getJSON("data/flex-row-x6.js?" + new Date().getTime())
+			$.getJSON("data/flex-row-reverse-x3.js?" + new Date().getTime())
 				.then(function (json) {
 					return this.handleJSON(json);
 				}.bind(this))

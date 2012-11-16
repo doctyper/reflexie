@@ -26,3 +26,7 @@ Point Chrome to [0.0.0.0:9090/generate](http://0.0.0.0:9090/generate). On file s
 Point Safari / Firefox / IE to [0.0.0.0:9090/runner](http://0.0.0.0:9090/runner). These pages will listen for changes to the testbed and reload accordingly.
 
 Right now the runner only tests one of the six files. Change it manually in `test/lib/tests.js`, line 174.
+
+### Caveats (so far)
+
+- clearfix + display: flex does not mix. Chrome start reporting weird values. The only workaround is to use overflow: hidden;
