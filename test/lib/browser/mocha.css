@@ -1,7 +1,7 @@
 @charset "UTF-8";
 #mocha {
   /*font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-  font: 18px/1.35 "Anonymous Pro", Monaco, monospace;
+  font: 11px/1.35 "Anonymous Pro", Monaco, monospace;
   padding: 60px 50px;
 }
 
@@ -16,12 +16,14 @@
 
 #mocha h1, #mocha h2 {
   margin: 0;
+  font-size: 11px;
+  font-weight: normal;
 }
 
 #mocha h1 {
   /*margin-top: 15px;*/
-  font-size: 0.6em;
-  font-weight: 200;
+  /*font-size: 0.6em;*/
+  /*font-weight: 200;*/
   white-space: pre;
 }
 
@@ -36,7 +38,7 @@
 
 #mocha .suite .suite h1 {
   margin-top: 0;
-  font-size: .8em;
+  /*font-size: .8em;*/
 }
 
 .hidden {
@@ -44,8 +46,8 @@
 }
 
 #mocha h2 {
-  font-size: 12px;
-  font-weight: normal;
+  /*font-size: 12px;*/
+  /*font-weight: normal;*/
   cursor: pointer;
 }
 
@@ -62,7 +64,7 @@
 
 #mocha .suite.pass::before {
   content: '✓';
-  font-size: 12px;
+  /*font-size: 12px;*/
   display: block;
   float: left;
   margin-right: 5px;
@@ -75,7 +77,7 @@
 
 #mocha .test.pending:hover h2::after {
   content: '(pending)';
-  font-family: arial;
+  /*font-family: arial;*/
 }
 
 #mocha .test.pass.medium .duration {
@@ -88,7 +90,7 @@
 
 #mocha .test.pass::before {
   content: '✓';
-  font-size: 12px;
+  /*font-size: 12px;*/
   display: block;
   float: left;
   margin-right: 5px;
@@ -96,7 +98,7 @@
 }
 
 #mocha .test.pass .duration {
-  font-size: 9px;
+  /*font-size: 9px;*/
   margin-left: 5px;
   padding: 2px 5px;
   color: white;
@@ -133,7 +135,7 @@
 
 #mocha .test.fail::before {
   content: '✖';
-  font-size: 12px;
+  /*font-size: 12px;*/
   display: block;
   float: left;
   margin-right: 5px;
@@ -148,7 +150,7 @@
 
 #mocha .test pre {
   display: inline-block;
-  font: 11px/1.35 "Anonymous Pro", Monaco, monospace;
+  /*font: 11px/1.35 "Anonymous Pro", Monaco, monospace;*/
   margin: 5px;
   padding: 15px;
   border: 1px solid #eee;
@@ -175,7 +177,7 @@
   line-height: 15px;
   text-align: center;
   background: #eee;
-  font-size: 15px;
+  /*font-size: 15px;*/
   -moz-border-radius: 15px;
   border-radius: 15px;
   -webkit-transition: opacity 200ms;
@@ -199,8 +201,8 @@
 
 #error {
   color: #c00;
-  font-size: 1.5  em;
-  font-weight: 100;
+  /*font-size: 1.5  em;*/
+  /*font-weight: 100;*/
   letter-spacing: 1px;
 }
 
@@ -208,7 +210,7 @@
   position: fixed;
   top: 15px;
   right: 10px;
-  font-size: 12px;
+  /*font-size: 12px;*/
   margin: 0;
   color: #888;
 }

@@ -61,11 +61,11 @@
 								console.error(suite);
 								throw new Error();
 							} else {
-								var parentSuite = $("#report .suite");
+								var parentSuite = $("#report .suite .suite .suite");
 								parentSuite.find(".suite").remove();
 
-								if (parentSuite.length > 10) {
-									parentSuite.first().remove();
+								if (parentSuite.length > 6) {
+									parentSuite.remove();
 								}
 							}
 						});

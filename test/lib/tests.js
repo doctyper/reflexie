@@ -7,6 +7,19 @@ define([
 	"use strict";
 
 	var DEBUG = false;
+	var TESTS = {
+		"children": {
+			"x3": true,
+			"x6": true
+		},
+
+		"direction": {
+			"row": true,
+			"row-reverse": true,
+			"column": true,
+			"column-reverse": true
+		}
+	};
 
 	var hasSupport = (function () {
 		var testProp = "flexWrap";
@@ -79,16 +92,8 @@ define([
 	};
 
 	return {
-		handleJSON : function (json) {
-			var deferred = $.Deferred();
-
+		handleDirection : function (json) {
 			var flex = $("#flex-target");
-
-			var count = json.children;
-			delete json.children;
-
-			var set = appendFlexChildren(flex, count);
-			var childNodes = flex.children();
 
 			var sizeMap = {
 				"row": "height",
@@ -101,6 +106,7 @@ define([
 				var val = Math.floor(value);
 
 				it(key + " should be " + val, function () {
+					var childNodes = flex.children();
 					var box = childNodes[idx].getBoundingClientRect();
 					expect(Math.floor(box[key])).to.be.within(val - 2,  val + 2);
 				});
@@ -108,6 +114,7 @@ define([
 
 			var buildItemDescription = function (idx, item) {
 				describe(":nth-child(" + (idx + 1) + ")", function () {
+					var childNodes = flex.children();
 					var child = childNodes[idx];
 
 					for (var key in item) {
@@ -116,10 +123,13 @@ define([
 				});
 			};
 
-			var buildChildDescription = function (children, data) {
+			var buildChildDescription = function (children, data, count) {
 				describe(children, function () {
 					before(function () {
+						flex.empty();
+
 						var rules = data.rules;
+						var set = appendFlexChildren(flex, count);
 
 						if (hasSupport) {
 							flex.css("display", "-webkit-flex");
@@ -155,8 +165,34 @@ define([
 				});
 			};
 
-			for (var children in json) {
-				buildChildDescription(children, json[children]);
+			var buildDirectionDescription = function (direction, data) {
+				describe(direction, function () {
+					var count = data.children;
+
+					if (TESTS.children["x" + count]) {
+						for (var children in data) {
+							if (data[children].items) {
+								buildChildDescription(children, data[children], count);
+							}
+						}
+					}
+				});
+			};
+
+			for (var direction in json) {
+				buildDirectionDescription(direction, json[direction]);
+			}
+		},
+
+		handleJSON : function (json) {
+			var deferred = $.Deferred();
+
+			for (var type in json) {
+				if (TESTS.direction[type]) {
+					describe("flex-direction: " + type, function () {
+						this.handleDirection(json[type]);
+					}.bind(this));
+				}
 			}
 
 			return deferred.resolve();
@@ -169,7 +205,7 @@ define([
 
 			this.target = $("#flex-target");
 
-			$.getJSON("data/flex-row-reverse-x3.js?" + new Date().getTime())
+			$.getJSON("data/flex.js?" + new Date().getTime())
 				.then(function (json) {
 					return this.handleJSON(json);
 				}.bind(this))

@@ -60,9 +60,9 @@ app.get("/tester", function (req, res) {
 	res.render("tester.html");
 });
 
-app.post("/flex/:count", function (req, res) {
+app.post("/flex", function (req, res) {
 	var dataPath = __dirname + "/data";
-	var dataFile = dataPath + "/flex-" + req.params.count + ".js";
+	var dataFile = dataPath + "/flex.js";
 
 	if (!fs.existsSync(dataPath)) {
 		fs.mkdirSync(dataPath);

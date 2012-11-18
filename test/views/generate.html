@@ -185,7 +185,6 @@
 						loopOfDoom(target, props, children[i]);
 					}
 
-					console.log(tests);
 					return tests;
 				};
 
@@ -196,16 +195,10 @@
 						shorts = container.shorthands;
 
 					var tests = iterateProperties(target, props);
-					console.log(tests);
-					for (var key in tests) {
-						var direction = tests[key];
 
-						for (var count in direction) {
-							$.post("/flex/" + key + "-" + count, direction[count], function (data) {
-								document.title = data;
-							});
-						}
-					}
+					$.post("/flex", tests, function (data) {
+						document.title = data;
+					});
 				});
 			});
 		</script>
