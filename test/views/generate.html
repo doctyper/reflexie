@@ -207,6 +207,7 @@
 		<script>
 			var socket = io.connect("http://0.0.0.0:9999");
 			socket.on("csschange", function (data) {
+				socket.disconnect();
 				window.location.reload();
 			});
 		</script>

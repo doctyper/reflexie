@@ -11,7 +11,7 @@ var io = require("socket.io").listen(server);
 server.listen(9999);
 
 io.configure(function () {
-	io.set("log level", 1);
+	io.set("log level", 2);
 });
 
 io.sockets.on("connection", function (socket) {
