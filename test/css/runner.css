@@ -37,19 +37,19 @@
 }
 
 #flex-col-1 {
-	margin: 5px 10px 15px 20px;
+	margin: 17px 17px 28px 20px;
 	/*padding: 6px 11px 16px 21px;*/
 	/*border: dotted gray;*/
 	/*border-width: 8px 5px 3px 2px;*/
 	width: 500px;
-	height: 100px;
+	height: 50px;
 	background: #ccc;
 }
 
 #flex-col-2 {
-	margin: 7px 12px 17px 22px;
+	margin: 12px 7px 22px 17px;
 	width: 150px;
-	height: 150px;
+	height: 100px;
 	background: red;
 }
 
@@ -59,15 +59,15 @@
 	/*border: dotted gray;*/
 	/*border-width: 9px 14px 19px 24px;*/
 	width: 535px;
-	height: 200px;
+	height: 130px;
 	background: teal;
 }
 
 #flex-col-4 {
-	margin: 10px 15px 20px 25px;
+	margin: 14px 5px 6px 16px;
 	/*padding: 11px 16px 21px 26px;*/
 	width: 180px;
-	height: 250px;
+	height: 150px;
 	background: purple;
 }
 
@@ -80,6 +80,7 @@
 }
 
 #flex-col-6 {
+	margin: 1px 2px 3px 4px;
 	width: 330px;
 	height: 50px;
 	background: blue;
