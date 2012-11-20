@@ -17,6 +17,8 @@ Flexbox.models.justifyContent = function (justification, properties) {
 
 	isReverse = (isReverse) ? -1 : 1;
 
+	var mainTotal = mainStart + "Total";
+
 	if (isStart) {
 		return;
 	}
@@ -32,7 +34,7 @@ Flexbox.models.justifyContent = function (justification, properties) {
 
 		for (k = 0; k < l; k++) {
 			item = items[k];
-			lineRemainder -= item[mainSize] + item.debug.margin[mainStart + "Combo"];
+			lineRemainder -= item[mainSize] + item.debug.margin[mainTotal];
 		}
 
 		if (isCenter || isAround && lineRemainder < 0) {

@@ -89,8 +89,8 @@ Flexbox.utils = {
 			}
 		}
 
-		values.topCombo = values.top + values.bottom;
-		values.leftCombo = values.left + values.right;
+		values.topTotal = values.top + values.bottom;
+		values.leftTotal = values.left + values.right;
 
 		return values;
 	},

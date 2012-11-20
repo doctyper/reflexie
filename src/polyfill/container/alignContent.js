@@ -21,6 +21,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		multiplier = 1, x, y;
 
 	var isAlignItemsStretch = properties["align-items"] === "stretch";
+	var crossTotal = crossStart + "Total";
 
 	// http://www.w3.org/TR/css3-flexbox/#align-content-property
 	//  Note, this property has no effect when the flexbox has only a single line.
@@ -40,7 +41,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 		for (k = 0, l = line.length; k < l; k++) {
 			item = line[k];
-			x = Math.max(x, item[crossSize] + item.debug.margin[crossStart + "Combo"]);
+			x = Math.max(x, item[crossSize] + item.debug.margin[crossTotal]);
 		}
 
 		lineRemainder -= x;
@@ -107,7 +108,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 			lineCrossSize -= prevCrossSize;
 
 			for (k = 0, l = item.length; k < l; k++) {
-				item[k][crossSize] = (lineCrossSize - item[k].debug.margin[crossStart + "Combo"]);
+				item[k][crossSize] = (lineCrossSize - item[k].debug.margin[crossTotal]);
 			}
 
 			prevCrossSize += lineCrossSize;

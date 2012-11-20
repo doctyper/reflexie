@@ -44,6 +44,8 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 		};
 
 		var revStart = revValues[mainStart];
+		var mainTotal = mainStart + "Total";
+		var crossTotal = crossStart + "Total";
 
 		var multiplier = isReverse ? -1 : 1;
 
@@ -81,8 +83,8 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 			item[mainStart] -= prevMainStart * multiplier;
 			item[crossStart] += prevCrossStart;
 
-			currMainStart += item[mainSize] + item.debug.margin[mainStart + "Combo"];
-			currCrossStart = Math.max(currCrossStart, item[crossSize] + item.debug.margin[crossStart + "Combo"]);
+			currMainStart += item[mainSize] + item.debug.margin[mainTotal];
+			currCrossStart = Math.max(currCrossStart, item[crossSize] + item.debug.margin[crossTotal]);
 
 			if (isColumn) {
 				if (prevItem) {

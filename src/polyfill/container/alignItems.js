@@ -18,7 +18,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 	var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 	var isAlignContentStretch = properties["align-content"] === "stretch";
 
-	var crossCombo = crossStart + "Combo";
+	var crossTotal = crossStart + "Total";
 	var lineCrossSize;
 
 	if (isStretch && isNotFlexWrap) {
@@ -38,7 +38,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 						item[crossStart] += (lineRemainder - item[crossSize]) * i;
 					}
 
-					item[crossSize] = lineRemainder - item.debug.margin[crossCombo];
+					item[crossSize] = lineRemainder - item.debug.margin[crossTotal];
 				}
 			}
 		}
@@ -54,7 +54,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 				item = items[k];
 
 				if (item.debug.auto[crossSize]) {
-					lineCrossSize = Math.max(lineCrossSize, item[crossSize] + item.debug.margin[crossCombo]);
+					lineCrossSize = Math.max(lineCrossSize, item[crossSize] + item.debug.margin[crossTotal]);
 				}
 			}
 
@@ -62,7 +62,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 				item = items[k];
 
 				if (item.debug.auto[crossSize]) {
-					item[crossSize] = lineCrossSize - item.debug.margin[crossCombo];
+					item[crossSize] = lineCrossSize - item.debug.margin[crossTotal];
 				}
 			}
 		}
@@ -85,7 +85,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 		for (k = 0; k < l; k++) {
 			item = items[k];
-			line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.margin[crossCombo]);
+			line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.margin[crossTotal]);
 		}
 
 		remainderSize -= line.maxItemSize;
@@ -111,7 +111,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 			item = items[k];
 
 			// Remove margin from crossStart
-			item[crossStart] -= item.debug.margin[crossCombo] * multiplier;
+			item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
 			item[crossStart] += remainderSize + (lineRemainder - item[crossSize]) * multiplier;
 		}
 	}

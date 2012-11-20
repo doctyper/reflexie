@@ -18,6 +18,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 
 	var prevItem;
 	var prevMainStart = 0;
+	var mainTotal = mainStart + "Total";
 
 	var revValues = {
 		"top": "bottom",
@@ -31,7 +32,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		item[crossStart] = storedVal;
 
 		if (isReverse) {
-			item[mainStart] = (containerVal - item[mainSize] - item.debug.margin[mainStart + "Combo"]) - incrementVal;
+			item[mainStart] = (containerVal - item[mainSize] - item.debug.margin[mainTotal]) - incrementVal;
 		} else {
 			item[mainStart] += incrementVal;
 			item[mainStart] -= item.debug.margin[mainStart];
@@ -47,7 +48,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		}
 
 		if (needsIncrement) {
-			incrementVal += item[mainSize] + item.debug.margin[mainStart + "Combo"];
+			incrementVal += item[mainSize] + item.debug.margin[mainTotal];
 		}
 	}
 
