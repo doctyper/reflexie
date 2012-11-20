@@ -21,18 +21,29 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	};
 
 	var utils = Flexbox.utils,
+		colArray = ["column", "column-reverse"],
 		revArray = ["row-reverse", "column-reverse"],
-		isReverse = utils.assert(properties["flex-direction"], revArray);
+		flexDirection = properties["flex-direction"],
+		isColumn = utils.assert(flexDirection, colArray),
+		isReverse = utils.assert(flexDirection, revArray);
 
 	// TODO: Implement `flex-wrap: wrap-reverse;`
 	if (isWrap || isWrapReverse) {
 		var breakPoint = containerSize;
 		var item;
+		var prevItem;
 
 		var currMainStart = 0;
 		var prevMainStart = 0;
 		var currCrossStart = 0;
 		var prevCrossStart = 0;
+
+		var revValues = {
+			"top": "bottom",
+			"left": "right"
+		};
+
+		var revStart = revValues[mainStart];
 
 		var multiplier = isReverse ? -1 : 1;
 
@@ -49,6 +60,20 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 				prevMainStart += currMainStart;
 				prevCrossStart += currCrossStart;
 
+				if (isColumn && prevItem) {
+					var newLineStart;
+
+					if (isReverse) {
+						newLineStart = (item[mainStart] + item[mainSize] + item.debug.margin[mainStart]) - (prevMainStart * multiplier) - breakPoint;
+					} else {
+						newLineStart = (prevMainStart * multiplier) - (item[mainStart] + item.debug.margin[mainStart]);
+					}
+
+					if (newLineStart > 0) {
+						prevMainStart -= newLineStart;
+					}
+				}
+
 				currMainStart = 0;
 				currCrossStart = 0;
 			}
@@ -58,6 +83,14 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 
 			currMainStart += item[mainSize] + item.debug.margin[mainStart + "Combo"];
 			currCrossStart = Math.max(currCrossStart, item[crossSize] + item.debug.margin[crossStart + "Combo"]);
+
+			if (isColumn) {
+				if (prevItem) {
+					currMainStart += Math.min(item.debug.margin[mainStart], prevItem.debug.margin[revStart]);
+				}
+
+				prevItem = item;
+			}
 
 			line.items.push(item);
 		}
@@ -69,4 +102,5 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 
 	// Expose lines
 	this.lines = lines;
+	console.log(lines);
 };

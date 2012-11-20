@@ -24,21 +24,12 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 	// http://www.w3.org/TR/css3-flexbox/#align-content-property
 	//  Note, this property has no effect when the flexbox has only a single line.
-	if (lines.length <= 1) {
-		if (isNotFlexWrap) {
-			return;
-		} else if (isAround) {
-			isAround = false;
-			isCenter = true;
-		}
+	if (isNotFlexWrap && lines.length <= 1) {
+		return;
 	}
 
 	if (isStart) {
 		return;
-	}
-
-	if (isCenter) {
-		multiplier = 0.5;
 	}
 
 	lineRemainder = containerSize;
@@ -57,6 +48,19 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 	i = 0;
 	x = 0;
+
+	if ((isBetween || isAround) && lineRemainder <= 0) {
+		if (isAround) {
+			isAround = false;
+			isCenter = true;
+		} else {
+			return;
+		}
+	}
+
+	if (isCenter) {
+		multiplier = 0.5;
+	}
 
 	if (isBetween || isAround || isStretch) {
 		i = 1;

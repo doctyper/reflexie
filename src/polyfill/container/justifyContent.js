@@ -21,15 +21,12 @@ Flexbox.models.justifyContent = function (justification, properties) {
 		return;
 	}
 
-	if (isCenter) {
-		multiplier = 0.5;
-	}
-
 	for (i = 0, j = lines.length; i < j; i++) {
 		x = 0;
 		line = lines[i];
 		items = line.items;
 		l = items.length;
+		multiplier = 1;
 
 		lineRemainder = containerSize;
 
@@ -38,9 +35,7 @@ Flexbox.models.justifyContent = function (justification, properties) {
 			lineRemainder -= item[mainSize] + item.debug.margin[mainStart + "Combo"];
 		}
 
-		if (isAround && lineRemainder < 0) {
-			isAround = false;
-			isCenter = true;
+		if (isCenter || isAround && lineRemainder < 0) {
 			multiplier = 0.5;
 		}
 
@@ -48,7 +43,7 @@ Flexbox.models.justifyContent = function (justification, properties) {
 
 		k = 0;
 
-		if (isBetween || isAround) {
+		if (isBetween || isAround && lineRemainder >= 0) {
 			k = 1;
 
 			lineRemainder = Math.max(0, lineRemainder);

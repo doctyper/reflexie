@@ -1,9 +1,9 @@
 Flexbox.models.flexDirection = function (direction, properties) {
 	var values = this.values,
-		utils = Flexbox.utils,
 		containerValues = values.container,
 		itemValues = values.items,
 		i, j, item, incrementVal = 0,
+		utils = Flexbox.utils,
 		colArray = ["column", "column-reverse"],
 		revArray = ["row-reverse", "column-reverse"],
 		isColumn = utils.assert(direction, colArray),
@@ -19,6 +19,13 @@ Flexbox.models.flexDirection = function (direction, properties) {
 	var prevItem;
 	var prevMainStart = 0;
 
+	var revValues = {
+		"top": "bottom",
+		"left": "right"
+	};
+
+	var revStart = revValues[mainStart];
+
 	for (i = 0, j = itemValues.length; i < j; i++) {
 		item = itemValues[i];
 		item[crossStart] = storedVal;
@@ -26,11 +33,12 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		if (isReverse) {
 			item[mainStart] = (containerVal - item[mainSize] - item.debug.margin[mainStart + "Combo"]) - incrementVal;
 		} else {
-			item[mainStart] = item[mainStart] - item.debug.margin[mainStart] + incrementVal;
+			item[mainStart] += incrementVal;
+			item[mainStart] -= item.debug.margin[mainStart];
 
 			if (isColumn) {
 				if (prevItem) {
-					prevMainStart += item.debug.margin[mainStart];
+					prevMainStart += Math.min(item.debug.margin[mainStart], prevItem.debug.margin[revStart]);
 					item[mainStart] += prevMainStart;
 				}
 
