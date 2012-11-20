@@ -102,42 +102,44 @@ define([
 				"column-reverse": "width"
 			};
 
-			var buildItemExpectancy = function (idx, key, value) {
+			var buildItemExpectancy = function (idx, key, value, isStretch) {
 				var val = Math.floor(value);
 
 				it(key + " should be " + val, function () {
 					var childNodes = flex.children();
 					var box = childNodes[idx].getBoundingClientRect();
-					expect(Math.floor(box[key])).to.be.within(val - 2,  val + 2);
+
+					var range = (isStretch) ? 3 : 1;
+					expect(Math.floor(box[key])).to.be.within(val - range,  val + range);
 				});
 			};
 
-			var buildItemDescription = function (idx, item) {
+			var buildItemDescription = function (idx, item, isStretch) {
 				describe(":nth-child(" + (idx + 1) + ")", function () {
 					var childNodes = flex.children();
 					var child = childNodes[idx];
 
 					for (var key in item) {
-						buildItemExpectancy(idx, key, item[key]);
+						buildItemExpectancy(idx, key, item[key], isStretch);
 					}
 				});
 			};
 
 			var buildChildDescription = function (children, data, count) {
 				describe(children, function () {
+					var rules = data.rules;
+					var isStretch = (rules["align-items"] === "stretch");
+					isStretch = isStretch || (rules["align-content"] === "stretch");
+
 					before(function () {
 						flex.empty();
 
-						var rules = data.rules;
 						var set = appendFlexChildren(flex, count);
 
 						if (hasSupport) {
 							flex.css("display", "-webkit-flex");
 							flex.css(rules);
 						}
-
-						var isStretch = (rules["align-items"] === "stretch");
-						isStretch = isStretch || (rules["align-content"] === "stretch");
 
 						if (isStretch) {
 							flex.children().addClass(sizeMap[rules["flex-direction"]]);
@@ -155,7 +157,7 @@ define([
 					});
 
 					for (var i = 0, j = data.items.length; i < j; i++) {
-						buildItemDescription(i, data.items[i]);
+						buildItemDescription(i, data.items[i], isStretch);
 					}
 
 					after(function () {
@@ -184,14 +186,18 @@ define([
 			}
 		},
 
+		buildFlexDescription : function (type, data) {
+			describe("flex-direction: " + type, function () {
+				this.handleDirection(data);
+			}.bind(this));
+		},
+
 		handleJSON : function (json) {
 			var deferred = $.Deferred();
 
 			for (var type in json) {
 				if (TESTS.direction[type]) {
-					describe("flex-direction: " + type, function () {
-						this.handleDirection(json[type]);
-					}.bind(this));
+					this.buildFlexDescription(type, json[type]);
 				}
 			}
 
