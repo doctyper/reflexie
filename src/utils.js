@@ -85,7 +85,7 @@ Flexbox.utils = {
 
 			for (i = 0, j = properties.length; i < j; i++) {
 				prop = properties[i];
-				values[prop.toLowerCase()] = parseFloat(computed[type + prop]);
+				values[prop.toLowerCase()] = parseFloat(computed[type + prop] || 0);
 			}
 		}
 
