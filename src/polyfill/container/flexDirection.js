@@ -26,7 +26,11 @@ Flexbox.models.flexDirection = function (direction, properties) {
 	};
 
 	containerSize = container[mainSize];
-	incrementVal -= (container.debug.margin[mainStart] + container.debug.border[mainStart]);
+	incrementVal -= container.debug.border[mainStart];
+
+	if (!isReverse) {
+		incrementVal -= container.debug.margin[mainStart];
+	}
 
 	var revStart = revValues[mainStart];
 
