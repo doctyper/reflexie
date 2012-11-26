@@ -38,11 +38,14 @@ Flexbox.models.alignItems = function (alignment, properties) {
 						item[crossStart] += (lineRemainder - item[crossSize]) * i;
 					}
 
-					item[crossSize] = lineRemainder - item.debug.margin[crossTotal];
+					item[crossSize] = (lineRemainder - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal];
 				}
 			}
 		}
 	} else if (isStretch) {
+		var prevCrossStart = 0;
+		var prevItem;
+
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
 			items = line.items;
@@ -62,8 +65,15 @@ Flexbox.models.alignItems = function (alignment, properties) {
 				item = items[k];
 
 				if (item.debug.auto[crossSize]) {
-					item[crossSize] = lineCrossSize - item.debug.margin[crossTotal];
+					item[crossSize] = (lineCrossSize - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal];
+
+					if (prevItem) {
+						prevCrossStart += prevItem.debug.padding[crossTotal];
+						item[crossStart] -= prevCrossStart;
+					}
 				}
+
+				prevItem = item;
 			}
 		}
 	}
@@ -107,12 +117,20 @@ Flexbox.models.alignItems = function (alignment, properties) {
 		l = items.length;
 		lineRemainder = line.maxItemSize;
 
+		lineCrossSize = 0;
+
 		for (k = 0; k < l; k++) {
 			item = items[k];
 
+			lineCrossSize = item[crossSize];
+
+			if (isNotFlexWrap) {
+				lineCrossSize += item.debug.padding[crossTotal];
+			}
+
 			// Remove margin from crossStart
 			item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
-			item[crossStart] += remainderSize + (lineRemainder - item[crossSize]) * multiplier;
+			item[crossStart] += remainderSize + (lineRemainder - lineCrossSize) * multiplier;
 		}
 	}
 };

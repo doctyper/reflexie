@@ -34,7 +34,7 @@ Flexbox.models.justifyContent = function (justification, properties) {
 
 		for (k = 0; k < l; k++) {
 			item = items[k];
-			lineRemainder -= item[mainSize] + item.debug.margin[mainTotal];
+			lineRemainder -= (item[mainSize] + item.debug.padding[mainTotal]) + item.debug.margin[mainTotal];
 		}
 
 		if (isCenter || isAround && lineRemainder < 0) {
