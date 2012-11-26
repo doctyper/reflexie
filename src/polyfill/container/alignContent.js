@@ -94,16 +94,17 @@ Flexbox.models.alignContent = function (alignment, properties) {
 	}
 
 	if (isStretch && isAlignItemsStretch) {
-		var prevCrossSize = 0;
+		var prevCrossSize = container.debug.padding[crossStart];
 
 		for (i = 0, j = lines.length; i < j; i++) {
 			items = lines[i].items;
 
 			var next = lines[i + 1];
-			var lineCrossSize = containerSize;
+			var lineCrossSize = containerSize + container.debug.padding[crossStart];
 
 			if (next) {
-				lineCrossSize = next.items[0][crossStart];
+				next = next.items[0];
+				lineCrossSize = next[crossStart];
 			}
 
 			lineCrossSize -= prevCrossSize;

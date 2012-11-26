@@ -35,7 +35,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		item[crossStart] = (storedVal + container.debug.padding[crossStart]);
 
 		if (isReverse) {
-			item[mainStart] = (containerSize - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
+			item[mainStart] = ((containerSize + container.debug.padding[mainStart]) - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
 		} else {
 			item[mainStart] += incrementVal;
 			item[mainStart] -= item.debug.margin[mainStart];
