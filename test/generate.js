@@ -18,6 +18,7 @@ io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
 	var data = __dirname + "/data/flex-properties.js";
 	var test = __dirname + "/lib/tests.js";
+	var src = __dirname + "/../dist/reflexie.js";
 
 	fs.watchFile(css, function (curr, prev) {
 		socket.emit("csschange");
@@ -29,6 +30,10 @@ io.sockets.on("connection", function (socket) {
 
 	fs.watchFile(test, function (curr, prev) {
 		socket.emit("datachange");
+	});
+
+	fs.watchFile(src, function () {
+		socket.emit("srcchange");
 	});
 
 	socket.on("suiteerror", function (data) {
@@ -52,7 +57,7 @@ io.sockets.on("connection", function (socket) {
 
 		for (var key in map) {
 			for (var i = 0, j = prefixes.length; i < j; i++) {
-				css += "\t" + prefixes[i] + key + ": " + map[key] + "\n";
+				css += "\t" + prefixes[i] + key + ": " + map[key] + ";\n";
 			}
 
 			css += "\n";

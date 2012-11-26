@@ -93,7 +93,13 @@
 				"socket.io"
 			], function (Flexie, io) {
 				var socket = io.connect("http://0.0.0.0:9999");
+
 				socket.on("errorchange", function (data) {
+					socket.disconnect();
+					window.location.reload();
+				});
+
+				socket.on("srcchange", function (data) {
 					socket.disconnect();
 					window.location.reload();
 				});
