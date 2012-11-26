@@ -38,9 +38,9 @@
 
 #flex-col-1 {
 	/*margin: 17px 17px 28px 20px;*/
-	padding: 6px 11px 15px 24px;
-	/*border: dotted gray;*/
-	/*border-width: 8px 5px 3px 2px;*/
+	/*padding: 6px 11px 15px 24px;*/
+	border: dotted gray;
+	border-width: 8px 5px 3px 2px;
 	width: 500px;
 	height: 50px;
 	background: #ccc;
@@ -55,9 +55,9 @@
 
 #flex-col-3 {
 	/*margin: 0;*/
-	padding: 8px 13px 18px 23px;
-	/*border: dotted gray;*/
-	/*border-width: 9px 14px 19px 24px;*/
+	/*padding: 8px 13px 18px 23px;*/
+	border: dotted gray;
+	border-width: 9px 14px 19px 24px;
 	width: 535px;
 	height: 230px;
 	background: teal;
@@ -65,15 +65,15 @@
 
 #flex-col-4 {
 	/*margin: 14px 5px 6px 16px;*/
-	padding: 11px 16px 21px 26px;
+	/*padding: 11px 16px 21px 26px;*/
 	width: 180px;
 	height: 150px;
 	background: purple;
 }
 
 #flex-col-5 {
-	/*border: dotted gray;*/
-	/*border-width: 1px 2px 3px 4px;*/
+	border: dotted gray;
+	border-width: 1px 2px 3px 4px;
 	width: 140px;
 	height: 150px;
 	background: green;

@@ -149,8 +149,8 @@ Flexbox.utils = {
 			position: position,
 			left: marginBox.left,
 			top: marginBox.top,
-			width: sizeBox.width - (padding.left + padding.right),
-			height: sizeBox.height - (padding.top + padding.bottom),
+			width: sizeBox.width - (padding.left + padding.right) - (border.left + border.right),
+			height: sizeBox.height - (padding.top + padding.bottom) - (border.top + border.bottom),
 			debug: {
 				auto: autoValues,
 				values: {
@@ -160,6 +160,10 @@ Flexbox.utils = {
 				border: border,
 				margin: margin,
 				padding: padding,
+				inner: {
+					left: (padding.left + padding.right) + (border.left + border.right),
+					top: (padding.top + padding.bottom) + (border.top + border.bottom)
+				},
 				width: sizeBox.width + widthValues,
 				height: sizeBox.height + heightValues
 			}
