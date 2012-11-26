@@ -37,8 +37,8 @@
 }
 
 #flex-col-1 {
-	/*margin: 17px 17px 28px 20px;*/
-	/*padding: 6px 11px 15px 24px;*/
+	margin: 17px 17px 28px 20px;
+	padding: 6px 11px 15px 24px;
 	border: dotted gray;
 	border-width: 8px 5px 3px 2px;
 	width: 500px;
@@ -47,40 +47,40 @@
 }
 
 #flex-col-2 {
-	/*margin: 12px 7px 22px 17px;*/
+	margin: 12px 7px 22px 17px;
 	width: 150px;
 	height: 100px;
 	background: red;
 }
 
 #flex-col-3 {
-	/*margin: 0;*/
-	/*padding: 8px 13px 18px 23px;*/
+	margin: 0;
+	padding: 8px 13px 18px 23px;
 	border: dotted gray;
 	border-width: 9px 14px 19px 24px;
 	width: 535px;
-	height: 230px;
+	height: 120px;
 	background: teal;
 }
 
 #flex-col-4 {
-	/*margin: 14px 5px 6px 16px;*/
-	/*padding: 11px 16px 21px 26px;*/
+	margin: 23px 5px 35px 16px;
+	padding: 27px 16px 21px 26px;
 	width: 180px;
-	height: 150px;
+	height: 137px;
 	background: purple;
 }
 
 #flex-col-5 {
 	border: dotted gray;
-	border-width: 1px 2px 3px 4px;
+	border-width: 10px 12px 13px 14px;
 	width: 140px;
 	height: 150px;
 	background: green;
 }
 
 #flex-col-6 {
-	/*margin: 1px 2px 3px 4px;*/
+	margin: 11px 12px 13px 14px;
 	width: 330px;
 	height: 50px;
 	background: blue;
