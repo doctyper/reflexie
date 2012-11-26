@@ -36,7 +36,7 @@ Flexbox.container = (function () {
 			return this.uid;
 		},
 
-		expandShorthands : function (properties) {
+		expandFlexFlow : function (properties) {
 			var map = {};
 
 			for (var key in properties) {
@@ -73,7 +73,8 @@ Flexbox.container = (function () {
 			this.dom.values = utils.storePositionValues(this.container, this.items);
 			this.values = utils.clonePositionValues(this.dom.values);
 
-			var properties = this.expandShorthands(this.container.properties);
+			// Handle `flex-flow` shorthand property
+			var properties = this.expandFlexFlow(this.container.properties);
 			var models = this.models;
 
 			// So the way this works:
