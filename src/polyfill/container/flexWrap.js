@@ -69,9 +69,9 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 					var newLineStart;
 
 					if (isReverse) {
-						newLineStart = (item[mainStart] + item[mainSize] + item.debug.margin[mainStart]) - (prevMainStart * multiplier) - breakPoint;
+						newLineStart = (item[mainStart] + item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal]) - (prevMainStart * multiplier) - breakPoint;
 					} else {
-						newLineStart = (prevMainStart * multiplier) - (item[mainStart] + item.debug.margin[mainStart]);
+						newLineStart = (prevMainStart * multiplier) - item[mainStart];
 					}
 
 					if (newLineStart > 0) {
