@@ -183,8 +183,8 @@
 				position: position,
 				left: marginBox.left,
 				top: marginBox.top,
-				width: sizeBox.width - (padding.left + padding.right),
-				height: sizeBox.height - (padding.top + padding.bottom),
+				width: sizeBox.width - (padding.left + padding.right) - (border.left + border.right),
+				height: sizeBox.height - (padding.top + padding.bottom) - (border.top + border.bottom),
 				debug: {
 					auto: autoValues,
 					values: {
@@ -194,6 +194,10 @@
 					border: border,
 					margin: margin,
 					padding: padding,
+					inner: {
+						left: (padding.left + padding.right) + (border.left + border.right),
+						top: (padding.top + padding.bottom) + (border.top + border.bottom)
+					},
 					width: sizeBox.width + widthValues,
 					height: sizeBox.height + heightValues
 				}
@@ -358,7 +362,7 @@
 			item[crossStart] = storedVal;
 
 			if (isReverse) {
-				item[mainStart] = (containerVal - (item[mainSize] + item.debug.padding[mainTotal]) - item.debug.margin[mainTotal]) - incrementVal;
+				item[mainStart] = (containerVal - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
 			} else {
 				item[mainStart] += incrementVal;
 				item[mainStart] -= item.debug.margin[mainStart];
@@ -377,7 +381,7 @@
 				incrementVal += item[mainSize] + item.debug.margin[mainTotal];
 
 				if (isReverse) {
-					incrementVal += item.debug.padding[mainTotal];
+					incrementVal += item.debug.inner[mainStart];
 				}
 			}
 		}
@@ -448,7 +452,7 @@
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
 
-				if (currMainStart + (item[mainSize] + item.debug.padding[mainTotal]) > breakPoint) {
+				if (currMainStart + (item[mainSize] + item.debug.inner[mainStart]) > breakPoint) {
 					lines.push(line);
 
 					line = {
@@ -479,8 +483,8 @@
 				item[mainStart] -= prevMainStart * multiplier;
 				item[crossStart] += prevCrossStart;
 
-				currMainStart += (item[mainSize] + item.debug.padding[mainTotal]) + item.debug.margin[mainTotal];
-				currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
+				currMainStart += (item[mainSize] + item.debug.inner[mainStart]) + item.debug.margin[mainTotal];
+				currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 
 				if (isColumn) {
 					if (prevItem) {
@@ -509,7 +513,7 @@
 					item = items[k];
 
 					if (prevItem) {
-						prevMainStart += prevItem.debug.padding[mainTotal];
+						prevMainStart += prevItem.debug.inner[mainStart];
 						item[mainStart] += prevMainStart;
 					}
 
@@ -558,7 +562,7 @@
 
 			for (k = 0; k < l; k++) {
 				item = items[k];
-				lineRemainder -= (item[mainSize] + item.debug.padding[mainTotal]) + item.debug.margin[mainTotal];
+				lineRemainder -= (item[mainSize] + item.debug.inner[mainStart]) + item.debug.margin[mainTotal];
 			}
 
 			if (isCenter || isAround && lineRemainder < 0) {
@@ -631,7 +635,7 @@
 							item[crossStart] += (lineRemainder - item[crossSize]) * i;
 						}
 
-						item[crossSize] = (lineRemainder - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal];
+						item[crossSize] = (lineRemainder - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
 					}
 				}
 			}
@@ -650,7 +654,7 @@
 					item = items[k];
 
 					if (item.debug.auto[crossSize]) {
-						lineCrossSize = Math.max(lineCrossSize, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
+						lineCrossSize = Math.max(lineCrossSize, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 					}
 				}
 
@@ -658,10 +662,10 @@
 					item = items[k];
 
 					if (item.debug.auto[crossSize]) {
-						item[crossSize] = (lineCrossSize - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal];
+						item[crossSize] = (lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
 
 						// if (prevItem) {
-							// prevCrossStart += prevItem.debug.padding[crossTotal];
+							// prevCrossStart += prevItem.debug.inner[crossStart];
 							// item[crossStart] -= prevCrossStart;
 						// }
 					}
@@ -688,7 +692,7 @@
 
 			for (k = 0; k < l; k++) {
 				item = items[k];
-				line.maxItemSize = Math.max(line.maxItemSize || 0, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
+				line.maxItemSize = Math.max(line.maxItemSize || 0, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 			}
 
 			remainderSize -= line.maxItemSize;
@@ -715,7 +719,7 @@
 
 				// Remove margin from crossStart
 				item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
-				item[crossStart] += remainderSize + (lineRemainder - (item[crossSize] + item.debug.padding[crossTotal])) * multiplier;
+				item[crossStart] += remainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
 			}
 		}
 	};
@@ -764,7 +768,7 @@
 
 			for (k = 0, l = line.length; k < l; k++) {
 				item = line[k];
-				x = Math.max(x, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
+				x = Math.max(x, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 			}
 
 			lineRemainder -= x;
@@ -832,7 +836,7 @@
 
 				for (k = 0, l = items.length; k < l; k++) {
 					item = items[k];
-					item[crossSize] = ((lineCrossSize - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal]);
+					item[crossSize] = ((lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal]);
 				}
 
 				prevCrossSize += lineCrossSize;
