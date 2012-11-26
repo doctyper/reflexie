@@ -13,7 +13,7 @@
 @mixin box-properties($dimensions: true) {
 	$rand: random(30);
 
-	border: dotted gray;
+	border: solid gray;
 	border-width: box-values($rand);
 
 	$rand: random(50);
