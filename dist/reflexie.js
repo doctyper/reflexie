@@ -358,7 +358,7 @@
 			item[crossStart] = storedVal;
 
 			if (isReverse) {
-				item[mainStart] = (containerVal - item[mainSize] - item.debug.margin[mainTotal]) - incrementVal;
+				item[mainStart] = (containerVal - (item[mainSize] + item.debug.padding[mainTotal]) - item.debug.margin[mainTotal]) - incrementVal;
 			} else {
 				item[mainStart] += incrementVal;
 				item[mainStart] -= item.debug.margin[mainStart];
@@ -375,6 +375,10 @@
 
 			if (needsIncrement) {
 				incrementVal += item[mainSize] + item.debug.margin[mainTotal];
+
+				if (isReverse) {
+					incrementVal += item.debug.padding[mainTotal];
+				}
 			}
 		}
 
@@ -428,6 +432,8 @@
 		var currCrossStart = 0;
 		var prevCrossStart = 0;
 
+		var multiplier = isReverse ? -1 : 1;
+
 		// TODO: Implement `flex-wrap: wrap-reverse;`
 		if (isWrap || isWrapReverse) {
 			var breakPoint = containerSize;
@@ -439,12 +445,10 @@
 
 			var revStart = revValues[mainStart];
 
-			var multiplier = isReverse ? -1 : 1;
-
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
 
-				if (currMainStart + item[mainSize] > breakPoint) {
+				if (currMainStart + (item[mainSize] + item.debug.padding[mainTotal]) > breakPoint) {
 					lines.push(line);
 
 					line = {
@@ -497,18 +501,20 @@
 		prevMainStart = 0;
 
 		// Adjust positioning for padding
-		for (i = 0, j = lines.length; i < j; i++) {
-			items = lines[i].items;
+		if (!isColumn && !isReverse) {
+			for (i = 0, j = lines.length; i < j; i++) {
+				items = lines[i].items;
 
-			for (k = 0, l = items.length; k < l; k++) {
-				item = items[k];
+				for (k = 0, l = items.length; k < l; k++) {
+					item = items[k];
 
-				if (prevItem) {
-					prevMainStart += prevItem.debug.padding[mainTotal];
-					item[mainStart] += prevMainStart;
+					if (prevItem) {
+						prevMainStart += prevItem.debug.padding[mainTotal];
+						item[mainStart] += prevMainStart;
+					}
+
+					prevItem = item;
 				}
-
-				prevItem = item;
 			}
 		}
 
@@ -630,8 +636,8 @@
 				}
 			}
 		} else if (isStretch) {
-			var prevCrossStart = 0;
-			var prevItem;
+			// var prevCrossStart = 0;
+			// var prevItem;
 
 			for (i = 0, j = lines.length; i < j; i++) {
 				line = lines[i];
@@ -644,7 +650,7 @@
 					item = items[k];
 
 					if (item.debug.auto[crossSize]) {
-						lineCrossSize = Math.max(lineCrossSize, item[crossSize] + item.debug.margin[crossTotal]);
+						lineCrossSize = Math.max(lineCrossSize, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
 					}
 				}
 
@@ -654,13 +660,13 @@
 					if (item.debug.auto[crossSize]) {
 						item[crossSize] = (lineCrossSize - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal];
 
-						if (prevItem) {
-							prevCrossStart += prevItem.debug.padding[crossTotal];
-							item[crossStart] -= prevCrossStart;
-						}
+						// if (prevItem) {
+							// prevCrossStart += prevItem.debug.padding[crossTotal];
+							// item[crossStart] -= prevCrossStart;
+						// }
 					}
 
-					prevItem = item;
+					// prevItem = item;
 				}
 			}
 		}
@@ -682,7 +688,7 @@
 
 			for (k = 0; k < l; k++) {
 				item = items[k];
-				line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.margin[crossTotal]);
+				line.maxItemSize = Math.max(line.maxItemSize || 0, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
 			}
 
 			remainderSize -= line.maxItemSize;
@@ -704,20 +710,12 @@
 			l = items.length;
 			lineRemainder = line.maxItemSize;
 
-			lineCrossSize = 0;
-
 			for (k = 0; k < l; k++) {
 				item = items[k];
 
-				lineCrossSize = item[crossSize];
-
-				if (isNotFlexWrap) {
-					lineCrossSize += item.debug.padding[crossTotal];
-				}
-
 				// Remove margin from crossStart
 				item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
-				item[crossStart] += remainderSize + (lineRemainder - lineCrossSize) * multiplier;
+				item[crossStart] += remainderSize + (lineRemainder - (item[crossSize] + item.debug.padding[crossTotal])) * multiplier;
 			}
 		}
 	};
@@ -821,7 +819,7 @@
 			var prevCrossSize = 0;
 
 			for (i = 0, j = lines.length; i < j; i++) {
-				item = lines[i].items;
+				items = lines[i].items;
 
 				var next = lines[i + 1];
 				var lineCrossSize = containerSize;
@@ -832,8 +830,9 @@
 
 				lineCrossSize -= prevCrossSize;
 
-				for (k = 0, l = item.length; k < l; k++) {
-					item[k][crossSize] = (lineCrossSize - item[k].debug.margin[crossTotal]);
+				for (k = 0, l = items.length; k < l; k++) {
+					item = items[k];
+					item[crossSize] = ((lineCrossSize - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal]);
 				}
 
 				prevCrossSize += lineCrossSize;

@@ -5,6 +5,8 @@
 
 		<style>
 			#flex-container {
+				/*left: auto;*/
+				/*right: 0;*/
 				opacity: 1;
 				z-index: 1;
 			}
@@ -22,30 +24,30 @@
 
 		<style data-flex-values="container">
 			#flex-target {
-				-webkit-flex-direction: row;
-				flex-direction: row;
+				-webkit-flex-direction: row-reverse;
+				flex-direction: row-reverse;
 
 				-webkit-flex-wrap: wrap;
 				flex-wrap: wrap;
 
 				-webkit-justify-content: flex-start;
-				justify-content: flex-end;
+				justify-content: flex-start;
 
-				-webkit-align-items: center;
-				align-items: center;
+				-webkit-align-items: flex-start;
+				align-items: flex-start;
 
-				-webkit-align-content: stretch;
-				align-content: stretch;
+				-webkit-align-content: flex-start;
+				align-content: flex-start;
 			}
 		</style>
 		<script data-flex-values="container">
 			window.flexContainer = {
 				"display": "flex",
-				"flex-direction": "row",
+				"flex-direction": "row-reverse",
 				"flex-wrap": "wrap",
 				"justify-content": "flex-start",
-				"align-items": "center",
-				"align-content": "stretch"
+				"align-items": "flex-start",
+				"align-content": "flex-start"
 			};
 		</script>
 
@@ -100,7 +102,7 @@
 							"flex-basis": "auto",
 							"align-self": "auto"
 						}
-					}/*, {
+					}, {
 						"element": items[3],
 						"selector": "#flex-col-4",
 						"properties": {
@@ -130,7 +132,7 @@
 							"flex-basis": "auto",
 							"align-self": "auto"
 						}
-					}*/]
+					}]
 				});
 
 			});
@@ -149,7 +151,7 @@
 				<div id="flex-col-3">
 					<h2>Col 3</h2>
 				</div>
-				<!--<div id="flex-col-4">
+				<div id="flex-col-4">
 					<h2>Col 4</h2>
 				</div>
 				<div id="flex-col-5">
@@ -157,7 +159,7 @@
 				</div>
 				<div id="flex-col-6">
 					<h2>Col 6</h2>
-				</div>-->
+				</div>
 			</div>
 		</div>
 
