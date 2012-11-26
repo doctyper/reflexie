@@ -1,87 +1,111 @@
+/* line 32, ../scss/runner.scss */
 #flex-container, #flex-container * {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font: normal 12px/1 Arial;
-	list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: normal 12px/1 Arial;
+  list-style: none;
 }
 
+/* line 40, ../scss/runner.scss */
 #flex-container {
-	top: 0;
-	left: 0;
-	position: fixed;
-	opacity: 0.4;
-	outline: 1px solid green;
-	z-index: -1;
+  top: 0;
+  left: 0;
+  position: fixed;
+  opacity: 0.4;
+  outline: 1px solid green;
+  z-index: -1;
 }
 
+/* line 49, ../scss/runner.scss */
 #flex-target {
-	/*  As of August 2012, only supported in Chrome 21+ */
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: flex;
-
-	width: 600px;
-	height: 600px;
-
-	overflow: hidden;
+  /*  As of August 2012, only supported in Chrome 21+ */
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  border: solid gray;
+  border-width: 2px 4px 19px 13px;
+  margin: 27px 44px 0px 35px;
+  padding: 41px 32px 29px 27px;
+  width: 600px;
+  height: 600px;
+  overflow: hidden;
 }
 
+/* line 61, ../scss/runner.scss */
 #flex-target div.width {
-	width: auto;
+  width: auto;
 }
 
+/* line 65, ../scss/runner.scss */
 #flex-target div.height {
-	height: auto;
+  height: auto;
 }
 
+/* line 69, ../scss/runner.scss */
 #flex-col-1 {
-	margin: 17px 17px 28px 20px;
-	padding: 6px 11px 15px 24px;
-	border: dotted gray;
-	border-width: 8px 5px 3px 2px;
-	width: 500px;
-	height: 50px;
-	background: #ccc;
+  background: #ccc;
+  border: solid gray;
+  border-width: 0px 0px 6px 2px;
+  margin: 6px 3px 2px 0px;
+  padding: 4px 0px 1px 4px;
+  width: 106px;
+  height: 154px;
 }
 
+/* line 74, ../scss/runner.scss */
 #flex-col-2 {
-	margin: 12px 7px 22px 17px;
-	width: 150px;
-	height: 100px;
-	background: red;
+  background: red;
+  border: solid gray;
+  border-width: 1px 1px 0px 0px;
+  margin: 3px 46px 8px 14px;
+  padding: 7px 6px 25px 15px;
+  width: 168px;
+  height: 102px;
 }
 
+/* line 79, ../scss/runner.scss */
 #flex-col-3 {
-	margin: 0;
-	padding: 8px 13px 18px 23px;
-	border: dotted gray;
-	border-width: 9px 14px 19px 24px;
-	width: 535px;
-	height: 120px;
-	background: teal;
+  background: teal;
+  border: solid gray;
+  border-width: 7px 6px 13px 11px;
+  margin: 18px 5px 5px 12px;
+  padding: 6px 14px 18px 10px;
+  width: 207px;
+  height: 177px;
 }
 
+/* line 84, ../scss/runner.scss */
 #flex-col-4 {
-	margin: 23px 5px 35px 16px;
-	padding: 27px 16px 21px 26px;
-	width: 180px;
-	height: 137px;
-	background: purple;
+  background: purple;
+  border: solid gray;
+  border-width: 13px 17px 12px 19px;
+  margin: 5px 21px 2px 6px;
+  padding: 20px 2px 3px 23px;
+  width: 52px;
+  height: 55px;
 }
 
+/* line 89, ../scss/runner.scss */
 #flex-col-5 {
-	border: dotted gray;
-	border-width: 10px 12px 13px 14px;
-	width: 140px;
-	height: 150px;
-	background: green;
+  background: green;
+  border: solid gray;
+  border-width: 15px 2px 3px 3px;
+  margin: 5px 8px 7px 4px;
+  padding: 6px 5px 5px 7px;
+  width: 410px;
+  height: 560px;
 }
 
+/* line 94, ../scss/runner.scss */
 #flex-col-6 {
-	margin: 11px 12px 13px 14px;
-	width: 330px;
-	height: 50px;
-	background: blue;
+  background: blue;
+  border: solid gray;
+  border-width: 0px 0px 0px 0px;
+  margin: 10px 16px 18px 2px;
+  padding: 14px 13px 26px 21px;
+  width: 50px;
+  height: 278px;
 }

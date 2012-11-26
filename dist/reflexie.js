@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 11-25-2012
+ * Date: 11-26-2012
  */
 (function (window, undefined) {
 
@@ -112,14 +112,19 @@
 			var prop;
 			var computed;
 			var values = {};
+			var suffix = "";
 			var properties = ["Top", "Right", "Bottom", "Left"];
 
 			if (window.getComputedStyle) {
 				computed = getComputedStyle(element);
 
+				if (type === "border") {
+					suffix = "Width";
+				}
+
 				for (i = 0, j = properties.length; i < j; i++) {
 					prop = properties[i];
-					values[prop.toLowerCase()] = parseFloat(computed[type + prop] || 0);
+					values[prop.toLowerCase()] = parseFloat(computed[type + prop + suffix] || 0);
 				}
 			}
 
@@ -330,7 +335,7 @@
 	
 	Flexbox.models.flexDirection = function (direction, properties) {
 		var values = this.values,
-			containerValues = values.container,
+			container = values.container,
 			itemValues = values.items,
 			i, j, item, incrementVal = 0,
 			utils = Flexbox.utils,
@@ -344,7 +349,7 @@
 			mainSize = Flexbox.dimValues[mainStart],
 			crossSize = Flexbox.dimValues[crossStart],
 			storedVal = 0,
-			containerVal = containerValues[mainSize];
+			containerSize;
 
 		var prevItem;
 		var prevMainStart = 0;
@@ -355,14 +360,21 @@
 			"left": "right"
 		};
 
+		containerSize = container[mainSize];
+
+		if (!isReverse) {
+			incrementVal -= container.debug.border[mainStart];
+			incrementVal -= container.debug.margin[mainStart];
+		}
+
 		var revStart = revValues[mainStart];
 
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
-			item[crossStart] = storedVal;
+			item[crossStart] = (storedVal + container.debug.padding[crossStart]);
 
 			if (isReverse) {
-				item[mainStart] = (containerVal - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
+				item[mainStart] = ((containerSize + container.debug.padding[mainStart]) - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
 			} else {
 				item[mainStart] += incrementVal;
 				item[mainStart] -= item.debug.margin[mainStart];
@@ -410,7 +422,8 @@
 		var mainSize = this.mainSize;
 		var crossSize = this.crossSize;
 
-		var containerSize = values.container[mainSize];
+		var container = values.container;
+		var containerSize = container[mainSize];
 		var lines = [];
 
 		var line = {
@@ -452,7 +465,7 @@
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
 
-				if (currMainStart + (item[mainSize] + item.debug.inner[mainStart]) > breakPoint) {
+				if (currMainStart + (item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal]) > breakPoint) {
 					lines.push(line);
 
 					line = {
@@ -466,9 +479,9 @@
 						var newLineStart;
 
 						if (isReverse) {
-							newLineStart = (item[mainStart] + item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal]) - (prevMainStart * multiplier) - breakPoint;
+							newLineStart = ((item[mainStart] - container.debug.padding[mainStart]) + item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal]) - (prevMainStart * multiplier) - breakPoint;
 						} else {
-							newLineStart = (prevMainStart * multiplier) - item[mainStart];
+							newLineStart = (prevMainStart * multiplier) - (item[mainStart] - container.debug.padding[mainStart]);
 						}
 
 						if (newLineStart > 0) {
@@ -529,10 +542,10 @@
 	Flexbox.models.justifyContent = function (justification, properties) {
 		var values = this.values,
 			utils = Flexbox.utils,
-			containerValues = values.container,
+			container = values.container,
 			mainStart = this.mainStart,
 			mainSize = this.mainSize,
-			containerSize = containerValues[mainSize],
+			containerSize = container[mainSize],
 			isStart = (justification === "flex-start"),
 			isCenter = (justification === "center"),
 			isBetween = (justification === "space-between"),
@@ -726,7 +739,7 @@
 	
 	Flexbox.models.alignContent = function (alignment, properties) {
 		var values = this.values,
-			containerValues = values.container,
+			container = values.container,
 
 			crossStart = this.crossStart,
 			mainStart = this.mainStart,
@@ -734,7 +747,7 @@
 			mainSize = this.mainSize,
 			crossSize = this.crossSize,
 
-			containerSize = containerValues[crossSize],
+			containerSize = container[crossSize],
 			isStart = (alignment === "flex-start"),
 			isCenter = (alignment === "center"),
 			isBetween = (alignment === "space-between"),
@@ -820,16 +833,17 @@
 		}
 
 		if (isStretch && isAlignItemsStretch) {
-			var prevCrossSize = 0;
+			var prevCrossSize = container.debug.padding[crossStart];
 
 			for (i = 0, j = lines.length; i < j; i++) {
 				items = lines[i].items;
 
 				var next = lines[i + 1];
-				var lineCrossSize = containerSize;
+				var lineCrossSize = containerSize + container.debug.padding[crossStart];
 
 				if (next) {
-					lineCrossSize = next.items[0][crossStart];
+					next = next.items[0];
+					lineCrossSize = next[crossStart];
 				}
 
 				lineCrossSize -= prevCrossSize;
