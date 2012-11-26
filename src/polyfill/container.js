@@ -36,6 +36,30 @@ Flexbox.container = (function () {
 			return this.uid;
 		},
 
+		expandShorthands : function (properties) {
+			var map = {};
+
+			for (var key in properties) {
+				var value = properties[key];
+
+				if (key === "flex-flow") {
+					value = value.split(" ");
+
+					if (value[0]) {
+						map["flex-direction"] = value[0];
+					}
+
+					if (value[1]) {
+						map["flex-wrap"] = value[1];
+					}
+				} else {
+					map[key] = value;
+				}
+			}
+
+			return map;
+		},
+
 		render : function (settings) {
 			this.uid = this.generateUID(settings.container);
 
@@ -49,7 +73,7 @@ Flexbox.container = (function () {
 			this.dom.values = utils.storePositionValues(this.container, this.items);
 			this.values = utils.clonePositionValues(this.dom.values);
 
-			var properties = this.container.properties;
+			var properties = this.expandShorthands(this.container.properties);
 			var models = this.models;
 
 			// So the way this works:
