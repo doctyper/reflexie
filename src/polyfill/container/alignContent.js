@@ -42,7 +42,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 		for (k = 0, l = line.length; k < l; k++) {
 			item = line[k];
-			x = Math.max(x, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
+			x = Math.max(x, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 		}
 
 		lineRemainder -= x;
@@ -110,7 +110,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 			for (k = 0, l = items.length; k < l; k++) {
 				item = items[k];
-				item[crossSize] = ((lineCrossSize - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal]);
+				item[crossSize] = ((lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal]);
 			}
 
 			prevCrossSize += lineCrossSize;

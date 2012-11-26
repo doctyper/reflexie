@@ -55,7 +55,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
 
-			if (currMainStart + (item[mainSize] + item.debug.padding[mainTotal]) > breakPoint) {
+			if (currMainStart + (item[mainSize] + item.debug.inner[mainStart]) > breakPoint) {
 				lines.push(line);
 
 				line = {
@@ -86,8 +86,8 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 			item[mainStart] -= prevMainStart * multiplier;
 			item[crossStart] += prevCrossStart;
 
-			currMainStart += (item[mainSize] + item.debug.padding[mainTotal]) + item.debug.margin[mainTotal];
-			currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
+			currMainStart += (item[mainSize] + item.debug.inner[mainStart]) + item.debug.margin[mainTotal];
+			currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 
 			if (isColumn) {
 				if (prevItem) {
@@ -116,7 +116,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 				item = items[k];
 
 				if (prevItem) {
-					prevMainStart += prevItem.debug.padding[mainTotal];
+					prevMainStart += prevItem.debug.inner[mainStart];
 					item[mainStart] += prevMainStart;
 				}
 
