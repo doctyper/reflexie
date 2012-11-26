@@ -39,6 +39,8 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	var currCrossStart = 0;
 	var prevCrossStart = 0;
 
+	var multiplier = isReverse ? -1 : 1;
+
 	// TODO: Implement `flex-wrap: wrap-reverse;`
 	if (isWrap || isWrapReverse) {
 		var breakPoint = containerSize;
@@ -50,12 +52,10 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 
 		var revStart = revValues[mainStart];
 
-		var multiplier = isReverse ? -1 : 1;
-
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
 
-			if (currMainStart + item[mainSize] > breakPoint) {
+			if (currMainStart + (item[mainSize] + item.debug.padding[mainTotal]) > breakPoint) {
 				lines.push(line);
 
 				line = {
@@ -84,7 +84,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 			}
 
 			item[mainStart] -= prevMainStart * multiplier;
-			item[crossStart] += prevCrossStart;
+			item[crossStart] += prevCrossStart * multiplier;
 
 			currMainStart += (item[mainSize] + item.debug.padding[mainTotal]) + item.debug.margin[mainTotal];
 			currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
@@ -108,18 +108,20 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	prevMainStart = 0;
 
 	// Adjust positioning for padding
-	for (i = 0, j = lines.length; i < j; i++) {
-		items = lines[i].items;
+	if (!isColumn) {
+		for (i = 0, j = lines.length; i < j; i++) {
+			items = lines[i].items;
 
-		for (k = 0, l = items.length; k < l; k++) {
-			item = items[k];
+			for (k = 0, l = items.length; k < l; k++) {
+				item = items[k];
 
-			if (prevItem) {
-				prevMainStart += prevItem.debug.padding[mainTotal];
-				item[mainStart] += prevMainStart;
+				if (prevItem) {
+					prevMainStart += prevItem.debug.padding[mainTotal];
+					item[mainStart] += prevMainStart;
+				}
+
+				prevItem = item;
 			}
-
-			prevItem = item;
 		}
 	}
 
