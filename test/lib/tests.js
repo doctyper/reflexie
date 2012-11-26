@@ -115,7 +115,7 @@ define([
 					var childNodes = flex.children();
 					var box = childNodes[idx].getBoundingClientRect();
 
-					var range = (isStretch) ? 3 : 1;
+					var range = (isStretch) ? 4 : 2;
 					expect(Math.floor(box[key])).to.be.within(val - range,  val + range);
 				});
 			};
