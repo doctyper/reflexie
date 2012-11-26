@@ -30,6 +30,44 @@ io.sockets.on("connection", function (socket) {
 	fs.watchFile(test, function (curr, prev) {
 		socket.emit("datachange");
 	});
+
+	socket.on("suiteerror", function (data) {
+		var map = {
+			"display": "flex"
+		};
+
+		var properties = data.properties.split("; ");
+
+		properties.forEach(function (prop, i) {
+			var props = prop.split(": ");
+			map[props[0]] = props[1];
+		});
+
+		var dataPath = __dirname + "/data";
+		var failCSSFile = dataPath + "/fail.css";
+		var failJSFile = dataPath + "/fail.js";
+
+		var prefixes = ["-webkit-", ""];
+		var css = "#flex-target {\n";
+
+		for (var key in map) {
+			for (var i = 0, j = prefixes.length; i < j; i++) {
+				css += "\t" + prefixes[i] + key + ": " + map[key] + "\n";
+			}
+
+			css += "\n";
+		}
+
+		css = css.trim() + "\n}";
+
+		var js = "window.flexContainer = " + JSON.stringify(map, null, "\t") + ";";
+
+		fs.writeFileSync(failCSSFile, css);
+		fs.writeFileSync(failJSFile, js);
+
+		console.log("New error reported. Check http://0.0.0.0:9090/tester for details.");
+		io.sockets.emit("errorchange");
+	});
 });
 
 app.configure(function () {

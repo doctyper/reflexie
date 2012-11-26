@@ -57,12 +57,15 @@
 								test = tests[i];
 
 								if (test.state === "failed") {
-									err = true;
+									err = test;
 									break;
 								}
 							}
 
 							if (err) {
+								socket.emit("suiteerror", {
+									properties: suite.parent.title
+								});
 								console.error(suite.parent.title);
 								throw new Error();
 							} else {

@@ -4,6 +4,23 @@
 		<link rel="stylesheet" href="css/runner.css" />
 
 		<style>
+			#error {
+				padding: 10px;
+				right: 20px;
+				bottom: 20px;
+				position: fixed;
+				border: 1px dashed #555;
+				background: #eee;
+				z-index: 10;
+			}
+
+			#error pre {
+				margin: 0;
+				font-size: 12px;
+			}
+		</style>
+
+		<style>
 			#flex-container {
 				/*left: auto;*/
 				/*right: 0;*/
@@ -16,16 +33,22 @@
 			}
 
 			#flex-target div {
-				/*width: auto;*/
-				/*height: auto;*/
 				opacity: 0.5;
+			}
+
+			.stretch-row #flex-target div {
+				height: auto;
+			}
+
+			.stretch-col #flex-target div {
+				width: auto;
 			}
 		</style>
 
-		<style data-flex-values="container">
+		<!--<style data-flex-values="container">
 			#flex-target {
-				-webkit-flex-direction: column-reverse;
-				flex-direction: column-reverse;
+				-webkit-flex-direction: column;
+				flex-direction: column;
 
 				-webkit-flex-wrap: wrap;
 				flex-wrap: wrap;
@@ -39,29 +62,65 @@
 				-webkit-align-content: flex-start;
 				align-content: flex-start;
 			}
-		</style>
-		<script data-flex-values="container">
+		</style>-->
+		<link rel="stylesheet" href="data/fail.css" />
+
+		<!-- <script data-flex-values="container">
 			window.flexContainer = {
 				"display": "flex",
-				"flex-direction": "column-reverse",
-				"flex-wrap": "wrap",
+				"flex-direction": "row-reverse",
+				"flex-wrap": "nowrap",
 				"justify-content": "flex-start",
 				"align-items": "flex-start",
 				"align-content": "flex-start"
 			};
-		</script>
+		</script> -->
+		<script src="data/fail.js"></script>
 
 		<script src="lib/require.js"></script>
 		<script>
 			require.config({
+				paths: {
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io.js"
+				},
 				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
 		</script>
 
 		<script>
 			require([
-				"dist/reflexie"
-			], function (Flexie) {
+				"dist/reflexie",
+				"socket.io"
+			], function (Flexie, io) {
+				var socket = io.connect("http://0.0.0.0:9999");
+				socket.on("errorchange", function (data) {
+					socket.disconnect();
+					window.location.reload();
+				});
+
+				// Error Reporting Setup
+				(function () {
+					var error = document.querySelector("#error pre");
+					var body = document.body;
+					var flx = window.flexContainer;
+
+					error.innerHTML = JSON.stringify(window.flexContainer, null, 3);
+
+					if (flx["align-items"] === "stretch" || flx["align-content"] === "stretch") {
+						switch (flx["flex-direction"]) {
+						case "row":
+						case "row-reverse":
+							body.className = "stretch-row";
+							break;
+
+						case "column":
+						case "column-reverse":
+							body.className = "stretch-col";
+							break;
+						}
+					}
+				}());
+
 				var target = document.querySelector("#flex-target");
 				var items = document.querySelectorAll("#flex-target > *");
 
@@ -163,5 +222,8 @@
 			</div>
 		</div>
 
+		<div id="error">
+			<pre></pre>
+		</div>
 	</body>
 </html>
