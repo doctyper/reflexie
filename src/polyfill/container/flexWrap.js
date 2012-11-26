@@ -55,7 +55,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
 
-			if (currMainStart + (item[mainSize] + item.debug.inner[mainStart]) > breakPoint) {
+			if (currMainStart + (item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal]) > breakPoint) {
 				lines.push(line);
 
 				line = {

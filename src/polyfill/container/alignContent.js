@@ -1,6 +1,6 @@
 Flexbox.models.alignContent = function (alignment, properties) {
 	var values = this.values,
-		containerValues = values.container,
+		container = values.container,
 
 		crossStart = this.crossStart,
 		mainStart = this.mainStart,
@@ -8,7 +8,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		mainSize = this.mainSize,
 		crossSize = this.crossSize,
 
-		containerSize = containerValues[crossSize],
+		containerSize = container[crossSize],
 		isStart = (alignment === "flex-start"),
 		isCenter = (alignment === "center"),
 		isBetween = (alignment === "space-between"),

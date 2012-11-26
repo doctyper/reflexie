@@ -1,6 +1,6 @@
 Flexbox.models.flexDirection = function (direction, properties) {
 	var values = this.values,
-		containerValues = values.container,
+		container = values.container,
 		itemValues = values.items,
 		i, j, item, incrementVal = 0,
 		utils = Flexbox.utils,
@@ -14,7 +14,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		mainSize = Flexbox.dimValues[mainStart],
 		crossSize = Flexbox.dimValues[crossStart],
 		storedVal = 0,
-		containerVal = containerValues[mainSize];
+		containerSize;
 
 	var prevItem;
 	var prevMainStart = 0;
@@ -25,14 +25,17 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		"left": "right"
 	};
 
+	containerSize = container[mainSize];
+	incrementVal -= (container.debug.margin[mainStart] + container.debug.border[mainStart]);
+
 	var revStart = revValues[mainStart];
 
 	for (i = 0, j = itemValues.length; i < j; i++) {
 		item = itemValues[i];
-		item[crossStart] = storedVal;
+		item[crossStart] = (storedVal + container.debug.padding[crossStart]);
 
 		if (isReverse) {
-			item[mainStart] = (containerVal - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
+			item[mainStart] = (containerSize - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
 		} else {
 			item[mainStart] += incrementVal;
 			item[mainStart] -= item.debug.margin[mainStart];

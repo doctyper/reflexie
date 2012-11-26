@@ -1,10 +1,10 @@
 Flexbox.models.justifyContent = function (justification, properties) {
 	var values = this.values,
 		utils = Flexbox.utils,
-		containerValues = values.container,
+		container = values.container,
 		mainStart = this.mainStart,
 		mainSize = this.mainSize,
-		containerSize = containerValues[mainSize],
+		containerSize = container[mainSize],
 		isStart = (justification === "flex-start"),
 		isCenter = (justification === "center"),
 		isBetween = (justification === "space-between"),
