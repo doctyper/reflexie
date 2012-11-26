@@ -18,6 +18,12 @@ define([
 			"row-reverse": true,
 			"column": true,
 			"column-reverse": true
+		},
+
+		"wrap": {
+			"wrap": true,
+			"nowrap": true,
+			"wrap-reverse": true
 		}
 	};
 
@@ -170,11 +176,16 @@ define([
 			var buildDirectionDescription = function (direction, data) {
 				describe(direction, function () {
 					var count = data.children;
+					var x;
 
 					if (TESTS.children["x" + count]) {
 						for (var children in data) {
-							if (data[children].items) {
-								buildChildDescription(children, data[children], count);
+							x = data[children];
+
+							if (x.items) {
+								if (TESTS.wrap[x.rules["flex-wrap"]]) {
+									buildChildDescription(children, data[children], count);
+								}
 							}
 						}
 					}

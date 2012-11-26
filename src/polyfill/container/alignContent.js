@@ -20,7 +20,8 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		lineEnd, lineRemainder,
 		multiplier = 1, x, y;
 
-	var isAlignItemsStretch = properties["align-items"] === "stretch";
+	var alignItems = properties["align-items"];
+	var isAlignItemsStretch = alignItems === "stretch";
 	var crossTotal = crossStart + "Total";
 
 	// http://www.w3.org/TR/css3-flexbox/#align-content-property
@@ -41,7 +42,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 		for (k = 0, l = line.length; k < l; k++) {
 			item = line[k];
-			x = Math.max(x, item[crossSize] + item.debug.margin[crossTotal]);
+			x = Math.max(x, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
 		}
 
 		lineRemainder -= x;
@@ -96,7 +97,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		var prevCrossSize = 0;
 
 		for (i = 0, j = lines.length; i < j; i++) {
-			item = lines[i].items;
+			items = lines[i].items;
 
 			var next = lines[i + 1];
 			var lineCrossSize = containerSize;
@@ -107,8 +108,9 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 			lineCrossSize -= prevCrossSize;
 
-			for (k = 0, l = item.length; k < l; k++) {
-				item[k][crossSize] = (lineCrossSize - item[k].debug.margin[crossTotal]);
+			for (k = 0, l = items.length; k < l; k++) {
+				item = items[k];
+				item[crossSize] = ((lineCrossSize - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal]);
 			}
 
 			prevCrossSize += lineCrossSize;

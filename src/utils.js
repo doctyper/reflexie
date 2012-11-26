@@ -85,7 +85,7 @@ Flexbox.utils = {
 
 			for (i = 0, j = properties.length; i < j; i++) {
 				prop = properties[i];
-				values[prop.toLowerCase()] = parseFloat(computed[type + prop]);
+				values[prop.toLowerCase()] = parseFloat(computed[type + prop] || 0);
 			}
 		}
 
@@ -107,16 +107,6 @@ Flexbox.utils = {
 		return this.getValues(element, "padding");
 	},
 
-	getBoxSizing : function (style) {
-
-		// Come on FF, get with the program
-		if ("MozBoxSizing" in style) {
-			return "MozBoxSizing";
-		}
-
-		return "boxSizing";
-	},
-
 	getPristineBox : function (element, position) {
 		position = position || "absolute";
 
@@ -126,13 +116,9 @@ Flexbox.utils = {
 		var oFloat = style.cssFloat;
 		var oClear = style.clear;
 
-		var boxSizing = this.getBoxSizing(style);
-		var oSize = style[boxSizing];
-
 		style.position = "relative";
 		style.cssFloat = "left";
 		style.clear = "both";
-		style[boxSizing] = "border-box";
 
 		var sizeBox = element.getBoundingClientRect();
 		var autoValues = this.detectAuto(element, sizeBox);
@@ -140,7 +126,6 @@ Flexbox.utils = {
 		style.position = oPos;
 		style.cssFloat = oFloat;
 		style.clear = oClear;
-		style[boxSizing] = oSize;
 
 		var marginBox = element.getBoundingClientRect();
 
@@ -164,8 +149,8 @@ Flexbox.utils = {
 			position: position,
 			left: marginBox.left,
 			top: marginBox.top,
-			width: sizeBox.width,
-			height: sizeBox.height,
+			width: sizeBox.width - (padding.left + padding.right),
+			height: sizeBox.height - (padding.top + padding.bottom),
 			debug: {
 				auto: autoValues,
 				values: {

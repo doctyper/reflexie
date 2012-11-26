@@ -5,6 +5,8 @@
 
 		<style>
 			#flex-container {
+				/*left: auto;*/
+				/*right: 0;*/
 				opacity: 1;
 				z-index: 1;
 			}
@@ -22,8 +24,8 @@
 
 		<style data-flex-values="container">
 			#flex-target {
-				-webkit-flex-direction: column;
-				flex-direction: column;
+				-webkit-flex-direction: row-reverse;
+				flex-direction: row-reverse;
 
 				-webkit-flex-wrap: wrap;
 				flex-wrap: wrap;
@@ -41,7 +43,7 @@
 		<script data-flex-values="container">
 			window.flexContainer = {
 				"display": "flex",
-				"flex-direction": "column",
+				"flex-direction": "row-reverse",
 				"flex-wrap": "wrap",
 				"justify-content": "flex-start",
 				"align-items": "flex-start",
