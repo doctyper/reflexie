@@ -26,9 +26,9 @@ Flexbox.models.flexDirection = function (direction, properties) {
 	};
 
 	containerSize = container[mainSize];
-	incrementVal -= container.debug.border[mainStart];
 
 	if (!isReverse) {
+		incrementVal -= container.debug.border[mainStart];
 		incrementVal -= container.debug.margin[mainStart];
 	}
 

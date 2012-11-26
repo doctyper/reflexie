@@ -13,7 +13,8 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	var mainSize = this.mainSize;
 	var crossSize = this.crossSize;
 
-	var containerSize = values.container[mainSize];
+	var container = values.container;
+	var containerSize = container[mainSize];
 	var lines = [];
 
 	var line = {
@@ -69,9 +70,9 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 					var newLineStart;
 
 					if (isReverse) {
-						newLineStart = (item[mainStart] + item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal]) - (prevMainStart * multiplier) - breakPoint;
+						newLineStart = ((item[mainStart] - container.debug.padding[mainStart]) + item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal]) - (prevMainStart * multiplier) - breakPoint;
 					} else {
-						newLineStart = (prevMainStart * multiplier) - item[mainStart];
+						newLineStart = (prevMainStart * multiplier) - (item[mainStart] - container.debug.padding[mainStart]);
 					}
 
 					if (newLineStart > 0) {
