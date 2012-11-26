@@ -9,15 +9,15 @@ define([
 	var DEBUG = false;
 	var TESTS = {
 		"children": {
-			"x3": true,
+			// "x3": true,
 			"x6": true
 		},
 
 		"direction": {
 			"row": true,
-			"row-reverse": true,
-			"column": true,
-			"column-reverse": true
+			// "row-reverse": true,
+			// "column": true,
+			// "column-reverse": true
 		}
 	};
 

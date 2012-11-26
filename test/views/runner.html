@@ -45,6 +45,10 @@
 							document.title = "Done.";
 						});
 
+						runner.on("test fail", function (test) {
+							throw new Error(test);
+						});
+
 						runner.on("suite end", function (suite) {
 							var tests = suite.tests,
 								i, j, test, err;
@@ -59,7 +63,7 @@
 							}
 
 							if (err) {
-								console.error(suite);
+								console.error(suite.parent.title);
 								throw new Error();
 							} else {
 								var parentSuite = $("#report .suite .suite .suite");

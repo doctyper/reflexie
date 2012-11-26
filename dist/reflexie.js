@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 11-20-2012
+ * Date: 11-25-2012
  */
 (function (window, undefined) {
 
@@ -119,7 +119,7 @@
 
 				for (i = 0, j = properties.length; i < j; i++) {
 					prop = properties[i];
-					values[prop.toLowerCase()] = parseFloat(computed[type + prop]);
+					values[prop.toLowerCase()] = parseFloat(computed[type + prop] || 0);
 				}
 			}
 
@@ -141,16 +141,6 @@
 			return this.getValues(element, "padding");
 		},
 
-		getBoxSizing : function (style) {
-
-			// Come on FF, get with the program
-			if ("MozBoxSizing" in style) {
-				return "MozBoxSizing";
-			}
-
-			return "boxSizing";
-		},
-
 		getPristineBox : function (element, position) {
 			position = position || "absolute";
 
@@ -160,13 +150,9 @@
 			var oFloat = style.cssFloat;
 			var oClear = style.clear;
 
-			var boxSizing = this.getBoxSizing(style);
-			var oSize = style[boxSizing];
-
 			style.position = "relative";
 			style.cssFloat = "left";
 			style.clear = "both";
-			style[boxSizing] = "border-box";
 
 			var sizeBox = element.getBoundingClientRect();
 			var autoValues = this.detectAuto(element, sizeBox);
@@ -174,7 +160,6 @@
 			style.position = oPos;
 			style.cssFloat = oFloat;
 			style.clear = oClear;
-			style[boxSizing] = oSize;
 
 			var marginBox = element.getBoundingClientRect();
 
@@ -198,8 +183,8 @@
 				position: position,
 				left: marginBox.left,
 				top: marginBox.top,
-				width: sizeBox.width,
-				height: sizeBox.height,
+				width: sizeBox.width - (padding.left + padding.right),
+				height: sizeBox.height - (padding.top + padding.bottom),
 				debug: {
 					auto: autoValues,
 					values: {
@@ -406,7 +391,7 @@
 		var values = this.values;
 		var itemValues = values.items;
 
-		var i, j;
+		var i, j, k, l;
 
 		var isWrap = (wrap === "wrap");
 		var isWrapReverse = (wrap === "wrap-reverse");
@@ -431,16 +416,21 @@
 			isColumn = utils.assert(flexDirection, colArray),
 			isReverse = utils.assert(flexDirection, revArray);
 
+		var item;
+		var items;
+		var prevItem;
+
+		var mainTotal = mainStart + "Total";
+		var crossTotal = crossStart + "Total";
+
+		var currMainStart = 0;
+		var prevMainStart = 0;
+		var currCrossStart = 0;
+		var prevCrossStart = 0;
+
 		// TODO: Implement `flex-wrap: wrap-reverse;`
 		if (isWrap || isWrapReverse) {
 			var breakPoint = containerSize;
-			var item;
-			var prevItem;
-
-			var currMainStart = 0;
-			var prevMainStart = 0;
-			var currCrossStart = 0;
-			var prevCrossStart = 0;
 
 			var revValues = {
 				"top": "bottom",
@@ -448,8 +438,6 @@
 			};
 
 			var revStart = revValues[mainStart];
-			var mainTotal = mainStart + "Total";
-			var crossTotal = crossStart + "Total";
 
 			var multiplier = isReverse ? -1 : 1;
 
@@ -487,8 +475,8 @@
 				item[mainStart] -= prevMainStart * multiplier;
 				item[crossStart] += prevCrossStart;
 
-				currMainStart += item[mainSize] + item.debug.margin[mainTotal];
-				currCrossStart = Math.max(currCrossStart, item[crossSize] + item.debug.margin[crossTotal]);
+				currMainStart += (item[mainSize] + item.debug.padding[mainTotal]) + item.debug.margin[mainTotal];
+				currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
 
 				if (isColumn) {
 					if (prevItem) {
@@ -506,9 +494,26 @@
 
 		lines.push(line);
 
+		prevMainStart = 0;
+
+		// Adjust positioning for padding
+		for (i = 0, j = lines.length; i < j; i++) {
+			items = lines[i].items;
+
+			for (k = 0, l = items.length; k < l; k++) {
+				item = items[k];
+
+				if (prevItem) {
+					prevMainStart += prevItem.debug.padding[mainTotal];
+					item[mainStart] += prevMainStart;
+				}
+
+				prevItem = item;
+			}
+		}
+
 		// Expose lines
 		this.lines = lines;
-		console.log(lines);
 	};
 	
 	Flexbox.models.justifyContent = function (justification, properties) {
@@ -547,7 +552,7 @@
 
 			for (k = 0; k < l; k++) {
 				item = items[k];
-				lineRemainder -= item[mainSize] + item.debug.margin[mainTotal];
+				lineRemainder -= (item[mainSize] + item.debug.padding[mainTotal]) + item.debug.margin[mainTotal];
 			}
 
 			if (isCenter || isAround && lineRemainder < 0) {
@@ -620,11 +625,14 @@
 							item[crossStart] += (lineRemainder - item[crossSize]) * i;
 						}
 
-						item[crossSize] = lineRemainder - item.debug.margin[crossTotal];
+						item[crossSize] = (lineRemainder - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal];
 					}
 				}
 			}
 		} else if (isStretch) {
+			var prevCrossStart = 0;
+			var prevItem;
+
 			for (i = 0, j = lines.length; i < j; i++) {
 				line = lines[i];
 				items = line.items;
@@ -644,8 +652,15 @@
 					item = items[k];
 
 					if (item.debug.auto[crossSize]) {
-						item[crossSize] = lineCrossSize - item.debug.margin[crossTotal];
+						item[crossSize] = (lineCrossSize - item.debug.padding[crossTotal]) - item.debug.margin[crossTotal];
+
+						if (prevItem) {
+							prevCrossStart += prevItem.debug.padding[crossTotal];
+							item[crossStart] -= prevCrossStart;
+						}
 					}
+
+					prevItem = item;
 				}
 			}
 		}
@@ -689,12 +704,20 @@
 			l = items.length;
 			lineRemainder = line.maxItemSize;
 
+			lineCrossSize = 0;
+
 			for (k = 0; k < l; k++) {
 				item = items[k];
 
+				lineCrossSize = item[crossSize];
+
+				if (isNotFlexWrap) {
+					lineCrossSize += item.debug.padding[crossTotal];
+				}
+
 				// Remove margin from crossStart
 				item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
-				item[crossStart] += remainderSize + (lineRemainder - item[crossSize]) * multiplier;
+				item[crossStart] += remainderSize + (lineRemainder - lineCrossSize) * multiplier;
 			}
 		}
 	};
@@ -721,7 +744,8 @@
 			lineEnd, lineRemainder,
 			multiplier = 1, x, y;
 
-		var isAlignItemsStretch = properties["align-items"] === "stretch";
+		var alignItems = properties["align-items"];
+		var isAlignItemsStretch = alignItems === "stretch";
 		var crossTotal = crossStart + "Total";
 
 		// http://www.w3.org/TR/css3-flexbox/#align-content-property
@@ -742,7 +766,7 @@
 
 			for (k = 0, l = line.length; k < l; k++) {
 				item = line[k];
-				x = Math.max(x, item[crossSize] + item.debug.margin[crossTotal]);
+				x = Math.max(x, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
 			}
 
 			lineRemainder -= x;
