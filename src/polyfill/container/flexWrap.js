@@ -84,7 +84,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 			}
 
 			item[mainStart] -= prevMainStart * multiplier;
-			item[crossStart] += prevCrossStart * multiplier;
+			item[crossStart] += prevCrossStart;
 
 			currMainStart += (item[mainSize] + item.debug.padding[mainTotal]) + item.debug.margin[mainTotal];
 			currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.padding[crossTotal]) + item.debug.margin[crossTotal]);
@@ -108,7 +108,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	prevMainStart = 0;
 
 	// Adjust positioning for padding
-	if (!isColumn) {
+	if (!isColumn && !isReverse) {
 		for (i = 0, j = lines.length; i < j; i++) {
 			items = lines[i].items;
 
