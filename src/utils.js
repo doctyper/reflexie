@@ -78,14 +78,19 @@ Flexbox.utils = {
 		var prop;
 		var computed;
 		var values = {};
+		var suffix = "";
 		var properties = ["Top", "Right", "Bottom", "Left"];
 
 		if (window.getComputedStyle) {
 			computed = getComputedStyle(element);
 
+			if (type === "border") {
+				suffix = "Width";
+			}
+
 			for (i = 0, j = properties.length; i < j; i++) {
 				prop = properties[i];
-				values[prop.toLowerCase()] = parseFloat(computed[type + prop] || 0);
+				values[prop.toLowerCase()] = parseFloat(computed[type + prop + suffix] || 0);
 			}
 		}
 
