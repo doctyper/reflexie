@@ -43,9 +43,6 @@ Flexbox.models.alignItems = function (alignment, properties) {
 			}
 		}
 	} else if (isStretch) {
-		// var prevCrossStart = 0;
-		// var prevItem;
-
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
 			items = line.items;
@@ -66,14 +63,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 				if (item.debug.auto[crossSize]) {
 					item[crossSize] = (lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
-
-					// if (prevItem) {
-						// prevCrossStart += prevItem.debug.inner[crossStart];
-						// item[crossStart] -= prevCrossStart;
-					// }
 				}
-
-				// prevItem = item;
 			}
 		}
 	}
