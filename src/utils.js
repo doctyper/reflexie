@@ -18,6 +18,12 @@ Flexbox.utils = {
 		});
 	},
 
+	toDashedCase : function (str) {
+		return str.replace(/([A-Z])/g, function ($1) {
+			return "-" + $1.toLowerCase();
+		});
+	},
+
 	testValue : function (val) {
 		var dimensions = ["left", "top", "right", "bottom", "width", "height"],
 			i, j;
@@ -190,7 +196,7 @@ Flexbox.utils = {
 		};
 	},
 
-	clonePositionValues : function (values) {
+	clonePositionValues : function (values, items) {
 		var key, i, j, newItem;
 
 		var newValues = {
@@ -209,6 +215,7 @@ Flexbox.utils = {
 				newItem[key] = values.items[i][key];
 			}
 
+			newItem.debug.properties = items[i].properties;
 			newValues.items.push(newItem);
 		}
 

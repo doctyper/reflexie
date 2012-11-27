@@ -14,6 +14,7 @@ Flexbox.container = (function () {
 
 	container.prototype = {
 		models : {
+			order: models.order,
 			flexDirection : models.flexDirection,
 			flexWrap : models.flexWrap,
 			justifyContent : models.justifyContent,
@@ -38,6 +39,8 @@ Flexbox.container = (function () {
 
 		expandFlexFlow : function (properties) {
 			var map = {};
+			var longHands = ["direction", "wrap"];
+			var i, j;
 
 			for (var key in properties) {
 				var value = properties[key];
@@ -45,12 +48,8 @@ Flexbox.container = (function () {
 				if (key === "flex-flow") {
 					value = value.split(" ");
 
-					if (value[0]) {
-						map["flex-direction"] = value[0];
-					}
-
-					if (value[1]) {
-						map["flex-wrap"] = value[1];
+					for (i = 0, j = value.length; i < j; i++) {
+						map["flex-" + longHands[i]] = value[i];
 					}
 				} else {
 					map[key] = value;
@@ -71,7 +70,7 @@ Flexbox.container = (function () {
 
 			this.dom = this.dom || {};
 			this.dom.values = utils.storePositionValues(this.container, this.items);
-			this.values = utils.clonePositionValues(this.dom.values);
+			this.values = utils.clonePositionValues(this.dom.values, this.items);
 
 			// Handle `flex-flow` shorthand property
 			var properties = this.expandFlexFlow(this.container.properties);
@@ -80,6 +79,7 @@ Flexbox.container = (function () {
 			// So the way this works:
 			//
 			// All properties get a chance to override each other, in this order:
+			// - order
 			// - flex-direction
 			// - flex-wrap
 			// - justify-content
@@ -91,15 +91,13 @@ Flexbox.container = (function () {
 			//
 			// The result is then written to the DOM using only one write cycle.
 
-			for (var key in properties) {
-				var func = utils.toCamelCase(key);
-
-				if (models[func]) {
-					models[func].call(this, properties[key], properties);
-				}
+			for (var key in models) {
+				var prop = utils.toDashedCase(key);
+				models[key].call(this, properties[prop], properties);
 			}
 
-			utils.applyPositioning(this.uid, this.container, this.items, this.values);
+			// Final positioning
+			Flexbox.utils.applyPositioning(this.uid, this.container, this.items, this.values);
 		}
 	};
 
