@@ -68,14 +68,6 @@ Flexbox.models.alignItems = function (alignment, properties) {
 		}
 	}
 
-	if (isStretch || isStart || isBaseline) {
-		return;
-	}
-
-	if (isCenter) {
-		multiplier = 0.5;
-	}
-
 	var remainderSize = containerSize;
 
 	for (i = 0, j = lines.length; i < j; i++) {
@@ -93,7 +85,12 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 	remainderSize /= lines.length;
 
+	if (isStretch || isStart || isBaseline) {
+		return;
+	}
+
 	if (isCenter) {
+		multiplier = 0.5;
 		remainderSize *= 0.5;
 	}
 

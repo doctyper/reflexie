@@ -19,6 +19,7 @@ Flexbox.container = (function () {
 			flexWrap : models.flexWrap,
 			justifyContent : models.justifyContent,
 			alignItems : models.alignItems,
+			alignSelf : models.alignSelf,
 			alignContent : models.alignContent
 		},
 
