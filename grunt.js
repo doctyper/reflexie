@@ -21,6 +21,7 @@ module.exports = function (grunt) {
 				"polyfill/container/alignItems",
 				"polyfill/container/alignContent",
 				"polyfill/container",
+				"polyfill/items",
 				"polyfill",
 				"exports",
 				"outro"
