@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 11-26-2012
+ * Date: 3-12-2013
  */
 (function (window, undefined) {
 
@@ -49,6 +49,12 @@
 		toCamelCase : function (str) {
 			return str.replace(/\W+(.)/g, function (x, chr) {
 				return chr.toUpperCase();
+			});
+		},
+
+		toDashedCase : function (str) {
+			return str.replace(/([A-Z])/g, function ($1) {
+				return "-" + $1.toLowerCase();
 			});
 		},
 
@@ -224,7 +230,7 @@
 			};
 		},
 
-		clonePositionValues : function (values) {
+		clonePositionValues : function (values, items) {
 			var key, i, j, newItem;
 
 			var newValues = {
@@ -243,6 +249,7 @@
 					newItem[key] = values.items[i][key];
 				}
 
+				newItem.debug.properties = items[i].properties;
 				newValues.items.push(newItem);
 			}
 
@@ -332,6 +339,86 @@
 		return flexboxSupport;
 	}());
 	
+	
+	Flexbox.models.order = function (properties) {
+		this.items.sort(function (a, b) {
+			var aProps = a.properties;
+			var bProps = b.properties;
+
+			if (!aProps || !bProps) {
+				return;
+			}
+
+			return aProps.order - bProps.order;
+		});
+
+		this.values.items.sort(function (a, b) {
+			var aProps = a.debug.properties;
+			var bProps = b.debug.properties;
+
+			if (!aProps || !bProps) {
+				return;
+			}
+
+			return aProps.order - bProps.order;
+		});
+	};
+	
+	Flexbox.models.alignSelf = function (alignment, properties) {
+		var crossStart = this.crossStart,
+			crossSize = this.crossSize,
+			multiplier = 1,
+			lines = this.lines,
+			i, j, k, l, line, items, item,
+			lineRemainder;
+
+		var values = this.values;
+		var mainSize = this.mainSize;
+		var containerSize = values.container[mainSize];
+
+		var mainStart = this.mainStart;
+		var crossTotal = crossStart + "Total";
+
+		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
+
+		var alignSelf, lineSize;
+		var isAuto, isStart, isCenter, isStretch;
+
+		for (i = 0, j = lines.length; i < j; i++) {
+			line = lines[i];
+
+			for (i = 0, j = line.items.length; i < j; i++) {
+				item = line.items[i];
+
+				if (!item.debug || !item.debug.properties) {
+					return;
+				}
+
+				alignSelf = item.debug.properties["align-self"];
+
+				isAuto = alignSelf === "auto";
+				isStart = alignSelf === "flex-start";
+				isCenter = alignSelf === "center";
+				isStretch = alignSelf === "stretch";
+
+				lineSize = (isNotFlexWrap) ? containerSize : line.maxItemSize;
+				lineSize -= item.debug.inner[crossStart];
+				lineSize -= item.debug.margin[crossTotal];
+
+				if (isStretch) {
+					if (item.debug.auto[crossSize]) {
+						item[crossSize] = lineSize;
+					}
+				} else if (!isAuto && !isStart) {
+					if (isCenter) {
+						multiplier = 0.5;
+					}
+
+					item[crossStart] += (lineSize - item[crossSize]) * multiplier;
+				}
+			}
+		}
+	};
 	
 	Flexbox.models.flexDirection = function (direction, properties) {
 		var values = this.values,
@@ -653,9 +740,6 @@
 				}
 			}
 		} else if (isStretch) {
-			// var prevCrossStart = 0;
-			// var prevItem;
-
 			for (i = 0, j = lines.length; i < j; i++) {
 				line = lines[i];
 				items = line.items;
@@ -676,24 +760,9 @@
 
 					if (item.debug.auto[crossSize]) {
 						item[crossSize] = (lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
-
-						// if (prevItem) {
-							// prevCrossStart += prevItem.debug.inner[crossStart];
-							// item[crossStart] -= prevCrossStart;
-						// }
 					}
-
-					// prevItem = item;
 				}
 			}
-		}
-
-		if (isStretch || isStart || isBaseline) {
-			return;
-		}
-
-		if (isCenter) {
-			multiplier = 0.5;
 		}
 
 		var remainderSize = containerSize;
@@ -713,7 +782,12 @@
 
 		remainderSize /= lines.length;
 
+		if (isStretch || isStart || isBaseline) {
+			return;
+		}
+
 		if (isCenter) {
+			multiplier = 0.5;
 			remainderSize *= 0.5;
 		}
 
@@ -874,10 +948,12 @@
 
 		container.prototype = {
 			models : {
+				order: models.order,
 				flexDirection : models.flexDirection,
 				flexWrap : models.flexWrap,
 				justifyContent : models.justifyContent,
 				alignItems : models.alignItems,
+				alignSelf : models.alignSelf,
 				alignContent : models.alignContent
 			},
 
@@ -896,6 +972,28 @@
 				return this.uid;
 			},
 
+			expandFlexFlow : function (properties) {
+				var map = {};
+				var longHands = ["direction", "wrap"];
+				var i, j;
+
+				for (var key in properties) {
+					var value = properties[key];
+
+					if (key === "flex-flow") {
+						value = value.split(" ");
+
+						for (i = 0, j = value.length; i < j; i++) {
+							map["flex-" + longHands[i]] = value[i];
+						}
+					} else {
+						map[key] = value;
+					}
+				}
+
+				return map;
+			},
+
 			render : function (settings) {
 				this.uid = this.generateUID(settings.container);
 
@@ -907,14 +1005,16 @@
 
 				this.dom = this.dom || {};
 				this.dom.values = utils.storePositionValues(this.container, this.items);
-				this.values = utils.clonePositionValues(this.dom.values);
+				this.values = utils.clonePositionValues(this.dom.values, this.items);
 
-				var properties = this.container.properties;
+				// Handle `flex-flow` shorthand property
+				var properties = this.expandFlexFlow(this.container.properties);
 				var models = this.models;
 
 				// So the way this works:
 				//
 				// All properties get a chance to override each other, in this order:
+				// - order
 				// - flex-direction
 				// - flex-wrap
 				// - justify-content
@@ -926,15 +1026,13 @@
 				//
 				// The result is then written to the DOM using only one write cycle.
 
-				for (var key in properties) {
-					var func = utils.toCamelCase(key);
-
-					if (models[func]) {
-						models[func].call(this, properties[key], properties);
-					}
+				for (var key in models) {
+					var prop = utils.toDashedCase(key);
+					models[key].call(this, properties[prop], properties);
 				}
 
-				utils.applyPositioning(this.uid, this.container, this.items, this.values);
+				// Final positioning
+				Flexbox.utils.applyPositioning(this.uid, this.container, this.items, this.values);
 			}
 		};
 
@@ -957,18 +1055,18 @@
 		return Items;
 	}());
 	
-	Flexie = function (options) {
-		this.options = options;
-		return this.box(options);
+	Flexie = function (settings) {
+		this.settings = settings;
+		return this.box(settings);
 	};
 
 	Flexie.prototype = {
-		box : function (options) {
+		box : function (settings) {
 			if (Flexbox.support === true) {
 				return true;
 			}
 
-			var container = new Flexbox.container(options);
+			var container = new Flexbox.container(settings);
 		}
 	};
 	
