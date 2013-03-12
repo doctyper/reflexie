@@ -1,9 +1,23 @@
 Flexbox.models.order = function (properties) {
 	this.items.sort(function (a, b) {
-		return a.properties.order - b.properties.order;
+		var aProps = a.properties;
+		var bProps = b.properties;
+
+		if (!aProps || !bProps) {
+			return;
+		}
+
+		return aProps.order - bProps.order;
 	});
 
 	this.values.items.sort(function (a, b) {
-		return a.debug.properties.order - b.debug.properties.order;
+		var aProps = a.debug.properties;
+		var bProps = b.debug.properties;
+
+		if (!aProps || !bProps) {
+			return;
+		}
+
+		return aProps.order - bProps.order;
 	});
 };

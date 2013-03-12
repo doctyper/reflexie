@@ -24,6 +24,10 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 		for (i = 0, j = line.items.length; i < j; i++) {
 			item = line.items[i];
 
+			if (!item.debug || !item.debug.properties) {
+				return;
+			}
+
 			alignSelf = item.debug.properties["align-self"];
 
 			isAuto = alignSelf === "auto";
