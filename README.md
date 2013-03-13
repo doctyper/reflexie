@@ -43,6 +43,10 @@ I use `test/views/tester.html` to debug specific flexbox properties.
 
 Your code should pass JSHint based on the settings in .jshintrc. You should try to follow the current code style. Please use semicolons, please use tabs.
 
+This project uses [git-flow](https://github.com/nvie/gitflow). tl;dr: use the develop branch for development, and nothing gets pushed into master unless tests pass.
+
+Use pull requests often. Pull requests should be separated by intent, please don't bulk your changes. Pull requests should target the develop branch. Never pull request into master unless all tests pass successfully.
+
 ### Caveats (so far)
 
 - clearfix + display: flex does not mix. Chrome start reporting weird values. The only workaround is to use overflow: hidden;
@@ -52,7 +56,3 @@ Your code should pass JSHint based on the settings in .jshintrc. You should try 
 - Lots (LOTS) to figure out, including a proper CSS parsing engine.
 
 - HELP.
-
-### Misc
-
-- This project uses [git-flow](https://github.com/nvie/gitflow). tl;dr: use the develop branch for development, and nothing gets pushed into master unless tests pass.
