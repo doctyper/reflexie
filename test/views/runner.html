@@ -40,7 +40,13 @@
 				$(document).ready(function () {
 
 					tests.setup().then(function () {
-						var runner = mocha.run();
+						var runner;
+
+						if (window.mochaPhantomJS) {
+							runner = mochaPhantomJS.run();
+						} else {
+							runner = mocha.run();
+						}
 
 						runner.on("end", function () {
 							document.title = "Done.";

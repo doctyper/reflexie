@@ -10,10 +10,12 @@
 		"mocha": ">=1.6.0",
 		"expect.js": ">=0.2.0",
 		"socket.io": ">=0.9.11",
-		"grunt": "0.3.x"
+		"grunt": "0.3.x",
+		"mocha-phantomjs": "2.0.x"
 	},
 	"scripts": {
-		"start": "grunt build && node test/generate.js"
+		"start": "grunt build && node test/generate.js",
+		"test": "mocha-phantomjs http://0.0.0.0:9090/runner"
 	},
 	"repository": {
 		"type": "git",
