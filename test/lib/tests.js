@@ -97,135 +97,135 @@ define([
 		}
 	};
 
-	return {
-		handleDirection : function (json) {
-			var flex = $("#flex-target");
+	var handleDirection = function (json) {
+		var flex = $("#flex-target");
 
-			var sizeMap = {
-				"row": "height",
-				"row-reverse": "height",
-				"column": "width",
-				"column-reverse": "width"
-			};
+		var sizeMap = {
+			"row": "height",
+			"row-reverse": "height",
+			"column": "width",
+			"column-reverse": "width"
+		};
 
-			var buildItemExpectancy = function (idx, key, value, isStretch) {
-				var val = Math.floor(value);
+		var buildItemExpectancy = function (idx, key, value, isStretch) {
+			var val = Math.floor(value);
 
-				it(key + " should be " + val, function () {
-					var childNodes = flex.children();
-					var box = childNodes[idx].getBoundingClientRect();
+			it(key + " should be " + val, function () {
+				var childNodes = flex.children();
+				var box = childNodes[idx].getBoundingClientRect();
 
-					var range = (isStretch) ? 4 : 2;
-					expect(Math.floor(box[key])).to.be.within(val - range,  val + range);
-				});
-			};
+				var range = (isStretch) ? 4 : 2;
+				expect(Math.floor(box[key])).to.be.within(val - range,  val + range);
+			});
+		};
 
-			var buildItemDescription = function (idx, item, isStretch) {
-				describe(":nth-child(" + (idx + 1) + ")", function () {
-					var childNodes = flex.children();
-					var child = childNodes[idx];
+		var buildItemDescription = function (idx, item, isStretch) {
+			describe(":nth-child(" + (idx + 1) + ")", function () {
+				var childNodes = flex.children();
+				var child = childNodes[idx];
 
-					for (var key in item) {
-						buildItemExpectancy(idx, key, item[key], isStretch);
+				for (var key in item) {
+					buildItemExpectancy(idx, key, item[key], isStretch);
+				}
+			});
+		};
+
+		var buildChildDescription = function (children, data, count) {
+			describe(children, function () {
+				var rules = data.rules;
+				var isStretch = (rules["align-items"] === "stretch");
+				isStretch = isStretch || (rules["align-content"] === "stretch");
+
+				before(function () {
+					flex.empty();
+
+					var set = appendFlexChildren(flex, count);
+
+					if (hasSupport) {
+						flex.css("display", "-webkit-flex");
+						flex.css(rules);
 					}
-				});
-			};
 
-			var buildChildDescription = function (children, data, count) {
-				describe(children, function () {
+					if (isStretch) {
+						flex.children().addClass(sizeMap[rules["flex-direction"]]);
+					}
+
+					var flx = new Flexie({
+						container: {
+							"element": flex[0],
+							"selector": "#flex-target",
+							"properties": rules
+						},
+
+						items: set
+					});
+				});
+
+				for (var i = 0, j = data.items.length; i < j; i++) {
+					buildItemDescription(i, data.items[i], isStretch);
+				}
+
+				after(function () {
 					var rules = data.rules;
-					var isStretch = (rules["align-items"] === "stretch");
-					isStretch = isStretch || (rules["align-content"] === "stretch");
-
-					before(function () {
-						flex.empty();
-
-						var set = appendFlexChildren(flex, count);
-
-						if (hasSupport) {
-							flex.css("display", "-webkit-flex");
-							flex.css(rules);
-						}
-
-						if (isStretch) {
-							flex.children().addClass(sizeMap[rules["flex-direction"]]);
-						}
-
-						var flx = new Flexie({
-							container: {
-								"element": flex[0],
-								"selector": "#flex-target",
-								"properties": rules
-							},
-
-							items: set
-						});
-					});
-
-					for (var i = 0, j = data.items.length; i < j; i++) {
-						buildItemDescription(i, data.items[i], isStretch);
-					}
-
-					after(function () {
-						var rules = data.rules;
-						flex.children().removeClass(sizeMap[rules["flex-direction"]]);
-					});
+					flex.children().removeClass(sizeMap[rules["flex-direction"]]);
 				});
-			};
+			});
+		};
 
-			var buildDirectionDescription = function (direction, data) {
-				describe(direction, function () {
-					var count = data.children;
-					var x;
+		var buildDirectionDescription = function (direction, data) {
+			describe(direction, function () {
+				var count = data.children;
+				var x;
 
-					if (TESTS.children["x" + count]) {
-						for (var children in data) {
-							x = data[children];
+				if (TESTS.children["x" + count]) {
+					for (var children in data) {
+						x = data[children];
 
-							if (x.items) {
-								if (TESTS.wrap[x.rules["flex-wrap"]]) {
-									buildChildDescription(children, data[children], count);
-								}
+						if (x.items) {
+							if (TESTS.wrap[x.rules["flex-wrap"]]) {
+								buildChildDescription(children, data[children], count);
 							}
 						}
 					}
-				});
-			};
-
-			for (var direction in json) {
-				buildDirectionDescription(direction, json[direction]);
-			}
-		},
-
-		buildFlexDescription : function (type, data) {
-			describe("flex-direction: " + type, function () {
-				this.handleDirection(data);
-			}.bind(this));
-		},
-
-		handleJSON : function (json) {
-			var deferred = $.Deferred();
-
-			for (var type in json) {
-				if (TESTS.direction[type]) {
-					this.buildFlexDescription(type, json[type]);
 				}
+			});
+		};
+
+		for (var direction in json) {
+			buildDirectionDescription(direction, json[direction]);
+		}
+	};
+
+	var buildFlexDescription = function (type, data) {
+		describe("flex-direction: " + type, function () {
+			handleDirection(data);
+		});
+	};
+
+	var handleJSON = function (json) {
+		var deferred = $.Deferred();
+
+		for (var type in json) {
+			if (TESTS.direction[type]) {
+				buildFlexDescription(type, json[type]);
 			}
+		}
 
-			return deferred.resolve();
-		},
+		return deferred.resolve();
+	};
 
+	return {
 		setup : function () {
 			var deferred = $.Deferred();
 
 			document.title = "Running Tests...";
 
-			this.target = $("#flex-target");
+			var target = $("#flex-target");
 
 			$.getJSON("data/flex.js?" + new Date().getTime())
 				.then(function (json) {
-					return this.handleJSON(json);
-				}.bind(this))
+					return handleJSON(json);
+				})
 			.then(function () {
 				return deferred.resolve();
 			});
