@@ -43,7 +43,9 @@ I use `test/views/tester.html` to debug specific flexbox properties.
 
 Your code should pass JSHint based on the settings in .jshintrc. You should try to follow the current code style. Please use semicolons, please use tabs.
 
-This project uses [git-flow](https://github.com/nvie/gitflow). tl;dr: use the develop branch for development, and nothing gets pushed into master unless tests pass.
+This project uses [git-flow](https://github.com/nvie/gitflow). tl;dr: the develop branch is for development, and nothing gets pushed into master unless tests pass.
+
+Branch at will. Use feature branches to organize your changes. Follow the git-flow model when branching.
 
 Use pull requests often. Pull requests should be separated by intent, please don't bulk your changes. Pull requests should target the develop branch. Never pull request into master unless all tests pass successfully.
 
