@@ -29,15 +29,23 @@ grunt watch
 
 ### Generate a new testbed
 
-Point an up-to-date Chrome to [0.0.0.0:9090/generate](http://0.0.0.0:9090/generate). On file save, the page will reload and generate a pristine set of values to test against, split into six files (so browser don't crash reading a huge 110k-line file). You should probably stick to vanilla Chrome (as opposed to Canary, etc) to reflect the current implementation.
+Point an up-to-date Chrome to [0.0.0.0:9090/generate](http://0.0.0.0:9090/generate). On file save, the page will reload and generate a pristine set of values to test against. You should probably stick to vanilla Chrome (as opposed to Canary, etc) to reflect the current implementation.
 
 It should be noted that for my tests "full implementation" means "parity with Google Chrome". Any Chrome variation from the spec will have to be manually accounted for.
 
 Point Safari / Firefox / IE to [0.0.0.0:9090/runner](http://0.0.0.0:9090/runner). These pages will listen for changes to the testbed and reload accordingly.
 
-Right now the runner only tests one of the six files. Change it manually in `test/lib/tests.js`, line 174.
-
 I use `test/views/tester.html` to debug specific flexbox properties.
+
+## Generate a new set of pairwise tests
+
+The flexbox spec is enormous, so I'm using a pairwise algorithm (via [James Bach](http://www.satisfice.com/tools.shtml)) to build out relevant tests.
+
+To generate a new set, run this command from project root. You must have Perl installed:
+
+```shell
+node test/data/pairwise/generate-tests.js
+```
 
 ### Contributing
 

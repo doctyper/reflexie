@@ -16,7 +16,7 @@ io.configure(function () {
 
 io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
-	var data = __dirname + "/data/flex-properties.js";
+	var data = __dirname + "/data/pairwise/flex-tests.js";
 	var test = __dirname + "/lib/tests.js";
 	var src = __dirname + "/../dist/reflexie.js";
 
@@ -87,7 +87,7 @@ app.configure(function () {
 });
 
 app.get("/properties", function (req, res) {
-	var file = fs.readFileSync(__dirname + "/data/flex-properties.js");
+	var file = fs.readFileSync(__dirname + "/data/pairwise/flex-tests.js");
 	res.json(JSON.parse(file));
 });
 
