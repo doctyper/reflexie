@@ -1,0 +1,7 @@
+display	children	flex-direction	flex-wrap	justify-content	align-items	align-content	align-self	order	flex-grow	flex-shrink	flex-basis
+flex	3	row	nowrap	flex-start	flex-start	flex-start	auto	0	0	0	auto
+inline-flex	6	row-reverse	wrap	flex-end	flex-end	flex-end	flex-start	-1	1	1	10px
+		column	wrap-reverse	center	center	center	flex-end	2	2	2	20px
+		column-reverse		space-between	baseline	space-between	center				
+				space-around	stretch	space-around	baseline				
+						stretch	stretch				

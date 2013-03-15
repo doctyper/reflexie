@@ -1,0 +1,6 @@
+pps	pr	cp	pid	cont	sc	do	uf	ul	ar	bp	ppt	rpo	ip	ifc	ic	iht	ido	pdof
+1	all	1	1	alltext	letter	y	y	y	y	y	y	y	y	y	y	y	y	y
+2	current	2c	2	alldiagrams	legal	n	n	n	n	n	n	n	n	n	n	n	n	n
+4	range	2nc	3	mixed	executive													
+8		5c	33		a4-210													
+16		5nc			a4-small													
