@@ -50,7 +50,7 @@ define([
 			set.push({
 				selector: "#" + selector,
 				element: element[0],
-				properties: items
+				properties: items[i]
 			});
 
 			target.append(element);
@@ -113,8 +113,24 @@ define([
 	};
 
 	var buildFlexDescription = function (type, data) {
+		type = type.replace(/\@start/g, "[").replace(/\@end/g, "]");
+
 		var desc = JSON.parse(type);
 		var flex = $("#flex-target");
+
+		// TODO: Get rid of this kludgy mess
+		if (desc.parent.display === "inline-flex") {
+			return;
+		}
+
+		if (desc.parent["align-items"] === "baseline") {
+			return;
+		}
+
+		if (desc.parent["flex-flow"].indexOf("wrap-reverse") !== -1) {
+			return;
+		}
+		// TODO: Get rid of this kludgy mess
 
 		var children = flex.children();
 
@@ -132,7 +148,10 @@ define([
 
 				if (hasSupport) {
 					flex.css(desc.parent);
-					flex.children().css(desc.items);
+
+					for (var i = 0, j = children.length; i < j; i++) {
+						$(children[i]).css(desc.items[i]);
+					}
 				}
 
 				if (isStretch) {
@@ -163,7 +182,7 @@ define([
 			};
 
 			var setupItemDescriptions = function (item, index) {
-				describe(prettifyDescription("#flex-col-" + (index + 1), desc.items), function () {
+				describe(prettifyDescription("#flex-col-" + (index + 1), desc.items[index]), function () {
 					for (var prop in item) {
 						setupItemTests(prop, parseFloat(item[prop]), index);
 					}
@@ -172,6 +191,11 @@ define([
 
 			for (var i = 0, j = data.items.length; i < j; i++) {
 				var item = data.items[i];
+
+				if (desc.items[i]["align-self"] === "baseline") {
+					continue;
+				}
+
 				setupItemDescriptions(item, i);
 			}
 

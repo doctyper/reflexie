@@ -109,9 +109,9 @@
 				(function () {
 					var error = document.querySelector("#error pre");
 					var body = document.body;
-					var flx = window.flexContainer;
+					var flx = window.flexValues.container;
 
-					error.innerHTML = JSON.stringify(window.flexContainer, null, 3);
+					error.innerHTML = JSON.stringify(window.flexValues, null, 3);
 
 					if (flx["align-items"] === "stretch" || flx["align-content"] === "stretch") {
 						switch (flx["flex-direction"]) {
@@ -135,70 +135,16 @@
 					container: {
 						"element": target,
 						"selector": "#flex-target",
-						"properties": window.flexContainer
+						"properties": window.flexValues.container
 					},
 
-					items: [{
-						"element": items[0],
-						"selector": "#flex-col-1",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
+					items: window.flexValues.items.map(function (item, index) {
+						return {
+							"element": items[index],
+							"selector": "#flex-col-" + (index + 1),
+							properties: item
 						}
-					}, {
-						"element": items[1],
-						"selector": "#flex-col-2",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[2],
-						"selector": "#flex-col-3",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[3],
-						"selector": "#flex-col-4",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[4],
-						"selector": "#flex-col-5",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[5],
-						"selector": "#flex-col-6",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}]
+					})
 				});
 
 			});

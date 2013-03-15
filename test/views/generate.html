@@ -43,17 +43,23 @@
 
 					var items = pristineTest.items;
 
-					items["flex"] = [
-						items["flex-grow"],
-						items["flex-shrink"],
-						items["flex-basis"]
-					].join(" ");
+					for (var i = 0, j = items.length; i < j; i++) {
+						var item = items[i];
 
-					delete items["flex-grow"];
-					delete items["flex-shrink"];
-					delete items["flex-basis"];
+						item["flex"] = [
+							item["flex-grow"],
+							item["flex-shrink"],
+							item["flex-basis"]
+						].join(" ");
 
-					return JSON.stringify(pristineTest);
+						delete item["flex-grow"];
+						delete item["flex-shrink"];
+						delete item["flex-basis"];
+					}
+
+					var string = JSON.stringify(pristineTest);
+					string = string.replace(/\[/g, "@start").replace(/\]/g, "@end");
+					return string;
 				};
 
 				var getFlexValues = function (flex) {
@@ -75,7 +81,7 @@
 					};
 				};
 
-				var updateFlexValues = function (parent, items, children) {
+				var updateFlexValues = function (parent, items, count) {
 					// Get fresh reference
 					var flex = $("#flex-target");
 
@@ -83,7 +89,7 @@
 					flex.empty();
 
 					// Append children based on incoming property
-					for (var i = 0, j = children; i < j; i++) {
+					for (var i = 0, j = count; i < j; i++) {
 						var idx = (i + 1);
 						flex.append('<div id="flex-col-' + idx + '">Col ' + idx + '</div>');
 					}
@@ -96,7 +102,11 @@
 
 					// Apply styles
 					flex.css(parent);
-					children.css(items);
+
+					// Apply children styles
+					for (var i = 0, j = children.length; i < j; i++) {
+						$(children[i]).css(items[i]);
+					}
 
 					// Special case stretch properties
 					var isStretch = parent["align-items"] === "stretch";
@@ -124,7 +134,6 @@
 						var ident = toString(test);
 
 						results[ident] = result;
-						console.log(result);
 					}
 
 					return results;
