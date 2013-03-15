@@ -23,6 +23,8 @@
 		console.log();
 		console.log(cases);
 
+		// return process.exit();
+
 		// Tests array
 		var tests = [];
 
@@ -40,7 +42,7 @@
 			// Rule object
 			var rule = {
 				parent: {},
-				items: {}
+				items: new Array(3)
 			};
 
 			for (var k = 0, l = line.length; k < l; k++) {
@@ -64,14 +66,23 @@
 					rule.children = value;
 					break;
 
-				case "align-self":
-				case "order":
-				case "flex-grow":
-				case "flex-shrink":
-				case "flex-basis":
-					rule.items[prop] = value;
+				default:
+					var match = (/([a-z-]+)\-nth\-(\d)/).exec(prop);
+
+					if (match && match.length) {
+						var pristine = match[1];
+						var idx = match[2] - 1;
+
+						rule.items[idx] = rule.items[idx] || {};
+						rule.items[idx][pristine] = value;
+					}
 					break;
 				}
+			}
+
+			// Account for 6x children
+			if (rule.children === "6") {
+				rule.items = rule.items.concat(rule.items);
 			}
 
 			tests.push(rule);

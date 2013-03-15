@@ -56,24 +56,44 @@
 							throw new Error(test);
 						});
 
-						/*runner.on("suite end", function (suite) {
-							var tests = suite.tests,
-								i, j, test, err;
+						runner.on("suite end", function (suite) {
+							var err;
 
-							for (i = 0, j = tests.length; i < j; i++) {
-								test = tests[i];
+							if (suite.suites.length) {
+								var suites = suite.suites;
 
-								if (test.state === "failed") {
-									err = test;
-									break;
+								for (var i = 0, j = suites.length; i < j; i++) {
+									var currentSuite = suites[i];
+									var tests = currentSuite.tests;
+
+									for (var k = 0, l = tests.length; k < l; k++) {
+										var test = tests[k];
+
+										if (test.state === "failed") {
+											err = test;
+											break;
+										}
+									}
 								}
 							}
 
 							if (err) {
 								socket.emit("suiteerror", {
-									properties: suite.parent.title
+									parent: suite.title,
+									items: (function () {
+										var suites = suite.suites;
+										var rules = [];
+
+										for (var i = 0, j = suites.length; i < j; i++) {
+											var currentSuite = suites[i];
+											rules.push(currentSuite.title);
+										}
+
+										return rules;
+									}())
 								});
-								console.error(suite.parent.title);
+
+								console.error(suite.title);
 								throw new Error();
 							} else {
 								var parentSuite = $("#report .suite .suite .suite");
@@ -83,7 +103,7 @@
 									parentSuite.remove();
 								}
 							}
-						});*/
+						});
 					});
 
 				});
