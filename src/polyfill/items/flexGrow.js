@@ -27,8 +27,8 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 		line = lines[i];
 		noOfItems = line.items.length;
 
-		// TODO Properly: calculate hypothetical cross size of each item
-		// Currently just use width (i.e. borders will currently make this wrong!)
+		// TODO Properly: calculate hypothetical main and cross size of each item
+		// Currently just use width/height (i.e. borders will currently make this wrong!)
 
 		usedSpace = 0;
 		for (j = 0; j < noOfItems; j++) {
