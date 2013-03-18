@@ -39,8 +39,15 @@ Flexbox.container = (function () {
 		},
 
 		expandFlexFlow : function (properties) {
-			var map = {};
-			var longHands = ["direction", "wrap"];
+			var map = {
+				"display": "flex",
+				"flex-direction": "row",
+				"flex-wrap": "nowrap",
+				"justify-content": "flex-start",
+				"align-items": "stretch",
+				"align-content": "stretch"
+			};
+
 			var i, j;
 
 			for (var key in properties) {
@@ -50,7 +57,119 @@ Flexbox.container = (function () {
 					value = value.split(" ");
 
 					for (i = 0, j = value.length; i < j; i++) {
-						map["flex-" + longHands[i]] = value[i];
+						var val = value[i];
+
+						if (/row|column/.test(val)) {
+							map["flex-direction"] = val;
+						} else {
+							map["flex-wrap"] = val;
+						}
+					}
+				} else {
+					map[key] = value;
+				}
+			}
+
+			return map;
+		},
+
+		expandFlex : function (properties) {
+			var map = {
+				"align-self": "auto",
+				"order": 0,
+				"flex-grow": 0,
+				"flex-shrink": 1,
+				"flex-basis": "auto"
+			};
+
+			for (var key in properties) {
+				var value = properties[key];
+				var val, i, j;
+
+				if (key === "flex") {
+					value = value.split(" ");
+
+					switch (value.length) {
+					case 1:
+						// Can be either of:
+						// flex: initial;
+						// flex: auto;
+						// flex: none;
+						// flex: <positive number>;
+						// flex: <width-value>;
+
+						val = value[0];
+
+						if (!isNaN(val)) {
+							// A single, valid integer is mapped to flex-grow
+							map["flex-grow"] = val;
+						} else {
+							switch (val) {
+							case "initial":
+								break;
+
+							case "auto":
+								map["flex-grow"] = 1;
+								break;
+
+							case "none":
+								map["flex-shrink"] = 0;
+								break;
+
+							default:
+								// Assume value is a width value, map to flex-basis
+								map["flex-basis"] = val;
+								break;
+							}
+						}
+						break;
+					case 2:
+						// Can be either of:
+						// flex: <flex-grow> <flex-basis>;
+						// flex: <flex-basis> <flex-grow>;
+						// flex: <flex-grow> <flex-shrink>;
+
+						var hasNoBasis = !isNaN(value[0]) && !isNaN(value[1]);
+
+						// If both are valid numbers, map to flex-grow and flex-shrink
+						if (hasNoBasis) {
+							map["flex-grow"] = value[0];
+							map["flex-shrink"] = value[1];
+						} else {
+							// Map valid number to flex-grow, width value to flex-basis
+							for (i = 0, j = value.length; i < j; i++) {
+								val = value[i];
+
+								if (!isNaN(val)) {
+									map["flex-grow"] = val;
+								} else {
+									map["flex-basis"] = val;
+								}
+							}
+						}
+						break;
+					case 3:
+						var grown, shrunk, based;
+
+						for (i = 0, j = value.length; i < j; i++) {
+							val = value[i];
+
+							if (!isNaN(val)) {
+								if (!grown) {
+									map["flex-grow"] = val;
+									grown = true;
+								} else if (!shrunk) {
+									map["flex-shrink"] = val;
+									shrunk = true;
+								}
+							} else {
+								if (!based) {
+									map["flex-basis"] = val;
+									based = true;
+								}
+							}
+						}
+						break;
 					}
 				} else {
 					map[key] = value;
@@ -68,6 +187,14 @@ Flexbox.container = (function () {
 
 			this.container = settings.container;
 			this.items = settings.items;
+
+			// Expand flex property to individual rules
+			var i, j, item;
+
+			for (i = 0, j = this.items.length; i < j; i++) {
+				item = this.items[i];
+				item.properties = this.expandFlex(item.properties);
+			}
 
 			this.dom = this.dom || {};
 			this.dom.values = utils.storePositionValues(this.container, this.items);
