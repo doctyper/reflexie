@@ -29,7 +29,7 @@ grunt watch
 
 ### Generate a new testbed
 
-Point an up-to-date Chrome to [0.0.0.0:9090/generate](http://0.0.0.0:9090/generate). On file save, the page will reload and generate a pristine set of values to test against, split into six files (so browser don't crash reading a huge 110k-line file). You should probably stick to vanilla Chrome (as opposed to Canary, etc) to reflect the current implementation.
+Point an up-to-date Chrome to [0.0.0.0:9090/generate](http://0.0.0.0:9090/generate). On file save, the page will reload and generate a pristine set of values to test against, split into six files (so browsers don't crash reading a huge 110k-line file). You should probably stick to vanilla Chrome (as opposed to Canary, etc) to reflect the current implementation.
 
 It should be noted that for my tests "full implementation" means "parity with Google Chrome". Any Chrome variation from the spec will have to be manually accounted for.
 
