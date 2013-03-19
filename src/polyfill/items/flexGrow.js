@@ -52,10 +52,7 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 
 		flexTotal = 0;
 		for (j = 0; j < noOfItems; j++) {
-			curr = line.items[j].debug.properties["flex-grow"];
-			if (!curr || isNaN(curr) || curr < 0) {
-				curr = line.items[j].debug.properties["flex-grow"] = 0;
-			}
+			curr = line.items[j].debug.properties["flex-grow"] << 0;
 			flexTotal += curr;
 		}
 
@@ -75,7 +72,7 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 				maxSize = line.items[j].debug.properties["max-"+mainSize];
 				if (maxSize && isNaN(freezeList[j]) && (line.items[j][mainSize] + curr > maxSize)) {
 					minMaxChange = 1;
-					// use freezeList to store the amount we have to change the element by
+					// use freezeList to store the amount we have to change that element by
 					freezeList[j] = maxSize - line.items[j][mainSize];
 					flexTotal -= line.items[j].debug.properties["flex-grow"];
 					availSpace -= freezeList[j];
