@@ -21,11 +21,13 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 		isReverse = utils.assert(flexDirection, revArray);
 
 	var i, ilim, j, jlim, line, noOfItems, usedSpace,
-		availSpace, flexTotal, curr, runningDiff, dir;
+		availSpace, flexTotal, curr, maxSize, runningDiff,
+		dir, minMaxChange, freezeList;
 
 	for (i = 0, ilim = lines.length; i < ilim; i++) {
 		line = lines[i];
 		noOfItems = line.items.length;
+		freezeList = new Array(noOfItems);
 
 		// TODO Properly: calculate hypothetical main and cross size of each item
 		// Currently just use width/height (i.e. borders will currently make this wrong!)
@@ -55,19 +57,40 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 		}
 
 
-		if (flexTotal <= 0) {
+		if (flexTotal == 0) {
 			// Nothing can grow - do nothing!
 			return properties;
 		}
 
-		// TODO: Implent min/max-width/height support
+		// Max-width/height support (for flex-grow, min support is handled by the browser!)
+		// This could be made faster, but currently it's more debug-able in this form
+		minMaxChange = 1;
+		while(minMaxChange){
+			minMaxChange = 0;
+			for (j = 0; j < noOfItems; j++) {
+				curr = (availSpace * line.items[j].debug.properties["flex-grow"]) / flexTotal;
+				maxSize = line.items[j].debug.properties["max-"+mainSize];
+				if (maxSize && isNaN(freezeList[j]) && (line.items[j][mainSize] + curr > maxSize)) {
+					minMaxChange = 1;
+					// use freezeList to store the amount we have to change the element by
+					freezeList[j] = maxSize - line.items[j][mainSize];
+					flexTotal -= line.items[j].debug.properties["flex-grow"];
+					availSpace -= freezeList[j];
+					// This stops a divide by zero later whilst allowing the re-flow of max-width/height items
+					if(flexTotal == 0) flexTotal = 1;
+				}
+			}
+		}
+
 		runningDiff = 0;
 		dir = (isReverse ?  -1 : 1);
 		for (j = 0; j < noOfItems; j++) {
-			curr = (availSpace * line.items[j].debug.properties["flex-grow"]) / flexTotal;
+			curr = (!isNaN(freezeList[j]) ? freezeList[j] : (availSpace * line.items[j].debug.properties["flex-grow"]) / flexTotal);
 			line.items[j][mainStart] += (isReverse ?  -runningDiff - curr : runningDiff);
 			line.items[j][mainSize] += curr;
 			runningDiff += curr;
+			// For Debug uncomment next line
+			// console.log("Item ", j, "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize ," by ", curr)
 		}
 	}
 
