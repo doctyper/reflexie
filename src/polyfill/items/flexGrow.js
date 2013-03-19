@@ -52,6 +52,7 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 
 		flexTotal = 0;
 		for (j = 0; j < noOfItems; j++) {
+			// Cast to int, also has the nice feature that undefined << 0 = 0
 			curr = line.items[j].debug.properties["flex-grow"] << 0;
 			flexTotal += curr;
 		}
@@ -65,17 +66,22 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 		// Max-width/height support (for flex-grow, min support is handled by the browser!)
 		// This could be made faster, but currently it's more debug-able in this form
 		minMaxChange = 1;
+
 		while(minMaxChange){
 			minMaxChange = 0;
+
 			for (j = 0; j < noOfItems; j++) {
 				curr = (availSpace * line.items[j].debug.properties["flex-grow"]) / flexTotal;
 				maxSize = line.items[j].debug.properties["max-"+mainSize];
+
 				if (maxSize && isNaN(freezeList[j]) && (line.items[j][mainSize] + curr > maxSize)) {
 					minMaxChange = 1;
+
 					// use freezeList to store the amount we have to change that element by
 					freezeList[j] = maxSize - line.items[j][mainSize];
 					flexTotal -= line.items[j].debug.properties["flex-grow"];
 					availSpace -= freezeList[j];
+					
 					// This stops a divide by zero later whilst allowing the re-flow of max-width/height items
 					if(flexTotal == 0) flexTotal = 1;
 				}
