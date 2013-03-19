@@ -30,11 +30,14 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 		freezeList = new Array(noOfItems);
 
 		// TODO Properly: calculate hypothetical main and cross size of each item
-		// Currently just use width/height (i.e. borders will currently make this wrong!)
+		// Currently just use width/height + margin + padding + border
 
 		usedSpace = 0;
 		for (j = 0; j < noOfItems; j++) {
 			usedSpace += line.items[j][mainSize];
+			usedSpace += line.items[j].debug.margin[mainStart + "Total"];
+			usedSpace += line.items[j].debug.padding[mainStart + "Total"];
+			usedSpace += line.items[j].debug.border[mainStart + "Total"];
 		}
 
 		// TODO Properly: Determine the available main and cross space for the flex items (9.2)
@@ -88,9 +91,9 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 			curr = (!isNaN(freezeList[j]) ? freezeList[j] : (availSpace * line.items[j].debug.properties["flex-grow"]) / flexTotal);
 			line.items[j][mainStart] += (isReverse ?  -runningDiff - curr : runningDiff);
 			line.items[j][mainSize] += curr;
-			runningDiff += curr;
 			// For Debug uncomment next line
-			// console.log("Item ", j, "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize ," by ", curr)
+			console.log("Item ", j, "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize ," by ", curr);
+			runningDiff += curr;
 		}
 	}
 
