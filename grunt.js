@@ -15,6 +15,7 @@ module.exports = function (grunt) {
 				"parser",
 				"polyfill/items/order",
 				"polyfill/items/alignSelf",
+				"polyfill/items/flexGrow",
 				"polyfill/container/flexDirection",
 				"polyfill/container/flexWrap",
 				"polyfill/container/justifyContent",

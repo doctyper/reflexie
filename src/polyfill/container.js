@@ -20,7 +20,8 @@ Flexbox.container = (function () {
 			justifyContent : models.justifyContent,
 			alignItems : models.alignItems,
 			alignSelf : models.alignSelf,
-			alignContent : models.alignContent
+			alignContent : models.alignContent,
+			flexGrow : models.flexGrow
 		},
 
 		generateUID : function (container) {
