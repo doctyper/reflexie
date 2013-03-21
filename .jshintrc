@@ -57,6 +57,7 @@
 		"Flexbox",
 		"StyleLoader",
 		"CSSParser",
-		"domReady"
+		"domReady",
+		"SPECIFICITY"
 	]
 }
