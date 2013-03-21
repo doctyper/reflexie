@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-20-2013
+ * Date: 3-21-2013
  */
 (function (window, undefined) {
 
@@ -670,6 +670,149 @@
 		  loaded ? fn() : fns.push(fn)
 		})
 	}());
+	/**
+	 * Calculates the specificity of CSS selectors
+	 * http://www.w3.org/TR/css3-selectors/#specificity
+	 *
+	 * Returns an array of objects with the following properties:
+	 *  - selector: the input
+	 *  - specificity: e.g. 0,1,0,0
+	 *  - parts: array with details about each part of the selector that counts towards the specificity
+	 */
+	var SPECIFICITY = (function() {
+		var calculate,
+			calculateSingle;
+
+		calculate = function(input) {
+			var selectors,
+				selector,
+				i,
+				len,
+				results = [];
+
+			// Separate input by commas
+			selectors = input.split(',');
+
+			for (i = 0, len = selectors.length; i < len; i += 1) {
+				selector = selectors[i];
+				if (selector.length > 0) {
+					results.push(calculateSingle(selector));
+				}
+			}
+
+			return results;
+		};
+
+		// Calculate the specificity for a selector by dividing it into simple selectors and counting them
+		calculateSingle = function(input) {
+			var selector = input,
+				findMatch,
+				typeCount = {
+					'a': 0,
+					'b': 0,
+					'c': 0
+				},
+				parts = [],
+				// The following regular expressions assume that selectors matching the preceding regular expressions have been removed
+				attributeRegex = /(\[[^\]]+\])/g,
+				idRegex = /(#[^\s\+>~\.\[:]+)/g,
+				classRegex = /(\.[^\s\+>~\.\[:]+)/g,
+				pseudoElementRegex = /(::[^\s\+>~\.\[:]+|:first-line|:first-letter|:before|:after)/g,
+				pseudoClassRegex = /(:[^\s\+>~\.\[:]+)/g,
+				elementRegex = /([^\s\+>~\.\[:]+)/g;
+
+			// Find matches for a regular expression in a string and push their details to parts
+			// Type is "a" for IDs, "b" for classes, attributes and pseudo-classes and "c" for elements and pseudo-elements
+			findMatch = function(regex, type) {
+				var matches, i, len, match, index, length;
+				if (regex.test(selector)) {
+					matches = selector.match(regex);
+					for (i = 0, len = matches.length; i < len; i += 1) {
+						typeCount[type] += 1;
+						match = matches[i];
+						index = selector.indexOf(match);
+						length = match.length;
+						parts.push({
+							selector: match,
+							type: type,
+							index: index,
+							length: length
+						});
+						// Replace this simple selector with whitespace so it won't be counted in further simple selectors
+						selector = selector.replace(match, Array(length + 1).join(' '));
+					}
+				}
+			};
+
+			// Remove the negation psuedo-class (:not) but leave its argument because specificity is calculated on its argument
+			(function() {
+				var regex = /:not\(([^\)]*)\)/g;
+				if (regex.test(selector)) {
+					selector = selector.replace(regex, '	 $1 ');
+				}
+			}());
+
+			// Remove anything after a left brace in case a user has pasted in a rule, not just a selector
+			(function() {
+				var regex = /{[^]*/gm,
+					matches, i, len, match;
+				if (regex.test(selector)) {
+					matches = selector.match(regex);
+					for (i = 0, len = matches.length; i < len; i += 1) {
+						match = matches[i];
+						selector = selector.replace(match, Array(match.length + 1).join(' '));
+					}
+				}
+			}());
+
+			// Add attribute selectors to parts collection (type b)
+			findMatch(attributeRegex, 'b');
+
+			// Add ID selectors to parts collection (type a)
+			findMatch(idRegex, 'a');
+
+			// Add class selectors to parts collection (type b)
+			findMatch(classRegex, 'b');
+
+			// Add pseudo-element selectors to parts collection (type c)
+			findMatch(pseudoElementRegex, 'c');
+
+			// Add pseudo-class selectors to parts collection (type b)
+			findMatch(pseudoClassRegex, 'b');
+
+			// Remove universal selector and separator characters
+			selector = selector.replace(/[\*\s\+>~]/g, ' ');
+
+			// Remove any stray dots or hashes which aren't attached to words
+			// These may be present if the user is live-editing this selector
+			selector = selector.replace(/[#\.]/g, ' ');
+
+			// The only things left should be element selectors (type c)
+			findMatch(elementRegex, 'c');
+
+			// Order the parts in the order they appear in the original selector
+			// This is neater for external apps to deal with
+			parts.sort(function(a, b) {
+				return a.index - b.index;
+			});
+
+			return {
+				selector: input,
+				specificity: '0,' + typeCount.a.toString() + ',' + typeCount.b.toString() + ',' + typeCount.c.toString(),
+				parts: parts
+			};
+		};
+
+		return {
+			calculate: calculate
+		};
+	}());
+
+	// Export for Node JS
+	if (typeof exports !== 'undefined') {
+		exports.calculate = SPECIFICITY.calculate;
+	}
+	
 
 	var Flexie;
 
@@ -1020,6 +1163,7 @@
 
 			relationships = this.filterFlexRules(parser.cssRules);
 
+			// All done. Pass the new relationships to Flexie
 			for (i = 0, j = relationships.length; i < j; i++) {
 				flex = new Flexie(relationships[i]);
 			}
@@ -1059,6 +1203,125 @@
 			return this.validateRules(this.properties.items, styles);
 		},
 
+		// Copyright (C) 2011 Alex Kloss <alexthkloss@web.de>
+		// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+		keys : function (object) {
+			return (Object.keys || function (object, key, result) {
+				// initialize object and result
+				result = [];
+
+				// iterate over object keys
+				for (key in object) {
+
+					// fill result array with non-prototypical keys
+					if (result.hasOwnProperty.call(object, key)) {
+						result.push(key);
+					}
+
+					// return result
+					return result;
+				}
+			}).call(object, object);
+		},
+
+		sortByDescendingSpecificity : function (a, b) {
+			// SPECIFICITY requires a string of comma-delimited selectors
+			// Kind of a kludge, but...
+			var aSpec = parseFloat(a.specificity.split(",").join(""));
+			var bSpec = parseFloat(b.specificity.split(",").join(""));
+
+			// Return in descending order of specificity.
+			return bSpec - aSpec;
+		},
+
+		checkMatchingSelectors : function (map) {
+			var specificityMap = {}, matchesMap = {},
+				selector, elements, current,
+				key, sibling, specificity, combinedMap,
+				keys = this.keys(map), dominant,
+				i, j, k, l;
+
+			// Start a while loop using keys as the driver.
+			selector = keys.shift();
+
+			while (selector) {
+
+				// Create a unique key value pair for each matching selector
+				matchesMap[selector] = matchesMap[selector] || [selector];
+
+				// Poll the DOM for use with matchesSelector
+				elements = document.querySelectorAll(selector);
+
+				// Iterate through our result set
+				for (i = 0, j = elements.length; i < j; i++) {
+					current = elements[i];
+
+					// Test against sibling keys
+					for (k = 0, l = keys.length; k < l; k++) {
+						sibling = keys[k];
+
+						// Don't match against itself
+						if (sibling !== selector) {
+							var match = this.matchesSelector(current, sibling);
+
+							// If true, we have a duplicate match
+							// Gather matches into array for later merging
+							if (match === true) {
+								matchesMap[selector] = matchesMap[selector].concat(keys.splice(k, 1));
+
+								// We've modified the current array
+								// So let's adjust count values
+								k = (k - 1);
+								l = keys.length;
+							}
+						}
+					}
+				}
+
+				// Continue while keys remain in array
+				selector = keys.shift();
+			}
+
+			// Now we have a key value map of related selectors
+			// We need to organize and join values based on specificity
+			//
+			// Just like a real CSS engine. Fun!
+			for (key in matchesMap) {
+
+				// Use https://github.com/keeganstreet/specificity
+				// Calculate a selector's given specificity
+				specificity = SPECIFICITY.calculate(matchesMap[key].join());
+
+				// Now sort by descending specificity values
+				specificity.sort(this.sortByDescendingSpecificity);
+
+				// Create a shell for our combined object
+				combinedMap = {};
+
+				// Loop through our sorted specificity values
+				for (i = 0, j = specificity.length; i < j; i++) {
+					current = map[specificity[i].selector];
+
+					// At long last, combine values
+					for (selector in current) {
+
+						// Remember, we sorted by descending specificity
+						// So if value exists in map, discard it. It's too weak to apply.
+						combinedMap[selector] = combinedMap[selector] || current[selector];
+					}
+				}
+
+				// Our dominant selector is the first in the array.
+				dominant = specificity.shift();
+
+				// So we name the key after it, and assign it the combined object.
+				specificityMap[dominant.selector] = combinedMap;
+			}
+
+			// Done.
+			return specificityMap;
+		},
+
 		filterDuplicates : function (objects) {
 			var i, j, obj;
 			var map = {};
@@ -1074,6 +1337,11 @@
 					map[obj.selectorText][key] = obj.style[key];
 				}
 			}
+
+			// Now that we have unique selectors,
+			// check that the selectors do not match each other,
+			// or solve if they do match each other
+			map = this.checkMatchingSelectors(map);
 
 			return map;
 		},
@@ -2056,6 +2324,12 @@
 		// Check for native Flexbox support
 		if (Flexbox.support === true) {
 			return true;
+		}
+
+		// Does not support flexbox.
+		// But does it support other stuff we depend on?
+		if (!("querySelectorAll" in document)) {
+			throw new Error("Flexie needs `document.querySelectorAll`, but your browser doesn't support it.");
 		}
 
 		// no native Flexbox support, use polyfill
