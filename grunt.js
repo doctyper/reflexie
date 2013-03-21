@@ -34,6 +34,10 @@ module.exports = function (grunt) {
 				 */
 				"lib/domready/domready",
 
+				/* https://github.com/keeganstreet/specificity */
+				/* License TBD */
+				"lib/specificity/specificity",
+
 				"src/core",
 				"src/utils",
 				"src/support",

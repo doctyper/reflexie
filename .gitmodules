@@ -4,3 +4,6 @@
 [submodule "lib/domready"]
 	path = lib/domready
 	url = https://gist.github.com/5192352.git
+[submodule "lib/specificity"]
+	path = lib/specificity
+	url = git://github.com/keeganstreet/specificity.git
