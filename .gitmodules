@@ -1,0 +1,6 @@
+[submodule "lib/css-regions-polyfill"]
+	path = lib/css-regions-polyfill
+	url = git://github.com/adobe-webplatform/css-regions-polyfill.git
+[submodule "lib/domready"]
+	path = lib/domready
+	url = https://gist.github.com/5192352.git
