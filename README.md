@@ -10,6 +10,7 @@ __Sooooo not ready for prime-time.__ There is still lots to do to get this to a 
 Clone the repository, then run from your project root:
 
 ```shell
+git submodule update --init
 npm install
 ```
 
