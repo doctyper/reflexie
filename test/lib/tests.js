@@ -6,26 +6,7 @@ define([
 ], function ($, Flexie) {
 	"use strict";
 
-	var DEBUG = false;
-	var TESTS = {
-		"children": {
-			"x3": true,
-			"x6": true
-		},
-
-		"direction": {
-			"row": true,
-			"row-reverse": true,
-			"column": true,
-			"column-reverse": true
-		},
-
-		"wrap": {
-			"wrap": true,
-			"nowrap": true,
-			"wrap-reverse": true
-		}
-	};
+	var DEBUG = true;
 
 	var hasSupport = (function () {
 		var testProp = "flexWrap";
@@ -55,7 +36,7 @@ define([
 		return flexboxSupport;
 	}());
 
-	var appendFlexChildren = function (target, children) {
+	var appendFlexChildren = function (target, items, children) {
 		var i, j, idx,
 			set = [], selector, element;
 
@@ -68,13 +49,21 @@ define([
 
 			set.push({
 				selector: "#" + selector,
-				element: element[0]
+				element: element[0],
+				properties: items[i]
 			});
 
 			target.append(element);
 		}
 
 		return set;
+	};
+
+	var sizeMap = {
+		"row": "height",
+		"row-reverse": "height",
+		"column": "width",
+		"column-reverse": "width"
 	};
 
 	var logger = {
@@ -97,108 +86,123 @@ define([
 		}
 	};
 
-	var handleDirection = function (json) {
-		var flex = $("#flex-target");
+	var prettifyDescription = function (selector, rules) {
+		var string = JSON.stringify(rules);
+		string = string.replace(/^\{/, selector + " { ").replace(/\}$/, "; }");
+		string = string.replace(/\"/g, "");
+		string = string.replace(/\:/g, ": ");
+		string = string.replace(/\,/g, "; ");
 
-		var sizeMap = {
-			"row": "height",
-			"row-reverse": "height",
-			"column": "width",
-			"column-reverse": "width"
-		};
+		return string;
+	};
 
-		var buildItemExpectancy = function (idx, key, value, isStretch) {
-			var val = Math.floor(value);
+	var getSizeValue = function (data) {
+		var sizeValue;
 
-			it(key + " should be " + val, function () {
-				var childNodes = flex.children();
-				var box = childNodes[idx].getBoundingClientRect();
+		if (data["flex-direction"]) {
+			sizeValue = sizeMap[data["flex-direction"]];
+		} else {
+			var possibleDirection = data["flex-flow"].split(" ");
 
-				var range = (isStretch) ? 4 : 2;
-				expect(Math.floor(box[key])).to.be.within(val - range,  val + range);
-			});
-		};
-
-		var buildItemDescription = function (idx, item, isStretch) {
-			describe(":nth-child(" + (idx + 1) + ")", function () {
-				var childNodes = flex.children();
-				var child = childNodes[idx];
-
-				for (var key in item) {
-					buildItemExpectancy(idx, key, item[key], isStretch);
-				}
-			});
-		};
-
-		var buildChildDescription = function (children, data, count) {
-			describe(children, function () {
-				var rules = data.rules;
-				var isStretch = (rules["align-items"] === "stretch");
-				isStretch = isStretch || (rules["align-content"] === "stretch");
-
-				before(function () {
-					flex.empty();
-
-					var set = appendFlexChildren(flex, count);
-
-					if (hasSupport) {
-						flex.css("display", "-webkit-flex");
-						flex.css(rules);
-					}
-
-					if (isStretch) {
-						flex.children().addClass(sizeMap[rules["flex-direction"]]);
-					}
-
-					var flx = new Flexie({
-						container: {
-							"element": flex[0],
-							"selector": "#flex-target",
-							"properties": rules
-						},
-
-						items: set
-					});
-				});
-
-				for (var i = 0, j = data.items.length; i < j; i++) {
-					buildItemDescription(i, data.items[i], isStretch);
-				}
-
-				after(function () {
-					var rules = data.rules;
-					flex.children().removeClass(sizeMap[rules["flex-direction"]]);
-				});
-			});
-		};
-
-		var buildDirectionDescription = function (direction, data) {
-			describe(direction, function () {
-				var count = data.children;
-				var x;
-
-				if (TESTS.children["x" + count]) {
-					for (var children in data) {
-						x = data[children];
-
-						if (x.items) {
-							if (TESTS.wrap[x.rules["flex-wrap"]]) {
-								buildChildDescription(children, data[children], count);
-							}
-						}
-					}
-				}
-			});
-		};
-
-		for (var direction in json) {
-			buildDirectionDescription(direction, json[direction]);
+			for (var i = 0, j = possibleDirection.length; i < j; i++) {
+				sizeValue = sizeValue || sizeMap[possibleDirection[i]];
+			}
 		}
+
+		return sizeValue;
 	};
 
 	var buildFlexDescription = function (type, data) {
-		describe("flex-direction: " + type, function () {
-			handleDirection(data);
+		type = type.replace(/\@start/g, "[").replace(/\@end/g, "]");
+
+		var desc = JSON.parse(type);
+		var flex = $("#flex-target");
+
+		// TODO: Get rid of this kludgy mess
+		if (desc.parent.display === "inline-flex") {
+			return;
+		}
+
+		if (desc.parent["align-items"] === "baseline") {
+			return;
+		}
+
+		if (desc.parent["flex-flow"].indexOf("wrap-reverse") !== -1) {
+			return;
+		}
+		// TODO: Get rid of this kludgy mess
+
+		var children = flex.children();
+
+		var isStretch = (desc.parent["align-items"] === "stretch");
+		isStretch = isStretch || (desc.parent["align-content"] === "stretch");
+
+		describe(prettifyDescription("#flex-target", desc.parent), function () {
+
+			before(function () {
+				flex = $("#flex-target");
+				flex.empty();
+
+				var set = appendFlexChildren(flex, desc.items, data.items.length);
+				children = flex.children();
+
+				if (hasSupport) {
+					flex.css(desc.parent);
+
+					for (var i = 0, j = children.length; i < j; i++) {
+						$(children[i]).css(desc.items[i]);
+					}
+				}
+
+				if (isStretch) {
+					var sizeValue = getSizeValue(desc.parent);
+					flex.children().addClass(sizeValue);
+				}
+
+				var flx = new Flexie({
+					container: {
+						"element": flex[0],
+						"selector": "#flex-target",
+						"properties": desc.parent
+					},
+
+					items: set
+				});
+			});
+
+			var setupItemTests = function (prop, val, index) {
+				it(prop + " should be " + val, function () {
+
+					var child = $("#flex-target").children().get(index);
+					var box = child.getBoundingClientRect();
+					var range = (isStretch) ? 4 : 2;
+
+					expect(Math.floor(box[prop])).to.be.within(val - range,  val + range);
+				});
+			};
+
+			var setupItemDescriptions = function (item, index) {
+				describe(prettifyDescription("#flex-col-" + (index + 1), desc.items[index]), function () {
+					for (var prop in item) {
+						setupItemTests(prop, parseFloat(item[prop]), index);
+					}
+				});
+			};
+
+			for (var i = 0, j = data.items.length; i < j; i++) {
+				var item = data.items[i];
+
+				if (desc.items[i]["align-self"] === "baseline") {
+					continue;
+				}
+
+				setupItemDescriptions(item, i);
+			}
+
+			after(function () {
+				var sizeValue = getSizeValue(desc.parent);
+				flex.children().removeClass(sizeValue);
+			});
 		});
 	};
 
@@ -206,9 +210,7 @@ define([
 		var deferred = $.Deferred();
 
 		for (var type in json) {
-			if (TESTS.direction[type]) {
-				buildFlexDescription(type, json[type]);
-			}
+			buildFlexDescription(type, json[type]);
 		}
 
 		return deferred.resolve();

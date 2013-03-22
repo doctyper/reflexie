@@ -11,6 +11,7 @@
 		"expect.js": ">=0.2.0",
 		"socket.io": ">=0.9.11",
 		"grunt": "0.3.x",
+		"uglify-js2": "2.1.x",
 		"mocha-phantomjs": "2.0.x"
 	},
 	"scripts": {

@@ -82,7 +82,7 @@
 		<script>
 			require.config({
 				paths: {
-					"socket.io": "http://10.0.1.130:9999/socket.io/socket.io"
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io"
 				},
 				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
@@ -93,7 +93,7 @@
 				"dist/reflexie",
 				"socket.io"
 			], function (Flexie, io) {
-				var socket = io.connect("http://10.0.1.130:9999");
+				var socket = io.connect("http://0.0.0.0:9999");
 
 				socket.on("errorchange", function (data) {
 					socket.disconnect();
@@ -109,7 +109,11 @@
 				(function () {
 					var error = document.querySelector("#error pre");
 					var body = document.body;
-					var flx = window.flexContainer;
+					var flx = window.flexValues.container;
+
+					if (!flx) {
+						return;
+					}
 
 					error.innerHTML = JSON.stringify(window.flexContainer, null, 3);
 
@@ -127,79 +131,6 @@
 						}
 					}
 				}());
-
-				var target = document.querySelector("#flex-target");
-				var items = document.querySelectorAll("#flex-target > *");
-
-				var flex = new Flexie({
-					container: {
-						"element": target,
-						"selector": "#flex-target",
-						"properties": window.flexContainer
-					},
-
-					items: [{
-						"element": items[0],
-						"selector": "#flex-col-1",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[1],
-						"selector": "#flex-col-2",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[2],
-						"selector": "#flex-col-3",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[3],
-						"selector": "#flex-col-4",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[4],
-						"selector": "#flex-col-5",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[5],
-						"selector": "#flex-col-6",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}]
-				});
 
 			});
 		</script>
@@ -228,6 +159,8 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="flex-target-2"></div>
 
 		<div id="error">
 			<pre></pre>

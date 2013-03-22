@@ -26,12 +26,43 @@
 					"column-reverse": "width"
 				};
 
-				var flex = $("#flex-target");
-				var tests = {};
-
 				document.title = "Generating results...";
 
-				var getFlexValues = function (rules) {
+				var toString = function (test) {
+					var pristineTest = JSON.parse(JSON.stringify(test));
+
+					var parent = pristineTest.parent;
+
+					parent["flex-flow"] = [
+						parent["flex-direction"],
+						parent["flex-wrap"]
+					].join(" ");
+
+					delete parent["flex-direction"];
+					delete parent["flex-wrap"];
+
+					var items = pristineTest.items;
+
+					for (var i = 0, j = items.length; i < j; i++) {
+						var item = items[i];
+
+						item["flex"] = [
+							item["flex-grow"],
+							item["flex-shrink"],
+							item["flex-basis"]
+						].join(" ");
+
+						delete item["flex-grow"];
+						delete item["flex-shrink"];
+						delete item["flex-basis"];
+					}
+
+					var string = JSON.stringify(pristineTest);
+					string = string.replace(/\[/g, "@start").replace(/\]/g, "@end");
+					return string;
+				};
+
+				var getFlexValues = function (flex) {
 					var items = flex.children();
 
 					var values = $.map(items, function (child) {
@@ -45,152 +76,73 @@
 					delete flexbox.bottom;
 
 					return {
-						container: flexbox,
-						items: values,
-						rules: JSON.parse(JSON.stringify(rules))
+						parent: flexbox,
+						items: values
 					};
 				};
 
-				var toString = function (rules) {
-					var copy = JSON.parse(JSON.stringify(rules));
-					copy["flex-flow"] = copy["flex-direction"] + " " + copy["flex-wrap"];
+				var updateFlexValues = function (parent, items, count) {
+					// Get fresh reference
+					var flex = $("#flex-target");
 
-					delete copy["flex-direction"];
-					delete copy["flex-wrap"];
-
-					var arr = [];
-					var key;
-
-					var keys = Object.keys(copy);
-					var i, j;
-
-					for (i = 0, j = keys.length; i < j; i++) {
-						key = keys[i];
-						arr.push(key + ": " + copy[key]);
-					}
-
-					return arr.join("; ");
-				};
-
-				var resetFlexContainer = function (target, children) {
-					var i, j, idx,
-						flexProp = "-webkit-" + target.initial;
-
+					// Remove old children
 					flex.empty();
 
-					for (i = 0, j = children; i < j; i++) {
-						idx = (i + 1);
+					// Append children based on incoming property
+					for (var i = 0, j = count; i < j; i++) {
+						var idx = (i + 1);
 						flex.append('<div id="flex-col-' + idx + '">Col ' + idx + '</div>');
 					}
 
-					flex.removeAttr("style");
-					flex.css(target.property, flexProp);
-				};
-
-				var loopOfDoom = function (target, props, childLength) {
+					// Fresh reference to children
 					var children = flex.children();
-					var childStr = "x" + childLength;
 
-					console.log(childLength);
+					// Undo styles
+					flex.removeAttr("style");
 
-					var direction = props[0],
-						wrap = props[1],
-						justify = props[2],
-						items = props[3],
-						content = props[4];
+					// Apply styles
+					flex.css(parent);
 
-					var a = 0,
-						b, c, d, e;
-
-					var rules;
-					var str;
-
-					var flexProp = "-webkit-" + target.initial;
-					var isStretch;
-					var currDir;
-
-					while (direction.values[a]) {
-						tests[direction.values[a]] = tests[direction.values[a]] || {};
-						tests[direction.values[a]][childStr] = tests[direction.values[a]][childStr] || {
-							children: childLength
-						};
-
-						rules = {};
-
-						rules[direction.property] = direction.values[a];
-						b = 0;
-
-						while (wrap.values[b]) {
-							rules[wrap.property] = wrap.values[b];
-							c = 0;
-
-							while (justify.values[c]) {
-								rules[justify.property] = justify.values[c];
-								d = 0;
-
-								while (items.values[d]) {
-									rules[items.property] = items.values[d];
-									e = 0;
-
-									while (content.values[e]) {
-										rules[content.property] = content.values[e];
-
-										flex.removeAttr("style");
-										flex.css(target.property, flexProp);
-										flex.css(rules);
-
-										isStretch = rules["align-items"] === "stretch";
-										isStretch = isStretch || rules["align-content"] === "stretch";
-
-										if (isStretch) {
-											currDir = sizeMap[rules["flex-direction"]];
-											children.css(currDir, "auto");
-										}
-
-										str = toString(rules);
-										tests[direction.values[a]][childStr][str] = getFlexValues(rules);
-
-										if (isStretch) {
-											children.css(currDir, "");
-										}
-
-										e++;
-									}
-
-									d++;
-								}
-
-								c++;
-							}
-
-							b++;
-						}
-
-						a++;
-					}
-				};
-
-				var iterateProperties = function (target, props) {
-					var children = [3, 6];
-					var i, j;
-
-					for (i = 0, j = children.length; i < j; i++) {
-						resetFlexContainer(target, children[i]);
-						loopOfDoom(target, props, children[i]);
+					// Apply children styles
+					for (var i = 0, j = children.length; i < j; i++) {
+						$(children[i]).css(items[i]);
 					}
 
-					return tests;
+					// Special case stretch properties
+					var isStretch = parent["align-items"] === "stretch";
+					isStretch = isStretch || parent["align-content"] === "stretch";
+
+					if (isStretch) {
+						currDir = sizeMap[parent["flex-direction"]];
+						children.css(currDir, "auto");
+					}
+
+					return getFlexValues(flex);
 				};
 
-				$.getJSON("/properties?" + new Date().getTime()).then(function (json) {
-					var target = json.target,
-						container = json.container,
-						props = container.properties,
-						shorts = container.shorthands;
+				var iterateTests = function (tests) {
+					var results = {};
 
-					var tests = iterateProperties(target, props);
+					for (var i = 0, j = tests.length; i < j; i++) {
+						var test = tests[i];
 
-					$.post("/flex", tests, function (data) {
+						var parent = test.parent;
+						var items = test.items;
+						var children = test.children;
+
+						var result = updateFlexValues(parent, items, children);
+						var ident = toString(test);
+
+						results[ident] = result;
+					}
+
+					return results;
+				};
+
+				$.getJSON("/properties?" + new Date().getTime()).then(function (tests) {
+					var results = iterateTests(tests);
+
+					$.post("/flex", results, function (data) {
 						document.title = data;
 					});
 				});
