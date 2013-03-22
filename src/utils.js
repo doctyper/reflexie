@@ -102,7 +102,7 @@ Flexbox.utils = {
 		}
 	},
 
-	detectAuto : function (element, box, prop) {
+	detectAuto : function (element, box) {
 		var autoBox,
 			oWidth = element.style.width,
 			oHeight = element.style.height,
