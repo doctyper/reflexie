@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-21-2013
+ * Date: 3-22-2013
  */
 (function (window, undefined) {
 
@@ -845,6 +845,52 @@
 			});
 		},
 
+		// Copyright (C) 2011 Alex Kloss <alexthkloss@web.de>
+		// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+		keys : function (object) {
+			return (Object.keys || function (object, key, result) {
+				// initialize object and result
+				result = [];
+
+				// iterate over object keys
+				for (key in object) {
+
+					// fill result array with non-prototypical keys
+					if (result.hasOwnProperty.call(object, key)) {
+						result.push(key);
+					}
+
+					// return result
+					return result;
+				}
+			}).call(object, object);
+		},
+
+		matchesSelector : function (elem, selector) {
+			return (Element.prototype.matchesSelector || Element.prototype.webkitMatchesSelector || Element.prototype.mozMatchesSelector || function (selector) {
+				var els = document.querySelectorAll(selector),
+					i, j;
+
+				for (i = 0, j = els.length; i < j; i++) {
+					if (els[i] === this) {
+						return true;
+					}
+				}
+
+				return false;
+			}).call(elem, selector);
+		},
+
+		nthChildSupport : function () {
+			// For nth-child testing, I assume your browser supports querySelector
+			return (function () {
+				var dummy = document.createElement('div');
+				dummy.innerHTML += '<p></p>';
+
+				return dummy.querySelector("p:nth-child(1)");
+			}());
+		},
+
 		testValue : function (val) {
 			var dimensions = ["left", "top", "right", "bottom", "width", "height"],
 				i, j;
@@ -877,7 +923,7 @@
 			}
 		},
 
-		detectAuto : function (element, box, prop) {
+		detectAuto : function (element, box) {
 			var autoBox,
 				oWidth = element.style.width,
 				oHeight = element.style.height,
@@ -1203,27 +1249,6 @@
 			return this.validateRules(this.properties.items, styles);
 		},
 
-		// Copyright (C) 2011 Alex Kloss <alexthkloss@web.de>
-		// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-		keys : function (object) {
-			return (Object.keys || function (object, key, result) {
-				// initialize object and result
-				result = [];
-
-				// iterate over object keys
-				for (key in object) {
-
-					// fill result array with non-prototypical keys
-					if (result.hasOwnProperty.call(object, key)) {
-						result.push(key);
-					}
-
-					// return result
-					return result;
-				}
-			}).call(object, object);
-		},
-
 		sortByDescendingSpecificity : function (a, b) {
 			// SPECIFICITY requires a string of comma-delimited selectors
 			// Kind of a kludge, but...
@@ -1236,9 +1261,10 @@
 
 		checkMatchingSelectors : function (map) {
 			var specificityMap = {}, matchesMap = {},
+				matchesSelector = Flexbox.utils.matchesSelector,
 				selector, elements, current,
 				key, sibling, specificity, combinedMap,
-				keys = this.keys(map), dominant,
+				keys = Flexbox.utils.keys(map), dominant,
 				i, j, k, l;
 
 			// Start a while loop using keys as the driver.
@@ -1262,7 +1288,7 @@
 
 						// Don't match against itself
 						if (sibling !== selector) {
-							var match = this.matchesSelector(current, sibling);
+							var match = matchesSelector(current, sibling);
 
 							// If true, we have a duplicate match
 							// Gather matches into array for later merging
@@ -1346,21 +1372,6 @@
 			return map;
 		},
 
-		matchesSelector : function (elem, selector) {
-			return (Element.prototype.matchesSelector || Element.prototype.webkitMatchesSelector || Element.prototype.mozMatchesSelector || function (selector) {
-				var els = document.querySelectorAll(selector),
-					i, j;
-
-				for (i = 0, j = els.length; i < j; i++) {
-					if (els[i] === this) {
-						return true;
-					}
-				}
-
-				return false;
-			}).call(elem, selector);
-		},
-
 		buildSelector : function (container, item, index) {
 			var parts = [container, " > "],
 				classes, i, j, attribute, nth;
@@ -1403,19 +1414,25 @@
 			// If parts length is 3, there aren't any identifiers strong enough
 			// So let's improvise
 			if (parts.length === 3) {
-				nth = "nth-child-" + (index + 1);
-				item.className += " " + nth;
-				parts.push("." + nth);
+				var supportsNth = Flexbox.utils.nthChildSupport();
+
+				if (supportsNth) {
+					parts.push(":nth-child(" + (index + 1) + ")");
+				} else {
+					nth = "nth-child-" + (index + 1);
+					item.className += " " + nth;
+					parts.push("." + nth);
+				}
 			}
 
 			return parts.join("");
 		},
 
 		mapChildren : function (container, selector, items) {
-			var related = [];
-
-			var children = container.childNodes,
-				i, j, item, child, match, x = 0;
+			var matchesSelector = Flexbox.utils.matchesSelector,
+				children = container.childNodes,
+				i, j, item, child, match, x = 0,
+				related = [];
 
 			for (i = 0, j = children.length; i < j; i++) {
 				child = children[i];
@@ -1424,7 +1441,7 @@
 					match = false;
 
 					for (item in items) {
-						if (this.matchesSelector(child, item)) {
+						if (matchesSelector(child, item)) {
 							related.push({
 								element: child,
 								selector: item,
@@ -2009,8 +2026,7 @@
 			isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 			lines = this.lines,
 			i, j, k, l, line, items, item,
-			lineEnd, lineRemainder,
-			multiplier = 1, x, y;
+			lineRemainder, multiplier = 1, x, y;
 
 		var alignItems = properties["align-items"];
 		var isAlignItemsStretch = alignItems === "stretch";
@@ -2378,7 +2394,7 @@
 	
 	Flexie.init = function () {
 		// Load all stylesheets then feed them to the parser
-		var loader = new StyleLoader((function () {
+		return new StyleLoader((function () {
 			return function (stylesheets) {
 				Flexbox.parser.onStylesLoaded(stylesheets);
 			};
