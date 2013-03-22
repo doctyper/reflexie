@@ -82,7 +82,7 @@
 		<script>
 			require.config({
 				paths: {
-					"socket.io": "http://10.0.1.130:9999/socket.io/socket.io"
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io"
 				},
 				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
@@ -93,7 +93,7 @@
 				"dist/reflexie",
 				"socket.io"
 			], function (Flexie, io) {
-				var socket = io.connect("http://10.0.1.130:9999");
+				var socket = io.connect("http://0.0.0.0:9999");
 
 				socket.on("errorchange", function (data) {
 					socket.disconnect();
@@ -109,7 +109,7 @@
 				(function () {
 					var error = document.querySelector("#error pre");
 					var body = document.body;
-					var flx = window.flexContainer;
+					var flx = window.flexValues.container;
 
 					if (!flx) {
 						return;
