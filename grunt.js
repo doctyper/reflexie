@@ -4,6 +4,29 @@ module.exports = function (grunt) {
 
 	"use strict";
 
+	var getBytesWithUnit = function (bytes) {
+		if (isNaN(bytes)) {
+			return;
+		}
+
+		var units = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+		var amountOf2s = Math.floor(Math.log(+bytes) / Math.log(2));
+
+		if (amountOf2s < 1) {
+			amountOf2s = 0;
+		}
+
+		var i = Math.floor(amountOf2s / 10);
+		bytes = +bytes / Math.pow(2, 10 * i);
+
+		// Rounds to 3 decimals places.
+		if (bytes.toString().length > bytes.toFixed(3).toString().length) {
+			bytes = bytes.toFixed(3);
+		}
+
+		return bytes + units[i];
+	};
+
 	grunt.initConfig({
 		pkg: "<json:package.json>",
 		build: {
@@ -67,6 +90,8 @@ module.exports = function (grunt) {
 	// Special concat/build task to handle various jQuery build requirements
 	//
 	grunt.registerMultiTask("build", "Concatenate source", function () {
+		var done = this.async();
+
 		// Concat specified files.
 		var compiled = "",
 			version = grunt.config("pkg.version"),
@@ -111,6 +136,34 @@ module.exports = function (grunt) {
 		// Write concatenated source to file
 		grunt.file.write(this.file.dest, compiled);
 		grunt.log.subhead("Saved output to " + this.file.dest);
+
+		var uglify = require("uglify-js2");
+		var result = uglify.minify(this.file.dest, {
+			outSourceMap: this.file.dest + ".map",
+			warnings: true,
+			mangle: true,
+			compress: {
+				unsafe: true
+			}
+		});
+
+		var minifiedPath = this.file.dest.replace(".js", ".min.js");
+
+		// Save minified file
+		grunt.file.write(minifiedPath, result.code);
+
+		// Save source map
+		grunt.file.write(this.file.dest + ".map", result.map);
+
+		var gzip = require("gzip");
+
+		gzip(result.code, function (err, data) {
+			grunt.log.ok(getBytesWithUnit(compiled.length) + " uncompressed");
+			grunt.log.ok(getBytesWithUnit(result.code.length) + " minified");
+			grunt.log.ok(getBytesWithUnit(data.length) + " min & gzipped");
+
+			done();
+		});
 	});
 
 };

@@ -1,6 +1,6 @@
 Flexie.init = function () {
 	// Load all stylesheets then feed them to the parser
-	var loader = new StyleLoader((function () {
+	return new StyleLoader((function () {
 		return function (stylesheets) {
 			Flexbox.parser.onStylesLoaded(stylesheets);
 		};

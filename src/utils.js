@@ -24,6 +24,52 @@ Flexbox.utils = {
 		});
 	},
 
+	// Copyright (C) 2011 Alex Kloss <alexthkloss@web.de>
+	// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+	keys : function (object) {
+		return (Object.keys || function (object, key, result) {
+			// initialize object and result
+			result = [];
+
+			// iterate over object keys
+			for (key in object) {
+
+				// fill result array with non-prototypical keys
+				if (result.hasOwnProperty.call(object, key)) {
+					result.push(key);
+				}
+
+				// return result
+				return result;
+			}
+		}).call(object, object);
+	},
+
+	matchesSelector : function (elem, selector) {
+		return (Element.prototype.matchesSelector || Element.prototype.webkitMatchesSelector || Element.prototype.mozMatchesSelector || function (selector) {
+			var els = document.querySelectorAll(selector),
+				i, j;
+
+			for (i = 0, j = els.length; i < j; i++) {
+				if (els[i] === this) {
+					return true;
+				}
+			}
+
+			return false;
+		}).call(elem, selector);
+	},
+
+	nthChildSupport : function () {
+		// For nth-child testing, I assume your browser supports querySelector
+		return (function () {
+			var dummy = document.createElement('div');
+			dummy.innerHTML += '<p></p>';
+
+			return dummy.querySelector("p:nth-child(1)");
+		}());
+	},
+
 	testValue : function (val) {
 		var dimensions = ["left", "top", "right", "bottom", "width", "height"],
 			i, j;
@@ -56,7 +102,7 @@ Flexbox.utils = {
 		}
 	},
 
-	detectAuto : function (element, box, prop) {
+	detectAuto : function (element, box) {
 		var autoBox,
 			oWidth = element.style.width,
 			oHeight = element.style.height,

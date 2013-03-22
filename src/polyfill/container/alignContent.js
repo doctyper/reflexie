@@ -17,8 +17,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 		lines = this.lines,
 		i, j, k, l, line, items, item,
-		lineEnd, lineRemainder,
-		multiplier = 1, x, y;
+		lineRemainder, multiplier = 1, x, y;
 
 	var alignItems = properties["align-items"];
 	var isAlignItemsStretch = alignItems === "stretch";
