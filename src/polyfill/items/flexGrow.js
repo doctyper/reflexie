@@ -21,23 +21,31 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 		isReverse = utils.assert(flexDirection, revArray);
 
 	var i, ilim, j, jlim, line, noOfItems, usedSpace,
-		availSpace, flexTotal, curr, maxSize, runningDiff,
-		dir, minMaxChange, freezeList;
+		availSpace, flexTotal, curr, minMaxSize, runningDiff,
+		dir, minMaxChange, freezeList, flexBasis, flexGS, flexGSdir,
+		minOrMax, weights;
 
 	for (i = 0, ilim = lines.length; i < ilim; i++) {
 		line = lines[i];
 		noOfItems = line.items.length;
 		freezeList = new Array(noOfItems);
+		flexBasis = new Array(noOfItems);
+		weights = new Array(noOfItems);
 
 		// TODO Properly: calculate hypothetical main and cross size of each item
 		// Currently just use width/height + margin + padding + border
 
 		usedSpace = 0;
 		for (j = 0; j < noOfItems; j++) {
-			usedSpace += line.items[j][mainSize];
-			usedSpace += line.items[j].debug.margin[mainStart + "Total"];
-			usedSpace += line.items[j].debug.padding[mainStart + "Total"];
-			usedSpace += line.items[j].debug.border[mainStart + "Total"];
+		    if (!isNaN(line.items[j].debug.properties["flex-basis"])) {
+		        flexBasis[j] = line.items[j].debug.properties["flex-basis"];
+		    } else {
+			    flexBasis[j] = line.items[j][mainSize];
+			    flexBasis[j] += line.items[j].debug.margin[mainStart + "Total"];
+			    flexBasis[j] += line.items[j].debug.padding[mainStart + "Total"];
+			    flexBasis[j] += line.items[j].debug.border[mainStart + "Total"];
+			}
+			usedSpace += flexBasis[j];
 		}
 
 		// TODO Properly: Determine the available main and cross space for the flex items (9.2)
@@ -45,53 +53,55 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 
 		availSpace = containerMainSize - usedSpace;
 
-		if (availSpace < 0) {
-			// Need flex-shrink rather than flex-grow
-			return properties;
-		}
+        // Are we growing or shrinking?
+		flexGS = (availSpace < 0 ? "flex-shrink" : "flex-grow");
+		minOrMax = (availSpace < 0 ? "min-" : "max-");
+		flexGSdir = (availSpace < 0 ? -1 : 1);
 
 		flexTotal = 0;
 		for (j = 0; j < noOfItems; j++) {
-			// Cast to int, also has the nice feature that undefined << 0 = 0
-			curr = line.items[j].debug.properties["flex-grow"] << 0;
-			flexTotal += curr;
+		    if(flexGSdir){
+		        // flex-grow
+		        weights[j] = line.items[j].debug.properties["flex-grow"] << 0;
+		    } else {
+		        // flex-shrink (based on size*flex-shrink"
+		        if(isNaN(line.items[j].debug.properties["flex-shrink"])) line.items[j].debug.properties["flex-shrink"] = 1;
+		        weights[j] = flexBasis[j]*line.items[j].debug.properties["flex-shrink"];
+		    }
+			flexTotal += weights[j];
 		}
 
 
 		if (flexTotal == 0) {
-			// Nothing can grow - do nothing!
+			// Nothing can change - do nothing!
 			return properties;
 		}
 
-		// Max-width/height support (for flex-grow, min support is handled by the browser!)
-		// This could be made faster, but currently it's more debug-able in this form
+		// Max-width/height support (for flex-[grow/shrink], [min/max] support is handled by the browser!)
+		// This could be made faster/prettier, but currently it's more debug-able in this form
 		minMaxChange = 1;
-
-		while(minMaxChange){
-			minMaxChange = 0;
-
-			for (j = 0; j < noOfItems; j++) {
-				curr = (availSpace * line.items[j].debug.properties["flex-grow"]) / flexTotal;
-				maxSize = line.items[j].debug.properties["max-"+mainSize];
-
-				if (maxSize && isNaN(freezeList[j]) && (line.items[j][mainSize] + curr > maxSize)) {
-					minMaxChange = 1;
-
-					// use freezeList to store the amount we have to change that element by
-					freezeList[j] = maxSize - line.items[j][mainSize];
-					flexTotal -= line.items[j].debug.properties["flex-grow"];
-					availSpace -= freezeList[j];
-					
-					// This stops a divide by zero later whilst allowing the re-flow of max-width/height items
-					if(flexTotal == 0) flexTotal = 1;
-				}
-			}
-		}
+        while(minMaxChange){
+            minMaxChange = 0;
+            for (j = 0; j < noOfItems; j++) {
+	            curr = (availSpace * weights[j]) / flexTotal;
+	            minMaxSize = line.items[j].debug.properties[minOrMax+mainSize];
+	            if ( line.items[j][mainSize] + curr < 0 || ( minMaxSize && isNaN(freezeList[j]) && (flexGSdir * (line.items[j][mainSize] + curr) > flexGSdir * minMaxSize))) {
+		            minMaxChange = 1;
+		            // use freezeList to store the amount we have to change that element by
+		            freezeList[j] = (line.items[j][mainSize] + curr < 0 ? -line.items[j][mainSize] : minMaxSize - line.items[j][mainSize]);
+		            flexTotal -= weights[j];
+		            availSpace -= freezeList[j];
+		            // This stops a divide by zero later whilst allowing the re-flow of max-width/height items
+		            if(flexTotal == 0) flexTotal = 1;
+	            }
+            }
+        }
 
 		runningDiff = 0;
 		dir = (isReverse ?  -1 : 1);
 		for (j = 0; j < noOfItems; j++) {
-			curr = (!isNaN(freezeList[j]) ? freezeList[j] : (availSpace * line.items[j].debug.properties["flex-grow"]) / flexTotal);
+		    // addition for flex-grow, subtraction for flex-shrink
+			curr = ( !isNaN(freezeList[j]) ? freezeList[j] : availSpace * weights[j] / flexTotal );
 			line.items[j][mainStart] += (isReverse ?  -runningDiff - curr : runningDiff);
 			line.items[j][mainSize] += curr;
 			// For Debug uncomment next line
