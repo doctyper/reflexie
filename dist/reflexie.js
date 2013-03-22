@@ -1361,16 +1361,68 @@
 			}).call(elem, selector);
 		},
 
-		mapChildren : function (container, items) {
+		buildSelector : function (container, item, index) {
+			var parts = [container, " > "],
+				classes, i, j, attribute, nth;
+
+			// First start with the element name
+			parts.push(item.nodeName.toLowerCase());
+
+			// Add an ID if present
+			if (item.id) {
+				parts.push("#" + item.id);
+			}
+
+			// Add classes if present
+			if (item.className) {
+				classes = item.className.trim().split(" ");
+
+				for (i = 0, j = classes.length; i < j; i++) {
+					parts.push("." + classes[i]);
+				}
+			}
+
+			if (item.attributes.length) {
+				for (i = 0; i < item.attributes.length; i++) {
+					attribute = item.attributes[i];
+
+					if (attribute.specified) {
+						switch (attribute.name) {
+						case "class":
+						case "id":
+							break;
+
+						default:
+							parts.push("[" + attribute.name + "=" + attribute.value + "]");
+							break;
+						}
+					}
+				}
+			}
+
+			// If parts length is 3, there aren't any identifiers strong enough
+			// So let's improvise
+			if (parts.length === 3) {
+				nth = "nth-child-" + (index + 1);
+				item.className += " " + nth;
+				parts.push("." + nth);
+			}
+
+			return parts.join("");
+		},
+
+		mapChildren : function (container, selector, items) {
 			var related = [];
 
 			var children = container.childNodes,
-				i, j, item, child;
+				i, j, item, child, match, x = 0;
 
 			for (i = 0, j = children.length; i < j; i++) {
 				child = children[i];
 
 				if (child.nodeType === 1) {
+					match = false;
+
 					for (item in items) {
 						if (this.matchesSelector(child, item)) {
 							related.push({
@@ -1378,8 +1430,21 @@
 								selector: item,
 								properties: items[item]
 							});
+
+							match = true;
+							break;
 						}
 					}
+
+					if (!match) {
+						related.push({
+							element: child,
+							selector: this.buildSelector(selector, child, x),
+							properties: {}
+						});
+					}
+
+					x++;
 				}
 			}
 
@@ -1406,7 +1471,7 @@
 					containerElement = containerElements[i];
 
 					if (containerElement) {
-						children = this.mapChildren(containerElement, items);
+						children = this.mapChildren(containerElement, selector, items);
 
 						relationships.push({
 							container: {
