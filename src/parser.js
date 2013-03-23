@@ -6,7 +6,11 @@ Flexbox.parser = {
 			"flex-wrap": true,
 			"justify-content": true,
 			"align-items": true,
-			"align-content": true
+			"align-content": true,
+
+			// Shorthand support
+			// Combines flex-direction and flex-wrap
+			"flex-flow": true
 		},
 
 		items : {
@@ -14,7 +18,11 @@ Flexbox.parser = {
 			"flex-grow": true,
 			"flex-shrink": true,
 			"flex-basis": true,
-			"align-self": true
+			"align-self": true,
+
+			// Shorthand support
+			// Combines flex-grow, flex-shrink, and flex-basis
+			"flex": true
 		}
 	},
 
