@@ -3,9 +3,6 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		container = values.container,
 
 		crossStart = this.crossStart,
-		mainStart = this.mainStart,
-
-		mainSize = this.mainSize,
 		crossSize = this.crossSize,
 
 		containerSize = container[crossSize],

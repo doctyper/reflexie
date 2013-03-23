@@ -3,14 +3,12 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 		crossSize = this.crossSize,
 		multiplier = 1,
 		lines = this.lines,
-		i, j, k, l, line, items, item,
-		lineRemainder;
+		i, j, k, l, line, item;
 
 	var values = this.values;
 	var mainSize = this.mainSize;
 	var containerSize = values.container[mainSize];
 
-	var mainStart = this.mainStart;
 	var crossTotal = crossStart + "Total";
 
 	var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
@@ -21,8 +19,8 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 	for (i = 0, j = lines.length; i < j; i++) {
 		line = lines[i];
 
-		for (i = 0, j = line.items.length; i < j; i++) {
-			item = line.items[i];
+		for (k = 0, l = line.items.length; k < l; k++) {
+			item = line.items[k];
 
 			if (!item.debug || !item.debug.properties) {
 				return;

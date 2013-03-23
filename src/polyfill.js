@@ -9,6 +9,6 @@ Flexie.prototype = {
 			return true;
 		}
 
-		var container = new Flexbox.container(settings);
+		return new Flexbox.container(settings);
 	}
 };
