@@ -305,7 +305,7 @@ Flexbox.parser = {
 
 		var container, children, selector,
 			containerElements, containerElement,
-			i, j, itemElement;
+			i, j;
 
 		for (selector in containers) {
 			container = containers[selector];

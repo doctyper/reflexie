@@ -86,7 +86,7 @@ Flexbox.utils = {
 	applyPositioning : function (id, container, items, values) {
 		var rects = values.items,
 			box = values.container,
-			i, j, key, rect, item, element;
+			i, j, rect, item;
 
 		this.applyStyles(id, container.selector, {
 			"position": "relative",

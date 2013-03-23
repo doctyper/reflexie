@@ -1,4 +1,4 @@
-Flexbox.models.flexDirection = function (direction, properties) {
+Flexbox.models.flexDirection = function (direction/*, properties*/) {
 	var values = this.values,
 		container = values.container,
 		itemValues = values.items,
