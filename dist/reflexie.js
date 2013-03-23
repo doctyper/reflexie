@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-22-2013
+ * Date: 3-23-2013
  */
 (function (window, undefined) {
 
@@ -907,7 +907,7 @@
 		applyPositioning : function (id, container, items, values) {
 			var rects = values.items,
 				box = values.container,
-				i, j, key, rect, item, element;
+				i, j, rect, item;
 
 			this.applyStyles(id, container.selector, {
 				"position": "relative",
@@ -1180,7 +1180,11 @@
 				"flex-wrap": true,
 				"justify-content": true,
 				"align-items": true,
-				"align-content": true
+				"align-content": true,
+
+				// Shorthand support
+				// Combines flex-direction and flex-wrap
+				"flex-flow": true
 			},
 
 			items : {
@@ -1188,7 +1192,11 @@
 				"flex-grow": true,
 				"flex-shrink": true,
 				"flex-basis": true,
-				"align-self": true
+				"align-self": true,
+
+				// Shorthand support
+				// Combines flex-grow, flex-shrink, and flex-basis
+				"flex": true
 			}
 		},
 
@@ -1478,7 +1486,7 @@
 
 			var container, children, selector,
 				containerElements, containerElement,
-				i, j, itemElement;
+				i, j;
 
 			for (selector in containers) {
 				container = containers[selector];
@@ -1536,7 +1544,7 @@
 		}
 	};
 	
-	Flexbox.models.order = function (properties) {
+	Flexbox.models.order = function (/*properties*/) {
 		this.items.sort(function (a, b) {
 			var aProps = a.properties;
 			var bProps = b.properties;
@@ -1565,14 +1573,12 @@
 			crossSize = this.crossSize,
 			multiplier = 1,
 			lines = this.lines,
-			i, j, k, l, line, items, item,
-			lineRemainder;
+			i, j, k, l, line, item;
 
 		var values = this.values;
 		var mainSize = this.mainSize;
 		var containerSize = values.container[mainSize];
 
-		var mainStart = this.mainStart;
 		var crossTotal = crossStart + "Total";
 
 		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
@@ -1583,8 +1589,8 @@
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
 
-			for (i = 0, j = line.items.length; i < j; i++) {
-				item = line.items[i];
+			for (k = 0, l = line.items.length; k < l; k++) {
+				item = line.items[k];
 
 				if (!item.debug || !item.debug.properties) {
 					return;
@@ -1616,7 +1622,7 @@
 		}
 	};
 	
-	Flexbox.models.flexDirection = function (direction, properties) {
+	Flexbox.models.flexDirection = function (direction/*, properties*/) {
 		var values = this.values,
 			container = values.container,
 			itemValues = values.items,
@@ -2012,9 +2018,6 @@
 			container = values.container,
 
 			crossStart = this.crossStart,
-			mainStart = this.mainStart,
-
-			mainSize = this.mainSize,
 			crossSize = this.crossSize,
 
 			containerSize = container[crossSize],
@@ -2388,7 +2391,7 @@
 				return true;
 			}
 
-			var container = new Flexbox.container(settings);
+			return new Flexbox.container(settings);
 		}
 	};
 	
