@@ -13,7 +13,7 @@
 		"grunt": "0.3.x",
 		"uglify-js2": "2.1.x",
 		"mocha-phantomjs": "2.0.x",
-		"gzip": ">=0.1.0"
+		"gzip": "0.1.x"
 	},
 	"scripts": {
 		"start": "grunt build && node test/generate.js",
