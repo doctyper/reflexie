@@ -60,7 +60,7 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 
 		flexTotal = 0;
 		for (j = 0; j < noOfItems; j++) {
-		    if(flexGSdir){
+		    if(flexGSdir == 1){
 		        // flex-grow
 		        weights[j] = line.items[j].debug.properties["flex-grow"] << 0;
 		    } else {
@@ -85,7 +85,7 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
             for (j = 0; j < noOfItems; j++) {
 	            curr = (availSpace * weights[j]) / flexTotal;
 	            minMaxSize = line.items[j].debug.properties[minOrMax+mainSize];
-	            if ( line.items[j][mainSize] + curr < 0 || ( minMaxSize && isNaN(freezeList[j]) && (flexGSdir * (line.items[j][mainSize] + curr) > flexGSdir * minMaxSize))) {
+	            if ( isNaN(freezeList[j]) && ( line.items[j][mainSize] + curr < 0 || ( minMaxSize && (flexGSdir * (line.items[j][mainSize] + curr) > flexGSdir * minMaxSize)))) {
 		            minMaxChange = 1;
 		            // use freezeList to store the amount we have to change that element by
 		            freezeList[j] = (line.items[j][mainSize] + curr < 0 ? -line.items[j][mainSize] : minMaxSize - line.items[j][mainSize]);
@@ -105,7 +105,7 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 			line.items[j][mainStart] += (isReverse ?  -runningDiff - curr : runningDiff);
 			line.items[j][mainSize] += curr;
 			// For Debug uncomment next line
-			console.log("Item ", j, "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize ," by ", curr);
+			//console.log("Item ", j, "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize ," by ", curr);
 			runningDiff += curr;
 		}
 	}
