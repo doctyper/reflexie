@@ -84,14 +84,16 @@ Flexbox.utils = {
 	},
 
 	applyPositioning : function (id, container, items, values) {
-		var rects = values.items,
+		var display = container.properties.display,
+			rects = values.items,
 			box = values.container,
 			i, j, rect, item;
 
 		this.applyStyles(id, container.selector, {
 			"position": "relative",
 			"width": box.width,
-			"height": box.height
+			"height": box.height,
+			"display": display.replace("flex", "block")
 		});
 
 		for (i = 0, j = items.length; i < j; i++) {
