@@ -348,7 +348,9 @@ Flexbox.parser = {
 		var containers = [];
 		var items = [];
 
-		for (i = 0, j = rules.length; i < j; i++) {
+		// Rules are returned in order of cascade
+		// We want them in ascending order
+		for (i = rules.length - 1, j = 0; i >= j; i--) {
 			group = rules[i];
 			styles = group.style;
 
