@@ -5,7 +5,7 @@ Flexie = function (settings) {
 
 Flexie.prototype = {
 	box : function (settings) {
-		if (Flexbox.support === true) {
+		if (Flexie.support === true) {
 			return true;
 		}
 

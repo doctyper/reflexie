@@ -9,7 +9,7 @@ Flexie.init = function () {
 
 domReady(function () {
 	// Check for native Flexbox support
-	if (Flexbox.support === true) {
+	if (Flexie.support === true) {
 		return true;
 	}
 
