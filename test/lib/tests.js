@@ -8,6 +8,9 @@ define([
 
 	var DEBUG = true;
 
+	// Setup Flexie
+	Flexie.init();
+
 	var hasSupport = (function () {
 		var testProp = "flexWrap";
 		var prefixes = "webkit moz o ms".split(" ");
