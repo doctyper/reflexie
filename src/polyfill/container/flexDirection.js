@@ -16,7 +16,7 @@ Flexbox.models.flexDirection = function (direction, properties) {
 		storedVal = 0,
 		containerSize;
 
-	var prevItem;
+	var prevItem, itemSize;
 	var prevMainStart = 0;
 	var mainTotal = mainStart + "Total";
 
@@ -27,40 +27,22 @@ Flexbox.models.flexDirection = function (direction, properties) {
 
 	containerSize = container[mainSize];
 
-	if (!isReverse) {
-		incrementVal -= container.debug.border[mainStart];
-		incrementVal -= container.debug.margin[mainStart];
-	}
-
 	var revStart = revValues[mainStart];
+
+	incrementVal = (isReverse ? -1 : 1) * container.debug.padding[mainStart];
 
 	for (i = 0, j = itemValues.length; i < j; i++) {
 		item = itemValues[i];
+		itemSize = item[mainSize] + item.debug.margin[mainTotal] + item.debug.border[mainTotal] + item.debug.padding[mainTotal];
 		item[crossStart] = (storedVal + container.debug.padding[crossStart]);
 
 		if (isReverse) {
-			item[mainStart] = ((containerSize + container.debug.padding[mainStart]) - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
+			item[mainStart] = containerSize - itemSize - incrementVal;
 		} else {
-			item[mainStart] += incrementVal;
-			item[mainStart] -= item.debug.margin[mainStart];
-
-			if (isColumn) {
-				if (prevItem) {
-					prevMainStart += Math.min(item.debug.margin[mainStart], prevItem.debug.margin[revStart]);
-					item[mainStart] += prevMainStart;
-				}
-
-				prevItem = item;
-			}
+			item[mainStart] = incrementVal;
 		}
 
-		if (needsIncrement) {
-			incrementVal += item[mainSize] + item.debug.margin[mainTotal];
-
-			if (isReverse) {
-				incrementVal += item.debug.inner[mainStart];
-			}
-		}
+		incrementVal += itemSize;
 	}
 
 	// flex-direction sets which properties need updates
