@@ -1,4 +1,4 @@
-Flexbox.support = (function () {
+Flexie.support = (function () {
 	var testProp = "flexWrap";
 	var prefixes = "webkit moz o ms".split(" ");
 	var dummy = document.createElement("flx");
