@@ -36,10 +36,14 @@
 					parent["flex-flow"] = [
 						parent["flex-direction"],
 						parent["flex-wrap"]
-					].join(" ");
+					].join(" ").trim();
 
 					delete parent["flex-direction"];
 					delete parent["flex-wrap"];
+
+					if (parent["flex-flow"] === "") {
+						delete parent["flex-flow"];
+					}
 
 					var items = pristineTest.items;
 
@@ -50,11 +54,15 @@
 							item["flex-grow"],
 							item["flex-shrink"],
 							item["flex-basis"]
-						].join(" ");
+						].join(" ").trim();
 
 						delete item["flex-grow"];
 						delete item["flex-shrink"];
 						delete item["flex-basis"];
+
+						if (item.flex === "") {
+							delete item.flex;
+						}
 					}
 
 					var string = JSON.stringify(pristineTest);
