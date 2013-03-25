@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-22-2013
+ * Date: 3-25-2013
  */
 (function (window, undefined) {
 
@@ -1565,7 +1565,7 @@
 			crossSize = this.crossSize,
 			multiplier = 1,
 			lines = this.lines,
-			i, j, k, l, line, items, item,
+			i, j, ilim, jlim, k, l, line, items, item,
 			lineRemainder;
 
 		var values = this.values;
@@ -1578,13 +1578,15 @@
 		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 
 		var alignSelf, lineSize;
-		var isAuto, isStart, isCenter, isStretch;
+		var isAuto, isStart, isEnd, isCenter, isStretch;
 
-		for (i = 0, j = lines.length; i < j; i++) {
+		var runningLineTotal = values.container.debug.padding[crossStart];
+
+		for (i = 0, ilim = lines.length; i < ilim; i++) {
 			line = lines[i];
 
-			for (i = 0, j = line.items.length; i < j; i++) {
-				item = line.items[i];
+			for (j = 0, jlim = line.items.length; j < jlim; j++) {
+				item = line.items[j];
 
 				if (!item.debug || !item.debug.properties) {
 					return;
@@ -1594,25 +1596,27 @@
 
 				isAuto = alignSelf === "auto";
 				isStart = alignSelf === "flex-start";
+				isEnd = alignSelf === "flex-end";
 				isCenter = alignSelf === "center";
 				isStretch = alignSelf === "stretch";
 
 				lineSize = (isNotFlexWrap) ? containerSize : line.maxItemSize;
-				lineSize -= item.debug.inner[crossStart];
-				lineSize -= item.debug.margin[crossTotal];
 
 				if (isStretch) {
 					if (item.debug.auto[crossSize]) {
-						item[crossSize] = lineSize;
+						item[crossStart] = runningLineTotal;
+						item[crossSize] = lineSize - item.debug.padding[crossTotal] - item.debug.border[crossTotal] - item.debug.margin[crossTotal];
 					}
-				} else if (!isAuto && !isStart) {
-					if (isCenter) {
-						multiplier = 0.5;
-					}
-
-					item[crossStart] += (lineSize - item[crossSize]) * multiplier;
+				} else if (isStart) {
+					item[crossStart] = runningLineTotal;
+				} else if (isEnd) {
+					item[crossStart] = runningLineTotal + lineSize - item[crossSize] - item.debug.padding[crossTotal] - item.debug.border[crossTotal] - item.debug.margin[crossTotal];
+				} else if (isCenter) {
+					item[crossStart] = runningLineTotal + 0.5*(lineSize - item[crossSize] - item.debug.padding[crossTotal] - item.debug.border[crossTotal] - item.debug.margin[crossTotal]);
 				}
 			}
+
+			runningLineTotal += line.maxItemSize;
 		}
 	};
 	
@@ -1634,7 +1638,7 @@
 			storedVal = 0,
 			containerSize;
 
-		var prevItem;
+		var prevItem, itemSize;
 		var prevMainStart = 0;
 		var mainTotal = mainStart + "Total";
 
@@ -1645,40 +1649,22 @@
 
 		containerSize = container[mainSize];
 
-		if (!isReverse) {
-			incrementVal -= container.debug.border[mainStart];
-			incrementVal -= container.debug.margin[mainStart];
-		}
-
 		var revStart = revValues[mainStart];
+
+		incrementVal = (isReverse ? -1 : 1) * container.debug.padding[mainStart];
 
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
+			itemSize = item[mainSize] + item.debug.margin[mainTotal] + item.debug.border[mainTotal] + item.debug.padding[mainTotal];
 			item[crossStart] = (storedVal + container.debug.padding[crossStart]);
 
 			if (isReverse) {
-				item[mainStart] = ((containerSize + container.debug.padding[mainStart]) - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - incrementVal;
+				item[mainStart] = containerSize - itemSize - incrementVal;
 			} else {
-				item[mainStart] += incrementVal;
-				item[mainStart] -= item.debug.margin[mainStart];
-
-				if (isColumn) {
-					if (prevItem) {
-						prevMainStart += Math.min(item.debug.margin[mainStart], prevItem.debug.margin[revStart]);
-						item[mainStart] += prevMainStart;
-					}
-
-					prevItem = item;
-				}
+				item[mainStart] = incrementVal;
 			}
 
-			if (needsIncrement) {
-				incrementVal += item[mainSize] + item.debug.margin[mainTotal];
-
-				if (isReverse) {
-					incrementVal += item.debug.inner[mainStart];
-				}
-			}
+			incrementVal += itemSize;
 		}
 
 		// flex-direction sets which properties need updates
@@ -1800,24 +1786,6 @@
 
 		prevMainStart = 0;
 
-		// Adjust positioning for padding
-		if (!isColumn && !isReverse) {
-			for (i = 0, j = lines.length; i < j; i++) {
-				items = lines[i].items;
-
-				for (k = 0, l = items.length; k < l; k++) {
-					item = items[k];
-
-					if (prevItem) {
-						prevMainStart += prevItem.debug.inner[mainStart];
-						item[mainStart] += prevMainStart;
-					}
-
-					prevItem = item;
-				}
-			}
-		}
-
 		// Expose lines
 		this.lines = lines;
 	};
@@ -1912,97 +1880,20 @@
 		var isAlignContentStretch = properties["align-content"] === "stretch";
 
 		var crossTotal = crossStart + "Total";
-		var lineCrossSize;
-
-		if (isStretch && isNotFlexWrap) {
-			items = values.items;
-			lineRemainder = values.container[crossSize] / lines.length;
-
-			for (i = 0, j = lines.length; i < j; i++) {
-				line = lines[i];
-				items = line.items;
-				l = items.length;
-
-				for (k = 0; k < l; k++) {
-					item = items[k];
-
-					if (item.debug.auto[crossSize]) {
-						if (i) {
-							item[crossStart] += (lineRemainder - item[crossSize]) * i;
-						}
-
-						item[crossSize] = (lineRemainder - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
-					}
-				}
-			}
-		} else if (isStretch) {
-			for (i = 0, j = lines.length; i < j; i++) {
-				line = lines[i];
-				items = line.items;
-				l = items.length;
-
-				lineCrossSize = 0;
-
-				for (k = 0; k < l; k++) {
-					item = items[k];
-
-					if (item.debug.auto[crossSize]) {
-						lineCrossSize = Math.max(lineCrossSize, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
-					}
-				}
-
-				for (k = 0; k < l; k++) {
-					item = items[k];
-
-					if (item.debug.auto[crossSize]) {
-						item[crossSize] = (lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
-					}
-				}
-			}
-		}
-
-		var remainderSize = containerSize;
 
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
-			items = line.items;
-			l = items.length;
+			l = line.items.length;
 
 			for (k = 0; k < l; k++) {
-				item = items[k];
-				line.maxItemSize = Math.max(line.maxItemSize || 0, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
-			}
+				item = line.items[k];
+				line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.padding[crossTotal] + item.debug.border[crossTotal] + item.debug.margin[crossTotal]);
 
-			remainderSize -= line.maxItemSize;
-		}
+				var itemAlign = item.debug.properties["align-self"];
 
-		remainderSize /= lines.length;
-
-		if (isStretch || isStart || isBaseline) {
-			return;
-		}
-
-		if (isCenter) {
-			multiplier = 0.5;
-			remainderSize *= 0.5;
-		}
-
-		if (!isNotFlexWrap && !isAlignContentStretch) {
-			remainderSize = 0;
-		}
-
-		for (i = 0, j = lines.length; i < j; i++) {
-			line = lines[i];
-			items = line.items;
-			l = items.length;
-			lineRemainder = line.maxItemSize;
-
-			for (k = 0; k < l; k++) {
-				item = items[k];
-
-				// Remove margin from crossStart
-				item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
-				item[crossStart] += remainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
+				if(!itemAlign || itemAlign === "auto") {
+					item.debug.properties["align-self"] = alignment;
+				}
 			}
 		}
 	};

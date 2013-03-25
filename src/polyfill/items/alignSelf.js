@@ -3,7 +3,7 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 		crossSize = this.crossSize,
 		multiplier = 1,
 		lines = this.lines,
-		i, j, k, l, line, items, item,
+		i, j, ilim, jlim, k, l, line, items, item,
 		lineRemainder;
 
 	var values = this.values;
@@ -16,13 +16,15 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 	var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 
 	var alignSelf, lineSize;
-	var isAuto, isStart, isCenter, isStretch;
+	var isAuto, isStart, isEnd, isCenter, isStretch;
 
-	for (i = 0, j = lines.length; i < j; i++) {
+	var runningLineTotal = values.container.debug.padding[crossStart];
+
+	for (i = 0, ilim = lines.length; i < ilim; i++) {
 		line = lines[i];
 
-		for (i = 0, j = line.items.length; i < j; i++) {
-			item = line.items[i];
+		for (j = 0, jlim = line.items.length; j < jlim; j++) {
+			item = line.items[j];
 
 			if (!item.debug || !item.debug.properties) {
 				return;
@@ -32,24 +34,26 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 
 			isAuto = alignSelf === "auto";
 			isStart = alignSelf === "flex-start";
+			isEnd = alignSelf === "flex-end";
 			isCenter = alignSelf === "center";
 			isStretch = alignSelf === "stretch";
 
 			lineSize = (isNotFlexWrap) ? containerSize : line.maxItemSize;
-			lineSize -= item.debug.inner[crossStart];
-			lineSize -= item.debug.margin[crossTotal];
 
 			if (isStretch) {
 				if (item.debug.auto[crossSize]) {
-					item[crossSize] = lineSize;
+					item[crossStart] = runningLineTotal;
+					item[crossSize] = lineSize - item.debug.padding[crossTotal] - item.debug.border[crossTotal] - item.debug.margin[crossTotal];
 				}
-			} else if (!isAuto && !isStart) {
-				if (isCenter) {
-					multiplier = 0.5;
-				}
-
-				item[crossStart] += (lineSize - item[crossSize]) * multiplier;
+			} else if (isStart) {
+				item[crossStart] = runningLineTotal;
+			} else if (isEnd) {
+				item[crossStart] = runningLineTotal + lineSize - item[crossSize] - item.debug.padding[crossTotal] - item.debug.border[crossTotal] - item.debug.margin[crossTotal];
+			} else if (isCenter) {
+				item[crossStart] = runningLineTotal + 0.5*(lineSize - item[crossSize] - item.debug.padding[crossTotal] - item.debug.border[crossTotal] - item.debug.margin[crossTotal]);
 			}
 		}
+
+		runningLineTotal += line.maxItemSize;
 	}
 };
