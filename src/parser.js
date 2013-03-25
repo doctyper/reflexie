@@ -76,7 +76,19 @@ Flexbox.parser = {
 	},
 
 	validateContainer : function (styles) {
-		return this.validateRules(this.properties.container, styles);
+		var rules = this.validateRules(this.properties.container, styles);
+
+		// For container to be valid, it must have a display value
+		// Of either flex or inline-flex
+		var display = (rules || {}).display;
+
+		switch (display) {
+		case "flex":
+		case "inline-flex":
+			return rules;
+		}
+
+		return undefined;
 	},
 
 	validateItems : function (styles) {
