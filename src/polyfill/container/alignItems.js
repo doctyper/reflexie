@@ -19,97 +19,20 @@ Flexbox.models.alignItems = function (alignment, properties) {
 	var isAlignContentStretch = properties["align-content"] === "stretch";
 
 	var crossTotal = crossStart + "Total";
-	var lineCrossSize;
-
-	if (isStretch && isNotFlexWrap) {
-		items = values.items;
-		lineRemainder = values.container[crossSize] / lines.length;
-
-		for (i = 0, j = lines.length; i < j; i++) {
-			line = lines[i];
-			items = line.items;
-			l = items.length;
-
-			for (k = 0; k < l; k++) {
-				item = items[k];
-
-				if (item.debug.auto[crossSize]) {
-					if (i) {
-						item[crossStart] += (lineRemainder - item[crossSize]) * i;
-					}
-
-					item[crossSize] = (lineRemainder - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
-				}
-			}
-		}
-	} else if (isStretch) {
-		for (i = 0, j = lines.length; i < j; i++) {
-			line = lines[i];
-			items = line.items;
-			l = items.length;
-
-			lineCrossSize = 0;
-
-			for (k = 0; k < l; k++) {
-				item = items[k];
-
-				if (item.debug.auto[crossSize]) {
-					lineCrossSize = Math.max(lineCrossSize, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
-				}
-			}
-
-			for (k = 0; k < l; k++) {
-				item = items[k];
-
-				if (item.debug.auto[crossSize]) {
-					item[crossSize] = (lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
-				}
-			}
-		}
-	}
-
-	var remainderSize = containerSize;
 
 	for (i = 0, j = lines.length; i < j; i++) {
 		line = lines[i];
-		items = line.items;
-		l = items.length;
+		l = line.items.length;
 
 		for (k = 0; k < l; k++) {
-			item = items[k];
-			line.maxItemSize = Math.max(line.maxItemSize || 0, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
-		}
+			item = line.items[k];
+			line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.padding[crossTotal] + item.debug.border[crossTotal] + item.debug.margin[crossTotal]);
 
-		remainderSize -= line.maxItemSize;
-	}
+			var itemAlign = item.debug.properties["align-self"];
 
-	remainderSize /= lines.length;
-
-	if (isStretch || isStart || isBaseline) {
-		return;
-	}
-
-	if (isCenter) {
-		multiplier = 0.5;
-		remainderSize *= 0.5;
-	}
-
-	if (!isNotFlexWrap && !isAlignContentStretch) {
-		remainderSize = 0;
-	}
-
-	for (i = 0, j = lines.length; i < j; i++) {
-		line = lines[i];
-		items = line.items;
-		l = items.length;
-		lineRemainder = line.maxItemSize;
-
-		for (k = 0; k < l; k++) {
-			item = items[k];
-
-			// Remove margin from crossStart
-			item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
-			item[crossStart] += remainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
+			if(!itemAlign || itemAlign === "auto") {
+				item.debug.properties["align-self"] = alignment;
+			}
 		}
 	}
 };
