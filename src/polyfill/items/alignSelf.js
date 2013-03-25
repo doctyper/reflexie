@@ -1,7 +1,7 @@
 Flexbox.models.alignSelf = function (alignment, properties) {
 	var crossStart = this.crossStart,
 		crossSize = this.crossSize,
-		multiplier = 1,
+		multiplier,
 		lines = this.lines,
 		i, j, k, l, line, item,
 		lineRemainder;
@@ -41,6 +41,7 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 
 		for (k = 0, l = line.items.length; k < l; k++) {
 			item = line.items[k];
+			multiplier = 1;
 			currentRemainderSize = remainderSize;
 
 			if (!item.debug || !item.debug.properties) {
@@ -103,6 +104,8 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 
 			// Remove margin from crossStart
 			item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
+
+			// Magic line
 			item[crossStart] += currentRemainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
 		}
 	}
