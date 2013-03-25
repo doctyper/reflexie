@@ -52,10 +52,9 @@ module.exports = function (grunt) {
 				"lib/css-regions-polyfill/src/StyleLoader",
 				"lib/css-regions-polyfill/src/cssparser",
 
-				/*!
-				 * domready (c) Dustin Diaz 2012 - License MIT
-				 */
-				"lib/domready/domready",
+				/* https://github.com/jeromeetienne/microevent.js */
+				/* License MIT */
+				"lib/microevent/microevent",
 
 				/* https://github.com/keeganstreet/specificity */
 				/* License TBD */
@@ -63,7 +62,6 @@ module.exports = function (grunt) {
 
 				"src/core",
 				"src/utils",
-				"src/support",
 				"src/parser",
 				"src/polyfill/items/order",
 				"src/polyfill/items/alignSelf",
@@ -75,6 +73,8 @@ module.exports = function (grunt) {
 				"src/polyfill/container",
 				"src/polyfill/items",
 				"src/polyfill",
+				"src/support",
+				"src/event",
 				"src/init",
 				"src/exports",
 				"src/outro"
