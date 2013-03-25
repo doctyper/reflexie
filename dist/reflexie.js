@@ -1137,8 +1137,6 @@
 				style.type = "text/css";
 			}
 
-			// console.log(css);
-
 			if (style.styleSheet) {
 				style.styleSheet.cssText += css;
 			} else {
@@ -2481,7 +2479,7 @@
 	Flexbox.event = {
 		handlers : {
 			redraw : function () {
-				var options = Flexie.options;
+				var options = Flexie.options || {};
 
 				if (typeof options.redraw === "function") {
 					options.redraw.apply(Flexie, arguments);
@@ -2489,7 +2487,7 @@
 			},
 
 			complete : function () {
-				var options = Flexie.options;
+				var options = Flexie.options || {};
 
 				if (typeof options.complete === "function") {
 					options.complete.apply(Flexie, arguments);
