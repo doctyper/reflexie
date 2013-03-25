@@ -313,8 +313,6 @@ Flexbox.utils = {
 			style.type = "text/css";
 		}
 
-		// console.log(css);
-
 		if (style.styleSheet) {
 			style.styleSheet.cssText += css;
 		} else {
