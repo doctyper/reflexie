@@ -5,7 +5,7 @@
 		<link rel="stylesheet" href="css/runner.css" />
 
 		<style>
-			#error {
+			#error, #result {
 				padding: 10px;
 				right: 20px;
 				bottom: 20px;
@@ -13,11 +13,18 @@
 				border: 1px dashed #555;
 				background: #eee;
 				z-index: 10;
+				width: 270px;
 			}
 
-			#error pre {
+			#error pre, #result pre {
 				margin: 0;
 				font-size: 12px;
+			}
+
+			#result {
+				right: 330px;
+				border-color: #050;
+				background: rgba(0, 255, 0, 0.3);
 			}
 		</style>
 
@@ -37,11 +44,13 @@
 				opacity: 0.5;
 			}
 
-			.stretch-row #flex-target div {
+			.stretch-row #flex-target div,
+			#flex-target div.stretch-row {
 				height: auto;
 			}
 
-			.stretch-col #flex-target div {
+			.stretch-col #flex-target div,
+			#flex-target div.stretch-col {
 				width: auto;
 			}
 		</style>
@@ -105,11 +114,66 @@
 					window.location.reload();
 				});
 
+				var getRect = function (el) {
+					var box = {};
+
+					if (el) {
+						var rect = el.getBoundingClientRect();
+						var keys = Object.keys(rect).sort();
+
+						for (var i = 0, j = keys.length; i < j; i++) {
+							var key = keys[i];
+
+							if (key !== "bottom") {
+								box[key] = rect[key];
+							}
+						}
+					}
+
+					return box;
+				};
+
+				var onComplete = function (data) {
+					var result = document.querySelector("#result pre");
+
+					var container = document.querySelector("#flex-target");
+
+					var json = {
+						container : getRect(container),
+						items : (function () {
+							var items = document.querySelectorAll("#flex-target > div");
+
+							var arr = [];
+
+							for (var i = 0, j = items.length; i < j; i++) {
+								arr.push(getRect(items[i]));
+							}
+
+							return arr;
+						}())
+					};
+
+					result.innerHTML = JSON.stringify(json, null, 3);
+				};
+
+				var applyClass = function (flx, el) {
+					var direction = flx["flex-direction"] || "";
+					direction += flx["flex-flow"] || "";
+
+					if ((/row/).test(direction)) {
+						console.log("stretch-row");
+						el.className = "stretch-row";
+					} else if ((/column/).test(direction)) {
+						console.log("stretch-col");
+						el.className = "stretch-col";
+					}
+				};
+
 				// Error Reporting Setup
 				(function () {
 					var error = document.querySelector("#error pre");
 					var body = document.body;
-					var flx = window.flexValues.container;
+					var flx = window.flexValues;
 
 					if (!flx) {
 						return;
@@ -118,17 +182,24 @@
 					error.innerHTML = JSON.stringify(window.flexValues, null, 3);
 
 					if (flx["align-items"] === "stretch" || flx["align-content"] === "stretch") {
-						switch (flx["flex-direction"]) {
-						case "row":
-						case "row-reverse":
-							body.className = "stretch-row";
-							break;
+						applyClass(flx.container, body);
+					}
 
-						case "column":
-						case "column-reverse":
-							body.className = "stretch-col";
-							break;
+					for (var i = 0, j = flx.items.length; i < j; i++) {
+						var item = flx.items[i];
+						var element = document.querySelector("#flex-col-" + (i + 1));
+
+						if (item["align-self"] === "stretch") {
+							applyClass(flx.container, element);
 						}
+					}
+
+					if (Flexie.support) {
+						onComplete();
+					} else {
+						Flexie.init({
+							complete: onComplete
+						});
 					}
 				}());
 
@@ -148,7 +219,7 @@
 				<div id="flex-col-3">
 					<h2>Col 3</h2>
 				</div>
-				<div id="flex-col-4">
+				<!--<div id="flex-col-4">
 					<h2>Col 4</h2>
 				</div>
 				<div id="flex-col-5">
@@ -156,11 +227,15 @@
 				</div>
 				<div id="flex-col-6">
 					<h2>Col 6</h2>
-				</div>
+				</div>-->
 			</div>
 		</div>
 
 		<div id="flex-target-2"></div>
+
+		<div id="result">
+			<pre></pre>
+		</div>
 
 		<div id="error">
 			<pre></pre>
