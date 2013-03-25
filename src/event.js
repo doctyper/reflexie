@@ -1,7 +1,7 @@
 Flexbox.event = {
 	handlers : {
 		redraw : function () {
-			var options = Flexie.options;
+			var options = Flexie.options || {};
 
 			if (typeof options.redraw === "function") {
 				options.redraw.apply(Flexie, arguments);
@@ -9,7 +9,7 @@ Flexbox.event = {
 		},
 
 		complete : function () {
-			var options = Flexie.options;
+			var options = Flexie.options || {};
 
 			if (typeof options.complete === "function") {
 				options.complete.apply(Flexie, arguments);
