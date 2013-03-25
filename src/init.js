@@ -1,15 +1,6 @@
-Flexie.init = function () {
-	// Load all stylesheets then feed them to the parser
-	return new StyleLoader((function () {
-		return function (stylesheets) {
-			Flexbox.parser.onStylesLoaded(stylesheets);
-		};
-	}()));
-};
-
-domReady(function () {
+Flexie.init = function (options) {
 	// Check for native Flexbox support
-	if (Flexbox.support === true) {
+	if (Flexie.support === true) {
 		return true;
 	}
 
@@ -19,6 +10,21 @@ domReady(function () {
 		throw new Error("Flexie needs `document.querySelectorAll`, but your browser doesn't support it.");
 	}
 
-	// no native Flexbox support, use polyfill
-	Flexie.init();
-});
+	// Expose user options
+	this.options = options;
+
+	// Set up Event Emitter
+	this.event = new Flexbox.event.emitter(options);
+
+	// Expose API to redraw flexbox
+	this.redraw = function () {
+		return this.event.trigger("redraw");
+	};
+
+	// Load all stylesheets then feed them to the parser
+	return new StyleLoader((function () {
+		return function (stylesheets) {
+			Flexbox.parser.onStylesLoaded(stylesheets);
+		};
+	}()));
+};

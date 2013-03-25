@@ -1,5 +1,6 @@
+// TODO: Remove this when ready.
 Flexbox.models.alignItems = function (alignment, properties) {
-	var crossStart = this.crossStart,
+	/*var crossStart = this.crossStart,
 		crossSize = this.crossSize,
 		multiplier = 1,
 		lines = this.lines,
@@ -111,5 +112,5 @@ Flexbox.models.alignItems = function (alignment, properties) {
 			item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
 			item[crossStart] += remainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
 		}
-	}
+	}*/
 };
