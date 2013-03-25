@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-23-2013
+ * Date: 3-24-2013
  */
 (function (window, undefined) {
 
@@ -621,55 +621,58 @@
 		scope["CSSParser"] = CSSParser;
 
 	}(window);
-	/*!
-	  * domready (c) Dustin Diaz 2012 - License MIT
-	  */
-	var domReady = (function (ready) {
+	/**
+	 * MicroEvent - to make any js object an event emitter (server or browser)
+	 *
 
-	  var fns = [], fn, f = false
-		, doc = document
-		, testEl = doc.documentElement
-		, hack = testEl.doScroll
-		, domContentLoaded = 'DOMContentLoaded'
-		, addEventListener = 'addEventListener'
-		, onreadystatechange = 'onreadystatechange'
-		, readyState = 'readyState'
-		, loaded = /^loade|c/.test(doc[readyState])
+	 * - pure javascript - server compatible, browser compatible
+	 * - dont rely on the browser doms
+	 * - super simple - you get it immediatly, no mistery, no magic involved
+	 *
+	 * - create a MicroEventDebug with goodies to debug
+	 *   - make it safer to use
+	*/
 
-	  function flush(f) {
-		loaded = 1
-		while (f = fns.shift()) f()
-	  }
-
-	  doc[addEventListener] && doc[addEventListener](domContentLoaded, fn = function () {
-		doc.removeEventListener(domContentLoaded, fn, f)
-		flush()
-	  }, f)
-
-	  hack && doc.attachEvent(onreadystatechange, fn = function () {
-		if (/^c/.test(doc[readyState])) {
-		  doc.detachEvent(onreadystatechange, fn)
-		  flush()
+	var MicroEvent	= function(){};
+	MicroEvent.prototype	= {
+		bind	: function(event, fct){
+			this._events = this._events || {};
+			this._events[event] = this._events[event]	|| [];
+			this._events[event].push(fct);
+		},
+		unbind	: function(event, fct){
+			this._events = this._events || {};
+			if( event in this._events === false  )	return;
+			this._events[event].splice(this._events[event].indexOf(fct), 1);
+		},
+		trigger	: function(event /* , args... */){
+			this._events = this._events || {};
+			if( event in this._events === false  )	return;
+			for(var i = 0; i < this._events[event].length; i++){
+				this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
+			}
 		}
-	  })
+	};
 
-	  return (ready = hack ?
-		function (fn) {
-		  self != top ?
-			loaded ? fn() : fns.push(fn) :
-			function () {
-			  try {
-				testEl.doScroll('left')
-			  } catch (e) {
-				return setTimeout(function() { ready(fn) }, 50)
-			  }
-			  fn()
-			}()
-		} :
-		function (fn) {
-		  loaded ? fn() : fns.push(fn)
-		})
-	}());
+	/**
+	 * mixin will delegate all MicroEvent.js function in the destination object
+	 *
+	 * - require('MicroEvent').mixin(Foobar) will make Foobar able to use MicroEvent
+	 *
+	 * @param {Object} the object which will support MicroEvent
+	*/
+	MicroEvent.mixin	= function(destObject){
+		var props	= ['bind', 'unbind', 'trigger'];
+		for(var i = 0; i < props.length; i ++){
+			destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
+		}
+	}
+
+	// export in common js
+	if( typeof module !== "undefined" && ('exports' in module)){
+		module.exports	= MicroEvent;
+	}
+	
 	/**
 	 * Calculates the specificity of CSS selectors
 	 * http://www.w3.org/TR/css3-selectors/#specificity
@@ -905,14 +908,16 @@
 		},
 
 		applyPositioning : function (id, container, items, values) {
-			var rects = values.items,
+			var display = container.properties.display,
+				rects = values.items,
 				box = values.container,
 				i, j, rect, item;
 
 			this.applyStyles(id, container.selector, {
 				"position": "relative",
 				"width": box.width,
-				"height": box.height
+				"height": box.height,
+				"display": display.replace("flex", "block")
 			});
 
 			for (i = 0, j = items.length; i < j; i++) {
@@ -1144,34 +1149,6 @@
 		}
 	};
 	
-	Flexbox.support = (function () {
-		var testProp = "flexWrap";
-		var prefixes = "webkit moz o ms".split(" ");
-		var dummy = document.createElement("flx");
-		var i, j, prop;
-
-		var typeTest = function (prop) {
-			return typeof dummy.style[prop] !== "undefined";
-		};
-
-		var flexboxSupport = typeTest(testProp);
-
-		if (!flexboxSupport) {
-			testProp = testProp.charAt(0).toUpperCase() + testProp.slice(1);
-
-			for (i = 0, j = prefixes.length; i < j; i++) {
-				prop = prefixes[i] + testProp;
-				flexboxSupport = typeTest(prop);
-
-				if (flexboxSupport) {
-					return flexboxSupport;
-				}
-			}
-		}
-
-		return flexboxSupport;
-	}());
-	
 	Flexbox.parser = {
 		properties : {
 			container : {
@@ -1250,7 +1227,19 @@
 		},
 
 		validateContainer : function (styles) {
-			return this.validateRules(this.properties.container, styles);
+			var rules = this.validateRules(this.properties.container, styles);
+
+			// For container to be valid, it must have a display value
+			// Of either flex or inline-flex
+			var display = (rules || {}).display;
+
+			switch (display) {
+			case "flex":
+			case "inline-flex":
+				return rules;
+			}
+
+			return undefined;
 		},
 
 		validateItems : function (styles) {
@@ -1521,7 +1510,9 @@
 			var containers = [];
 			var items = [];
 
-			for (i = 0, j = rules.length; i < j; i++) {
+			// Rules are returned in order of cascade
+			// We want them in ascending order
+			for (i = rules.length - 1, j = 0; i >= j; i--) {
 				group = rules[i];
 				styles = group.style;
 
@@ -1573,24 +1564,45 @@
 			crossSize = this.crossSize,
 			multiplier = 1,
 			lines = this.lines,
-			i, j, k, l, line, item;
+			i, j, k, l, line, item,
+			lineRemainder;
 
 		var values = this.values;
 		var mainSize = this.mainSize;
 		var containerSize = values.container[mainSize];
 
 		var crossTotal = crossStart + "Total";
+		var lineCrossSize, m, n, cItem;
 
 		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
+		var isAlignContentStretch = properties["align-content"] === "stretch";
 
 		var alignSelf, lineSize;
-		var isAuto, isStart, isCenter, isStretch;
+		var isStart, isCenter, isStretch, isBaseline;
+
+		// Figure out remainders & max item sizes
+		var remainderSize = containerSize;
+		var currentRemainderSize;
 
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
+				line.maxItemSize = Math.max(line.maxItemSize || 0, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
+			}
+
+			remainderSize -= line.maxItemSize;
+		}
+
+		remainderSize /= lines.length;
+
+		for (i = 0, j = lines.length; i < j; i++) {
+			line = lines[i];
+
+			for (k = 0, l = line.items.length; k < l; k++) {
+				item = line.items[k];
+				currentRemainderSize = remainderSize;
 
 				if (!item.debug || !item.debug.properties) {
 					return;
@@ -1598,26 +1610,61 @@
 
 				alignSelf = item.debug.properties["align-self"];
 
-				isAuto = alignSelf === "auto";
+				// If auto, align-self value is inherited from align-items
+				if (alignSelf === "auto") {
+					alignSelf = properties["align-items"];
+				}
+
 				isStart = alignSelf === "flex-start";
 				isCenter = alignSelf === "center";
 				isStretch = alignSelf === "stretch";
+				isBaseline = alignSelf === "baseline";
 
-				lineSize = (isNotFlexWrap) ? containerSize : line.maxItemSize;
-				lineSize -= item.debug.inner[crossStart];
-				lineSize -= item.debug.margin[crossTotal];
+				if (isStretch && isNotFlexWrap) {
+					lineRemainder = values.container[crossSize] / lines.length;
 
-				if (isStretch) {
 					if (item.debug.auto[crossSize]) {
-						item[crossSize] = lineSize;
+						if (i) {
+							item[crossStart] += (lineRemainder - item[crossSize]) * i;
+						}
+
+						item[crossSize] = (lineRemainder - item.debug.inner[crossStart] - item.debug.margin[crossTotal]);
 					}
-				} else if (!isAuto && !isStart) {
-					if (isCenter) {
-						multiplier = 0.5;
+				} else if (isStretch) {
+					lineCrossSize = 0;
+
+					for (m = 0, n = line.items.length; m < n; m++) {
+						cItem = line.items[m];
+
+						if (cItem.debug.auto[crossSize]) {
+							lineCrossSize = Math.max(lineCrossSize, (cItem[crossSize] + cItem.debug.inner[crossStart]) + cItem.debug.margin[crossTotal]);
+						}
 					}
 
-					item[crossStart] += (lineSize - item[crossSize]) * multiplier;
+					if (item.debug.auto[crossSize]) {
+						item[crossSize] = (lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
+					}
 				}
+
+				// No furths if any of these apply
+				if (isStretch || isStart || isBaseline) {
+					continue;
+				}
+
+				if (isCenter) {
+					multiplier = 0.5;
+					currentRemainderSize *= 0.5;
+				}
+
+				if (!isNotFlexWrap && !isAlignContentStretch) {
+					currentRemainderSize = 0;
+				}
+
+				lineRemainder = line.maxItemSize;
+
+				// Remove margin from crossStart
+				item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
+				item[crossStart] += currentRemainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
 			}
 		}
 	};
@@ -1897,8 +1944,9 @@
 		}
 	};
 	
+	// TODO: Remove this when ready.
 	Flexbox.models.alignItems = function (alignment, properties) {
-		var crossStart = this.crossStart,
+		/*var crossStart = this.crossStart,
 			crossSize = this.crossSize,
 			multiplier = 1,
 			lines = this.lines,
@@ -2010,7 +2058,7 @@
 				item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
 				item[crossStart] += remainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
 			}
-		}
+		}*/
 	};
 	
 	Flexbox.models.alignContent = function (alignment, properties) {
@@ -2358,6 +2406,13 @@
 
 				// Final positioning
 				Flexbox.utils.applyPositioning(this.uid, this.container, this.items, this.values);
+
+				// Emit complete
+				Flexie.event.trigger("complete", {
+					uid: this.uid,
+					container: this.container,
+					items: this.items
+				});
 			}
 		};
 
@@ -2387,7 +2442,7 @@
 
 	Flexie.prototype = {
 		box : function (settings) {
-			if (Flexbox.support === true) {
+			if (Flexie.support === true) {
 				return true;
 			}
 
@@ -2395,18 +2450,67 @@
 		}
 	};
 	
-	Flexie.init = function () {
-		// Load all stylesheets then feed them to the parser
-		return new StyleLoader((function () {
-			return function (stylesheets) {
-				Flexbox.parser.onStylesLoaded(stylesheets);
-			};
-		}()));
-	};
+	Flexie.support = (function () {
+		var testProp = "flexWrap";
+		var prefixes = "webkit moz o ms".split(" ");
+		var dummy = document.createElement("flx");
+		var i, j, prop;
 
-	domReady(function () {
+		var typeTest = function (prop) {
+			return typeof dummy.style[prop] !== "undefined";
+		};
+
+		var flexboxSupport = typeTest(testProp);
+
+		if (!flexboxSupport) {
+			testProp = testProp.charAt(0).toUpperCase() + testProp.slice(1);
+
+			for (i = 0, j = prefixes.length; i < j; i++) {
+				prop = prefixes[i] + testProp;
+				flexboxSupport = typeTest(prop);
+
+				if (flexboxSupport) {
+					return flexboxSupport;
+				}
+			}
+		}
+
+		return flexboxSupport;
+	}());
+	
+	Flexbox.event = {
+		handlers : {
+			redraw : function () {
+				var options = Flexie.options;
+
+				if (typeof options.redraw === "function") {
+					options.redraw.apply(Flexie, arguments);
+				}
+			},
+
+			complete : function () {
+				var options = Flexie.options;
+
+				if (typeof options.complete === "function") {
+					options.complete.apply(Flexie, arguments);
+				}
+			}
+		},
+
+		emitter: function () {
+			var ee = new MicroEvent(),
+				handlers = Flexbox.event.handlers;
+
+			ee.bind("redraw", handlers.redraw);
+			ee.bind("complete", handlers.complete);
+
+			return ee;
+		}
+	};
+	
+	Flexie.init = function (options) {
 		// Check for native Flexbox support
-		if (Flexbox.support === true) {
+		if (Flexie.support === true) {
 			return true;
 		}
 
@@ -2416,9 +2520,24 @@
 			throw new Error("Flexie needs `document.querySelectorAll`, but your browser doesn't support it.");
 		}
 
-		// no native Flexbox support, use polyfill
-		Flexie.init();
-	});
+		// Expose user options
+		this.options = options;
+
+		// Set up Event Emitter
+		this.event = new Flexbox.event.emitter(options);
+
+		// Expose API to redraw flexbox
+		this.redraw = function () {
+			return this.event.trigger("redraw");
+		};
+
+		// Load all stylesheets then feed them to the parser
+		return new StyleLoader((function () {
+			return function (stylesheets) {
+				Flexbox.parser.onStylesLoaded(stylesheets);
+			};
+		}()));
+	};
 	
 	// Uses AMD or browser globals to create a module.
 	if (typeof define === "function" && define.amd) {
