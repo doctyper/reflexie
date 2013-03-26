@@ -12,30 +12,31 @@ server.listen(9999);
 
 io.configure(function () {
 	io.set("log level", 2);
-});
 
-io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
 	var data = __dirname + "/data/pairwise/flex-tests.js";
 	var test = __dirname + "/lib/tests.js";
 	var src = __dirname + "/../dist/reflexie.js";
 
 	fs.watchFile(css, function (curr, prev) {
-		socket.emit("csschange");
+		io.sockets.emit("csschange");
 	});
 
 	fs.watchFile(data, function (curr, prev) {
-		socket.emit("datachange");
+		io.sockets.emit("datachange");
 	});
 
 	fs.watchFile(test, function (curr, prev) {
-		socket.emit("datachange");
+		io.sockets.emit("datachange");
 	});
 
 	fs.watchFile(src, function () {
-		socket.emit("srcchange");
+		console.log("srcchange");
+		io.sockets.emit("srcchange");
 	});
+});
 
+io.sockets.on("connection", function (socket) {
 	socket.on("suiteerror", function (data) {
 		var map = {};
 
