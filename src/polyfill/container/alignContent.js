@@ -11,14 +11,19 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		isBetween = (alignment === "space-between"),
 		isAround = (alignment === "space-around"),
 		isStretch = (alignment === "stretch"),
+
 		isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 		lines = this.lines,
 		i, j, k, l, line, items, item,
-		lineRemainder, multiplier = 1, x, y;
+		lineRemainder, currentLineRemainder,
+		multiplier = 1, x, halfLineRemainder;
 
 	var alignItems = properties["align-items"];
 	var isAlignItemsStretch = alignItems === "stretch";
 	var crossTotal = crossStart + "Total";
+
+	var lineLength = lines.length;
+	var startIndex = 0;
 
 	// http://www.w3.org/TR/css3-flexbox/#align-content-property
 	//  Note, this property has no effect when the flexbox has only a single line.
@@ -26,28 +31,32 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		return;
 	}
 
+	lineRemainder = containerSize;
+
 	if (isStart) {
 		return;
 	}
 
-	lineRemainder = containerSize;
-
-	for (i = 0, j = lines.length; i < j; i++) {
-		x = 0;
+	for (i = 0, j = lineLength; i < j; i++) {
+		currentLineRemainder = 0;
 		line = lines[i].items;
 
 		for (k = 0, l = line.length; k < l; k++) {
 			item = line[k];
-			x = Math.max(x, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
+			currentLineRemainder = Math.max(currentLineRemainder, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 		}
 
-		lineRemainder -= x;
+		lineRemainder -= currentLineRemainder;
 	}
 
-	i = 0;
-	x = 0;
+	// This will differ between content alignments
+	// Watch for this
+	startIndex = 0;
 
-	if ((isBetween || isAround) && lineRemainder <= 0) {
+	// The current line remainder
+	currentLineRemainder = 0;
+
+	if ((isBetween || isAround || isStretch) && lineRemainder <= 0) {
 		if (isAround) {
 			isAround = false;
 			isCenter = true;
@@ -61,56 +70,33 @@ Flexbox.models.alignContent = function (alignment, properties) {
 	}
 
 	if (isBetween || isAround || isStretch) {
-		i = 1;
+		startIndex = 1;
 
-		lineRemainder /= (j - (!isBetween ? 0 : 1));
-		x = lineRemainder;
+		lineRemainder /= (lineLength - (!isBetween ? 0 : 1));
+		currentLineRemainder = lineRemainder;
 
 		if (isAround) {
-			y = (lineRemainder * 0.5);
+			halfLineRemainder = (lineRemainder * 0.5);
 
-			items = lines[0].items;
+			line = lines[0];
 
-			for (k = 0, l = items.length; k < l; k++) {
-				items[k][crossStart] += y;
+			for (k = 0, l = line.items.length; k < l; k++) {
+				item = line.items[k];
+				item[crossStart] += halfLineRemainder;
 			}
 
-			lineRemainder += y;
+			lineRemainder += halfLineRemainder;
 		}
 	}
 
-	for (j = lines.length; i < j; i++) {
-		item = lines[i].items;
+	for (j = lineLength; startIndex < j; startIndex++) {
+		line = lines[startIndex];
 
-		for (k = 0, l = item.length; k < l; k++) {
-			item[k][crossStart] += (lineRemainder * multiplier);
+		for (k = 0, l = line.items.length; k < l; k++) {
+			item = line.items[k];
+			item[crossStart] += (lineRemainder * multiplier);
 		}
 
-		lineRemainder += x;
-	}
-
-	if (isStretch && isAlignItemsStretch) {
-		var prevCrossSize = container.debug.padding[crossStart];
-
-		for (i = 0, j = lines.length; i < j; i++) {
-			items = lines[i].items;
-
-			var next = lines[i + 1];
-			var lineCrossSize = containerSize + container.debug.padding[crossStart];
-
-			if (next) {
-				next = next.items[0];
-				lineCrossSize = next[crossStart];
-			}
-
-			lineCrossSize -= prevCrossSize;
-
-			for (k = 0, l = items.length; k < l; k++) {
-				item = items[k];
-				item[crossSize] = ((lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal]);
-			}
-
-			prevCrossSize += lineCrossSize;
-		}
+		lineRemainder += currentLineRemainder;
 	}
 };
