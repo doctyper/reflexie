@@ -44,12 +44,12 @@
 				opacity: 0.5;
 			}
 
-			.stretch-row #flex-target div,
+			.stretch-row #flex-target div:not(.no-stretch),
 			#flex-target div.stretch-row {
 				height: auto;
 			}
 
-			.stretch-col #flex-target div,
+			.stretch-col #flex-target div:not(.no-stretch),
 			#flex-target div.stretch-col {
 				width: auto;
 			}
@@ -179,7 +179,7 @@
 
 					error.innerHTML = JSON.stringify(window.flexValues, null, 3);
 
-					if (flx["align-items"] === "stretch" || flx["align-content"] === "stretch") {
+					if (flx.container["align-items"] === "stretch" || flx.container["align-content"] === "stretch") {
 						applyClass(flx.container, body);
 					}
 
@@ -195,8 +195,10 @@
 
 						target.appendChild(element);
 
-						if (item["align-self"] === "stretch") {
+						if (item["align-self"] === "stretch" || (item["align-self"] === "auto" && flx.container["align-items"] === "stretch")) {
 							applyClass(flx.container, element);
+						} else {
+							element.className = "no-stretch";
 						}
 					}
 
