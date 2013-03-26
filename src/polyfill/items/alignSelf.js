@@ -57,7 +57,7 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 				}
 			} else if (isStretch) {
 				if (item.debug.auto[crossSize]) {
-					item[crossSize] = (lineCrossSize - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
+					item[crossSize] = ((isAlignContentStretch ? line.maxSize : line.maxItemSize) - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
 				}
 			}
 
