@@ -108,24 +108,6 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 
 	prevMainStart = 0;
 
-	// Adjust positioning for padding
-	if (!isColumn && !isReverse) {
-		for (i = 0, j = lines.length; i < j; i++) {
-			items = lines[i].items;
-
-			for (k = 0, l = items.length; k < l; k++) {
-				item = items[k];
-
-				if (prevItem) {
-					prevMainStart += prevItem.debug.inner[mainStart];
-					item[mainStart] += prevMainStart;
-				}
-
-				prevItem = item;
-			}
-		}
-	}
-
 	// Expose lines
 	this.lines = lines;
 };
