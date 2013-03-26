@@ -2,7 +2,7 @@ Flexbox.models.flexDirection = function (direction/*, properties*/) {
 	var values = this.values,
 		container = values.container,
 		itemValues = values.items,
-		i, j, item, incrementVal = 0,
+		i, j, item,
 		utils = Flexbox.utils,
 		colArray = ["column", "column-reverse"],
 		revArray = ["row-reverse", "column-reverse"],
@@ -13,11 +13,10 @@ Flexbox.models.flexDirection = function (direction/*, properties*/) {
 		mainStart = (isColumn ? "top" : "left"),
 		mainSize = Flexbox.dimValues[mainStart],
 		crossSize = Flexbox.dimValues[crossStart],
+		mainStartOffset = 0,
 		storedVal = 0,
 		containerSize;
 
-	var prevItem, itemSize;
-	var prevMainStart = 0;
 	var mainTotal = mainStart + "Total";
 
 	var revValues = {
@@ -29,20 +28,25 @@ Flexbox.models.flexDirection = function (direction/*, properties*/) {
 
 	var revStart = revValues[mainStart];
 
-	incrementVal = (isReverse ? -1 : 1) * container.debug.padding[mainStart];
-
 	for (i = 0, j = itemValues.length; i < j; i++) {
 		item = itemValues[i];
-		itemSize = item[mainSize] + item.debug.margin[mainTotal] + item.debug.border[mainTotal] + item.debug.padding[mainTotal];
+
+		item[mainStart] = (storedVal + container.debug.padding[mainStart]);
 		item[crossStart] = (storedVal + container.debug.padding[crossStart]);
 
 		if (isReverse) {
-			item[mainStart] = containerSize - itemSize - incrementVal;
+			item[mainStart] = ((containerSize + container.debug.padding[mainStart]) - (item[mainSize] + item.debug.inner[mainStart]) - item.debug.margin[mainTotal]) - mainStartOffset;
 		} else {
-			item[mainStart] = incrementVal;
+			item[mainStart] += mainStartOffset;
 		}
 
-		incrementVal += itemSize;
+		mainStartOffset += item[mainSize] + item.debug.margin[mainTotal];
+
+		if (isColumn && !isReverse) {
+			mainStartOffset += item.debug.inner[mainStart];
+		} else if (isReverse) {
+			mainStartOffset += item.debug.inner[mainStart];
+		}
 	}
 
 	// flex-direction sets which properties need updates
