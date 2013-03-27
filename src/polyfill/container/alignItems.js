@@ -15,7 +15,6 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 	for (i = 0, j = lines.length; i < j; i++) {
 		line = lines[i];
-		line.maxSize = line.maxSize || (containerSize / j);
 
 		for (k = 0, l = line.items.length; k < l; k++) {
 			item = line.items[k];
