@@ -1,4 +1,4 @@
-Flexbox.models.alignItems = function (alignment, properties) {
+Flexbox.models.alignItems = function () {
 	var crossStart = this.crossStart,
 		crossSize = this.crossSize,
 		lines = this.lines;

@@ -1,4 +1,4 @@
-Flexbox.models.order = function (order) {
+Flexbox.models.order = function () {
 	this.items.sort(function (a, b) {
 		var aProps = a.properties;
 		var bProps = b.properties;
