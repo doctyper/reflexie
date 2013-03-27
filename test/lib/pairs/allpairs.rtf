@@ -1,0 +1,565 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 TimesNewRomanPSMT;\f2\fswiss\fcharset0 ArialMT;
+\f3\fmodern\fcharset0 CourierNewPSMT;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue255;\red191\green191\blue191;}
+{\info
+{\author james}
+{\*\company  Satisfice, Inc.}}\vieww14400\viewh19360\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 \
+\pard\pardeftab720\ri0
+
+\f1\b\fs48 \cf0 ALLPAIRS\
+\pard\pardeftab720\ri0
+
+\fs24 \cf0 \
+\pard\pardeftab720\ri0
+
+\b0 \cf0 By James Bach, \cf2 \ul \ulc2 james@satisfice.com <mailto:james@satisfice.com>\cf0 \ulnone , www.satisfice.com\
+\
+\pard\pardeftab720\ri0
+
+\b \cf0 Installation Instructions\
+\pard\pardeftab720\ri0
+
+\b0 \cf0 Unzip everything into a directory. That\'92s all.\
+\
+\pard\pardeftab720\ri0
+
+\b \cf0 How to Use \
+\pard\pardeftab720\ri0
+
+\b0 \cf0 Allpairs.pl is a Perl script that constructs a reasonably small set of test cases that include all pairings of each value of each of a set of parameters. Actually, I don\'92t know if I\'92m saying that right. Let me show you. If you have two parameters you want to cover in a set of tests, say, printer and operating system, they might look something like this:\
+\
+\pard\pardeftab720\ri0
+
+\i \cf0 Operating System\
+\pard\pardeftab720\ri0
+
+\i0 \cf0 Win98\
+Win2K\
+WinXP\
+\
+\pard\pardeftab720\ri0
+
+\i \cf0 Printer\
+\pard\pardeftab720\ri0
+
+\i0 \cf0 HP 4050\
+HP 4100\
+\
+To test all the pairings, the test cases would look like this:\
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1260\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+
+\b \cf0 CASE\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 OS\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Printer\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1260\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+
+\b0 \cf0 1\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1260\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 2\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1260\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 3\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1260\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 4\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1260\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 5\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1260\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 6\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell \lastrow\row
+\pard\pardeftab720\ri0
+\cf0 \
+In the case of two parameters, all pairs is also all combinations. But look what happens when we add a third parameter:\
+\
+\pard\pardeftab720\ri0
+
+\i \cf0 Duplex Print\
+\pard\pardeftab720\ri0
+
+\i0 \cf0 Y\
+N\
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+
+\b \cf0 CASE\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 OS\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Printer\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Duplex\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+
+\b0 \cf0 1\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 2\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 3\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 4\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 5\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 6\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 7\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 8\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 9\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 10\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 11\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 12\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \lastrow\row
+\pard\pardeftab720\ri0
+\cf0 \
+All combinations of each of these parameters creates twelve test cases. But what if all we really need is a set of test cases that guarantee that each value of each parameter is paired in at least one case? Then we can get away with fewer cases. We\'92re back down to six, in fact:\
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+
+\b \cf0 CASE\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 OS\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Printer\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Duplex\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+
+\b0 \cf0 1\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 2\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 3\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 4\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 5\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 
+\clvertalt \clshdrawnil \clwWidth900\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1080\clftsWidth3 \clbrdrt\brdrs\brdrw15\brdrcf3 \clbrdrl\brdrs\brdrw15\brdrcf3 \clbrdrb\brdrs\brdrw15\brdrcf3 \clbrdrr\brdrs\brdrw15\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 6\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \lastrow\row
+\pard\pardeftab720\ri0
+\cf0 \
+If a bug will be triggered when the value of any one of the three parameters is paired with a value of either of the other two, then we\'92ll catch it with this set of test cases. If a bug occurs only when three specific values are tried together, this set of cases will not necessarily catch it, but at least we\'92ve achieved all pairs.\
+\
+All pairs coverage is a lot easier to achieve than all combinations. For instance, if you want to test with ten parameters of 26 values each, all combinations leads to 141,167,095,653,376 test cases. Allpairs does it in 1094 cases.\
+\
+To use Allpairs, prepare a tab-delimited table of parameters that you'd like to permute. The easiest way to do this is with Excel:\
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2175\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1440\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1440\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+
+\b \cf0 Operating System\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Printer\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Duplex
+\f2\b0\fs20 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2175\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1440\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1440\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+
+\f1\fs24 \cf0 Win98\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4050\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Y\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2175\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1440\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1440\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 Win2K\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 HP 4100\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 N\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2175\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth1440\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1440\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf3 \clbrdrl\brdrs\brdrw20\brdrcf3 \clbrdrb\brdrs\brdrw20\brdrcf3 \clbrdrr\brdrs\brdrw20\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 WinXP\cell 
+\pard\intbl\itap1\pardeftab720\ri0
+
+\f2\fs20 \cf0 \cell 
+\pard\intbl\itap1\pardeftab720\ri0
+\cf0 \cell \lastrow\row
+\pard\pardeftab720\ri0
+
+\f1\fs24 \cf0 \
+Then copy the excel table and paste into a text file (let\'92s say you name it 
+\f3 vars.txt
+\f1 ). Run the Allpairs program from a DOS command-line like this:\
+\
+\pard\pardeftab720\ri0
+
+\f3 \cf0 ALLPAIRS VARS.TXT > TESTCASES.TXT\
+\
+\pard\pardeftab720\ri0
+
+\f1 \cf0 If you have Perl installed, you can run the script instead like so:\
+\
+\pard\pardeftab720\ri0
+
+\f3 \cf0 PERL ALLPAIRS.PL VARS.TXT > TESTCASES.TXT\
+\pard\pardeftab720\ri0
+
+\f1 \cf0 \
+The content of 
+\f3 testcases.txt
+\f1  is suitable for pasting into Excel. It will look like this:\
+\
+\
+\
+\
+The first part of the output is the test cases. The \'93pairings\'94column reports the number of unique pairings that Allpairs managed to find.\
+\
+The second part of the output helps you see how the pairings were done. It lists each pair, shows how many times that pair appears in the test case table, and lists the specific test case or cases in which those pairings occur.\
+\
+\pard\pardeftab720\ri0
+
+\b \cf0 Don\'92t Care Values: \'93~\'94\
+\pard\pardeftab720\ri0
+
+\b0 \cf0 \
+Sometimes, the value of a particular cell in a test case table doesn\'92t matter, because all of its pairings have already been achieved. In that case the value chosen is the one that has been paired the fewest times relatively to the other cells in the test case. Also, the cell is marked with a \'93~\'94 symbol to alert you that you can substitute any other value for the one ALLPAIRS chose and still achieve your all-pairs coverage goal.\
+\
+\pard\pardeftab720\ri0
+
+\b \cf0 Example\
+\pard\pardeftab720\ri0
+
+\b0 \cf0 \
+Included in the ZIP file is a real-life example of testing printing in Microsoft Word. 
+\f3 PRINTING.TXT
+\f1  is the data file. The 
+\f3 PRINTING.XLS
+\f1  shows the results (I formatted it by hand to make it more readable).\
+\
+\pard\pardeftab720\ri0
+
+\b \cf0 Notes\
+\pard\pardeftab720\ri0
+
+\b0 \cf0 \
+\pard\pardeftab720\ri0
+
+\i \cf0 Test Design\
+\pard\pardeftab720\ri0
+
+\i0 \cf0 When permuting parameters, the more parameters you choose, the more work you\'92ll have to do for each test case. So, just choose those parameters that might reasonably interact with each other. Furthermore, think about the importance of the resulting bug. If a problem only happens when two values of two obscure parameters are used together, the result may be a bug that no one will care to fix.\
+\
+When a value is \'93don\'92t care\'94 (marked by a tilde) choose a value which either maximizes the probability of a failure, or maximizes the impact of the failure, should one occur. \
+\
+\pard\pardeftab720\ri0
+
+\i \cf0 Other Tools\
+\pard\pardeftab720\ri0
+
+\i0 \cf0 My version does not produce an optimal solution, but it\'92s good enough that I\'92ve lost interest in trying to discover the optimal solution myself. Consider the case of 10 parameters with 10 values each. Allpairs will do it in 177 cases. The smallest number of test cases possible is somewhere between 100 and 177. I suspect it\'92s something down around 130. But compared to the alternative of 10 billion test cases to achieve all permutations, 177 is not too bad.\
+\
+Telcordia Technologies (\cf2 \ul \ulc2 <http://www.argreenhouse.com>\cf0 \ulnone ) has a web-based tool that does a somewhat better job than Allpairs. For instance, with 40 parameters of three values each, their tool can cover all pairs with 21 test cases. Allpairs requires 29. However, their tool costs $6000 a seat. Compare that to FREE\'85\
+\
+}

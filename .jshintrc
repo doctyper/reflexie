@@ -54,6 +54,10 @@
 		"after",
 		"expect",
 		"Flexie",
-		"Flexbox"
+		"Flexbox",
+		"StyleLoader",
+		"CSSParser",
+		"SPECIFICITY",
+		"MicroEvent"
 	]
 }

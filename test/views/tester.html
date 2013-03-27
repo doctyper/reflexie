@@ -5,7 +5,7 @@
 		<link rel="stylesheet" href="css/runner.css" />
 
 		<style>
-			#error {
+			#error, #result {
 				padding: 10px;
 				right: 20px;
 				bottom: 20px;
@@ -13,11 +13,18 @@
 				border: 1px dashed #555;
 				background: #eee;
 				z-index: 10;
+				width: 270px;
 			}
 
-			#error pre {
+			#error pre, #result pre {
 				margin: 0;
 				font-size: 12px;
+			}
+
+			#result {
+				right: 330px;
+				border-color: #050;
+				background: rgba(0, 255, 0, 0.3);
 			}
 		</style>
 
@@ -37,52 +44,25 @@
 				opacity: 0.5;
 			}
 
-			.stretch-row #flex-target div {
+			.stretch-row #flex-target div:not(.no-stretch),
+			#flex-target div.stretch-row {
 				height: auto;
 			}
 
-			.stretch-col #flex-target div {
+			.stretch-col #flex-target div:not(.no-stretch),
+			#flex-target div.stretch-col {
 				width: auto;
 			}
 		</style>
 
-		<!--<style data-flex-values="container">
-			#flex-target {
-				-webkit-flex-direction: column;
-				flex-direction: column;
-
-				-webkit-flex-wrap: wrap;
-				flex-wrap: wrap;
-
-				-webkit-justify-content: flex-start;
-				justify-content: flex-start;
-
-				-webkit-align-items: flex-start;
-				align-items: flex-start;
-
-				-webkit-align-content: flex-start;
-				align-content: flex-start;
-			}
-		</style>-->
 		<link rel="stylesheet" href="data/fail.css" />
-
-		<!-- <script data-flex-values="container">
-			window.flexContainer = {
-				"display": "flex",
-				"flex-direction": "row-reverse",
-				"flex-wrap": "nowrap",
-				"justify-content": "flex-start",
-				"align-items": "flex-start",
-				"align-content": "flex-start"
-			};
-		</script> -->
 		<script src="data/fail.js"></script>
 
 		<script src="lib/require.js"></script>
 		<script>
 			require.config({
 				paths: {
-					"socket.io": "http://10.0.1.130:9999/socket.io/socket.io"
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io"
 				},
 				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
@@ -93,7 +73,7 @@
 				"dist/reflexie",
 				"socket.io"
 			], function (Flexie, io) {
-				var socket = io.connect("http://10.0.1.130:9999");
+				var socket = io.connect("http://0.0.0.0:9999");
 
 				socket.on("errorchange", function (data) {
 					socket.disconnect();
@@ -105,101 +85,101 @@
 					window.location.reload();
 				});
 
+				var getRect = function (el) {
+					var box = {};
+
+					if (el) {
+						var rect = el.getBoundingClientRect();
+						var keys = Object.keys(rect).sort();
+
+						for (var i = 0, j = keys.length; i < j; i++) {
+							var key = keys[i];
+
+							if (key !== "bottom") {
+								box[key] = rect[key];
+							}
+						}
+					}
+
+					return box;
+				};
+
+				var onComplete = function (data) {
+					var result = document.querySelector("#result pre");
+					var container = document.querySelector("#flex-target");
+
+					var json = {
+						container : getRect(container),
+						items : (function () {
+							var items = document.querySelectorAll("#flex-target > div");
+
+							var arr = [];
+
+							for (var i = 0, j = items.length; i < j; i++) {
+								arr.push(getRect(items[i]));
+							}
+
+							return arr;
+						}())
+					};
+
+					result.innerHTML = JSON.stringify(json, null, 3);
+				};
+
+				var applyClass = function (flx, el) {
+					var direction = flx["flex-direction"] || "";
+					direction += flx["flex-flow"] || "";
+
+					if ((/row/).test(direction)) {
+						el.className = "stretch-row";
+					} else if ((/column/).test(direction)) {
+						el.className = "stretch-col";
+					}
+				};
+
 				// Error Reporting Setup
 				(function () {
 					var error = document.querySelector("#error pre");
 					var body = document.body;
-					var flx = window.flexContainer;
+					var flx = window.flexValues;
 
-					error.innerHTML = JSON.stringify(window.flexContainer, null, 3);
+					if (!flx) {
+						return;
+					}
 
-					if (flx["align-items"] === "stretch" || flx["align-content"] === "stretch") {
-						switch (flx["flex-direction"]) {
-						case "row":
-						case "row-reverse":
-							body.className = "stretch-row";
-							break;
+					error.innerHTML = JSON.stringify(window.flexValues, null, 3);
 
-						case "column":
-						case "column-reverse":
-							body.className = "stretch-col";
-							break;
+					if (flx.container["align-items"] === "stretch" || flx.container["align-content"] === "stretch") {
+						applyClass(flx.container, body);
+					}
+
+					var target = document.querySelector("#flex-target");
+
+					for (var i = 0, j = flx.items.length; i < j; i++) {
+						var item = flx.items[i];
+						var index = (i + 1);
+
+						var element = document.createElement("div");
+						element.setAttribute("id", "flex-col-" + index);
+						element.innerHTML = "<h1>Col " + index + "</h1>";
+
+						target.appendChild(element);
+
+						if (item["align-self"] === "stretch" || (item["align-self"] === "auto" && flx.container["align-items"] === "stretch")) {
+							applyClass(flx.container, element);
+						} else {
+							element.className = "no-stretch";
 						}
 					}
+
+					if (Flexie.support) {
+						onComplete();
+					} else {
+						Flexie.init({
+							complete: onComplete
+						});
+					}
 				}());
-
-				var target = document.querySelector("#flex-target");
-				var items = document.querySelectorAll("#flex-target > *");
-
-				var flex = new Flexie({
-					container: {
-						"element": target,
-						"selector": "#flex-target",
-						"properties": window.flexContainer
-					},
-
-					items: [{
-						"element": items[0],
-						"selector": "#flex-col-1",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[1],
-						"selector": "#flex-col-2",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[2],
-						"selector": "#flex-col-3",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[3],
-						"selector": "#flex-col-4",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[4],
-						"selector": "#flex-col-5",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}, {
-						"element": items[5],
-						"selector": "#flex-col-6",
-						"properties": {
-							"order": 0,
-							"flex-grow": 0,
-							"flex-shrink": 0,
-							"flex-basis": "auto",
-							"align-self": "auto"
-						}
-					}]
-				});
 
 			});
 		</script>
@@ -207,26 +187,13 @@
 	<body>
 
 		<div id="flex-container">
-			<div id="flex-target">
-				<div id="flex-col-1">
-					<h2>Col 1</h2>
-				</div>
-				<div id="flex-col-2">
-					<h2>Col 2</h2>
-				</div>
-				<div id="flex-col-3">
-					<h2>Col 3</h2>
-				</div>
-				<div id="flex-col-4">
-					<h2>Col 4</h2>
-				</div>
-				<div id="flex-col-5">
-					<h2>Col 5</h2>
-				</div>
-				<div id="flex-col-6">
-					<h2>Col 6</h2>
-				</div>
-			</div>
+			<div id="flex-target"></div>
+		</div>
+
+		<div id="flex-target-2"></div>
+
+		<div id="result">
+			<pre></pre>
 		</div>
 
 		<div id="error">

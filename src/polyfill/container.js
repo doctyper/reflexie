@@ -227,6 +227,13 @@ Flexbox.container = (function () {
 
 			// Final positioning
 			Flexbox.utils.applyPositioning(this.uid, this.container, this.items, this.values);
+
+			// Emit complete
+			Flexie.event.trigger("complete", {
+				uid: this.uid,
+				container: this.container,
+				items: this.items
+			});
 		}
 	};
 
