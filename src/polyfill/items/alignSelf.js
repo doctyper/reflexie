@@ -17,8 +17,7 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 	var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 	var isAlignContentStretch = properties["align-content"] === "stretch";
 
-	var alignSelf, lineSize;
-	var isStart, isCenter, isStretch, isBaseline;
+	var alignSelf, isStart, isCenter, isStretch, isBaseline;
 
 	var remainderSize = this.remainderSize;
 	var currentRemainderSize;

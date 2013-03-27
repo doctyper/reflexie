@@ -16,16 +16,14 @@ Flexbox.models.alignContent = function (alignment, properties, model) {
 
 		isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 		lines = this.lines,
-		i, j, k, l, line, items, item,
+		i, j, k, l, line, item,
 		lineRemainder, currentLineRemainder,
-		multiplier = 1, x, halfLineRemainder;
+		multiplier = 1, halfLineRemainder,
 
-	var alignItems = properties["align-items"];
-	var isAlignItemsStretch = alignItems === "stretch";
-	var crossTotal = crossStart + "Total";
+		crossTotal = crossStart + "Total",
 
-	var lineLength = lines.length;
-	var startIndex = 0;
+		lineLength = lines.length,
+		startIndex = 0;
 
 	// http://www.w3.org/TR/css3-flexbox/#align-content-property
 	//  Note, this property has no effect when the flexbox has only a single line.

@@ -1,4 +1,4 @@
-Flexbox.models.flexDirection = function (direction/*, properties*/) {
+Flexbox.models.flexDirection = function (direction) {
 	var values = this.values,
 		container = values.container,
 		itemValues = values.items,
@@ -8,25 +8,14 @@ Flexbox.models.flexDirection = function (direction/*, properties*/) {
 		revArray = ["row-reverse", "column-reverse"],
 		isColumn = utils.assert(direction, colArray),
 		isReverse = utils.assert(direction, revArray),
-		needsIncrement = (!isColumn || isReverse),
 		crossStart = (isColumn ? "left" : "top"),
 		mainStart = (isColumn ? "top" : "left"),
 		mainSize = Flexbox.dimValues[mainStart],
 		crossSize = Flexbox.dimValues[crossStart],
 		mainStartOffset = 0,
 		storedVal = 0,
-		containerSize;
-
-	var mainTotal = mainStart + "Total";
-
-	var revValues = {
-		"top": "bottom",
-		"left": "right"
-	};
-
-	containerSize = container[mainSize];
-
-	var revStart = revValues[mainStart];
+		mainTotal = mainStart + "Total",
+		containerSize = container[mainSize];
 
 	for (i = 0, j = itemValues.length; i < j; i++) {
 		item = itemValues[i];
