@@ -17,6 +17,7 @@ Flexbox.container = (function () {
 			order: models.order,
 			flexDirection : models.flexDirection,
 			flexWrap : models.flexWrap,
+			alignContentStretch : models.alignContent,
 			justifyContent : models.justifyContent,
 			alignItems : models.alignItems,
 			alignSelf : models.alignSelf,
@@ -221,7 +222,7 @@ Flexbox.container = (function () {
 
 			for (var key in models) {
 				var prop = utils.toDashedCase(key);
-				models[key].call(this, properties[prop], properties);
+				models[key].call(this, properties[prop], properties, key);
 			}
 
 			// Final positioning

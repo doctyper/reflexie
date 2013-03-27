@@ -1,4 +1,4 @@
-Flexbox.models.alignContent = function (alignment, properties) {
+Flexbox.models.alignContent = function (alignment, properties, model) {
 	var values = this.values,
 		container = values.container,
 
@@ -10,7 +10,9 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		isCenter = (alignment === "center"),
 		isBetween = (alignment === "space-between"),
 		isAround = (alignment === "space-around"),
-		isStretch = (alignment === "stretch"),
+
+		isStretch = (properties["align-content"] === "stretch"),
+		timeToStretch = (model === "alignContentStretch"),
 
 		isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 		lines = this.lines,
@@ -33,7 +35,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 	lineRemainder = containerSize;
 
-	if (isStart) {
+	if (isStart || (isStretch && !timeToStretch) || (!isStretch && timeToStretch)) {
 		return;
 	}
 
@@ -56,7 +58,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 	// The current line remainder
 	currentLineRemainder = 0;
 
-	if ((isBetween || isAround || isStretch) && lineRemainder <= 0) {
+	if ((isBetween || isAround) && lineRemainder <= 0) {
 		if (isAround) {
 			isAround = false;
 			isCenter = true;
