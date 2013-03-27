@@ -165,7 +165,7 @@
 
 						target.appendChild(element);
 
-						if (item["align-self"] === "stretch" || (item["align-self"] === "auto" && flx.container["align-items"] === "stretch")) {
+						if (item["align-self"] === "stretch" || ((!item["align-self"] || item["align-self"] === "auto") && flx.container["align-items"] === "stretch")) {
 							applyClass(flx.container, element);
 						} else {
 							element.className = "no-stretch";
