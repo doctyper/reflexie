@@ -1573,6 +1573,7 @@
 
 		var crossTotal = crossStart + "Total";
 
+		var isWrapReverse = properties["flex-wrap"] === "wrap-reverse";
 		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 		var isAlignContentStretch = properties["align-content"] === "stretch";
 
@@ -1584,6 +1585,8 @@
 		var prevCrossSize = container.debug.padding[crossStart];
 		var nextLine, lineCrossSize, lineMaxSize;
 
+		var reverser = this.reverser;
+
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
 
@@ -1593,7 +1596,12 @@
 
 				if (nextLine) {
 					nextLine = nextLine.items[0];
-					lineCrossSize = nextLine[crossStart];
+
+					if (isWrapReverse) {
+						lineCrossSize -= nextLine[crossStart] + nextLine.debug.inner[crossStart] + nextLine.debug.margin[crossTotal];
+					} else {
+						lineCrossSize = nextLine[crossStart];
+					}
 				}
 
 				lineCrossSize -= prevCrossSize;
@@ -1634,7 +1642,12 @@
 						item[crossSize] = lineRemainder - item.debug.inner[crossStart] - item.debug.margin[crossTotal];
 					}
 				} else if (isStretch && item.debug.auto[crossSize]) {
+					var currentCrossSize = item[crossSize];
 					item[crossSize] = lineMaxSize - item.debug.inner[crossStart] - item.debug.margin[crossTotal];
+
+					if (isWrapReverse) {
+						item[crossStart] += currentCrossSize - item[crossSize];
+					}
 				}
 
 				// No furths if any of these apply
@@ -1654,10 +1667,10 @@
 				lineRemainder = line.maxItemSize;
 
 				// Remove margin from crossStart
-				item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
+				item[crossStart] -= (item.debug.margin[crossTotal] * multiplier) * reverser;
 
 				// Magic line
-				item[crossStart] += currentRemainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
+				item[crossStart] += (currentRemainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier) * reverser;
 			}
 
 			if (isAlignContentStretch) {
@@ -1757,7 +1770,8 @@
 		var currCrossStart = 0;
 		var prevCrossStart = 0;
 
-		var multiplier = isReverse ? -1 : 1;
+		var multiplier = (isReverse ? -1 : 1);
+		var reverser = (isWrapReverse ? -1 : 1);
 
 		// TODO: Implement `flex-wrap: wrap-reverse;`
 		if (isWrap || isWrapReverse) {
@@ -1769,6 +1783,22 @@
 			};
 
 			var revStart = revValues[mainStart];
+
+			if (isWrapReverse) {
+				var maxNoWrapLineSize = 0;
+
+				for (i = 0, j = itemValues.length; i < j; i++) {
+					item = itemValues[i];
+					maxNoWrapLineSize = Math.max(maxNoWrapLineSize, item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal]);
+				}
+
+				var revStartRemainder = containerSize - maxNoWrapLineSize;
+
+				for (i = 0, j = itemValues.length; i < j; i++) {
+					item = itemValues[i];
+					item[crossStart] += revStartRemainder + (maxNoWrapLineSize - (item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal]));
+				}
+			}
 
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
@@ -1802,7 +1832,7 @@
 				}
 
 				item[mainStart] -= prevMainStart * multiplier;
-				item[crossStart] += prevCrossStart;
+				item[crossStart] += prevCrossStart * reverser;
 
 				currMainStart += (item[mainSize] + item.debug.inner[mainStart]) + item.debug.margin[mainTotal];
 				currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
@@ -1845,6 +1875,9 @@
 
 		// Expose lines
 		this.lines = lines;
+
+		// Expose reverser
+		this.reverser = reverser;
 	};
 	
 	Flexbox.models.justifyContent = function (justification, properties) {
@@ -1973,6 +2006,8 @@
 
 			crossTotal = crossStart + "Total",
 
+			reverser = this.reverser,
+
 			lineLength = lines.length,
 			startIndex = 0;
 
@@ -2033,7 +2068,7 @@
 
 				for (k = 0, l = line.items.length; k < l; k++) {
 					item = line.items[k];
-					item[crossStart] += halfLineRemainder;
+					item[crossStart] += halfLineRemainder * reverser;
 				}
 
 				lineRemainder += halfLineRemainder;
@@ -2045,7 +2080,7 @@
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
-				item[crossStart] += (lineRemainder * multiplier);
+				item[crossStart] += (lineRemainder * multiplier) * reverser;
 			}
 
 			lineRemainder += currentLineRemainder;
