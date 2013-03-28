@@ -12,60 +12,116 @@ server.listen(9999);
 
 io.configure(function () {
 	io.set("log level", 2);
-});
 
-io.sockets.on("connection", function (socket) {
 	var css = __dirname + "/css/runner.css";
-	var data = __dirname + "/data/flex-properties.js";
+	var data = __dirname + "/data/pairwise/flex-tests.js";
 	var test = __dirname + "/lib/tests.js";
 	var src = __dirname + "/../dist/reflexie.js";
 
 	fs.watchFile(css, function (curr, prev) {
-		socket.emit("csschange");
+		io.sockets.emit("csschange");
 	});
 
 	fs.watchFile(data, function (curr, prev) {
-		socket.emit("datachange");
+		io.sockets.emit("datachange");
 	});
 
 	fs.watchFile(test, function (curr, prev) {
-		socket.emit("datachange");
+		io.sockets.emit("datachange");
 	});
 
 	fs.watchFile(src, function () {
-		socket.emit("srcchange");
+		console.log("srcchange");
+		io.sockets.emit("srcchange");
 	});
+});
 
+io.sockets.on("connection", function (socket) {
 	socket.on("suiteerror", function (data) {
-		var map = {
-			"display": "flex"
-		};
+		var map = {};
 
-		var properties = data.properties.split("; ");
-
-		properties.forEach(function (prop, i) {
-			var props = prop.split(": ");
-			map[props[0]] = props[1];
-		});
+		var parent = data.parent;
+		var items = data.items;
 
 		var dataPath = __dirname + "/data";
 		var failCSSFile = dataPath + "/fail.css";
 		var failJSFile = dataPath + "/fail.js";
 
-		var prefixes = ["-webkit-", ""];
-		var css = "#flex-target {\n";
+		var toPrettyCSS = function (string) {
+			var match = (/(\#[\w-]+) { (.*)+; }/).exec(string);
+			var newString = "";
 
-		for (var key in map) {
-			for (var i = 0, j = prefixes.length; i < j; i++) {
-				css += "\t" + prefixes[i] + key + ": " + map[key] + ";\n";
+			if (match && match[2]) {
+				newString += match[1] + " {\n\t";
+
+				var prefixes = ["-webkit-", ""];
+				var rules = match[2].split(/;\s?/);
+
+				for (var i = 0, j = rules.length; i < j; i++) {
+					var rule = rules[i].split(/:\s?/);
+
+					for (var k = 0, l = prefixes.length; k < l; k++) {
+						if (rule[0] === "display") {
+							newString += rule[0] + ": " + prefixes[k] + rule[1];
+						} else {
+							newString += prefixes[k] + rule[0] + ": " + rule[1];
+						}
+
+						newString += ";\n\t";
+					}
+
+					if (rules[i + 1]) {
+						newString += "\n\t";
+					}
+				}
+
+				newString += "}\n";
 			}
 
-			css += "\n";
-		}
+			// string = string.replace(/\{\s?/g, "{\n\t");
+			// string = string.replace(/;\s?/g, ";\n\t");
+			// string = string.replace(/\s?\}/g, "}\n");
 
-		css = css.trim() + "\n}";
+			return newString;
+		};
 
-		var js = "window.flexContainer = " + JSON.stringify(map, null, "\t") + ";";
+		var formatCSS = function (parent, items) {
+			parent = toPrettyCSS(parent);
+			return parent + "\n" + items.map(function (item) {
+				return toPrettyCSS(item);
+			}).join("\n");
+		};
+
+		var toJSON = function (string) {
+			var match = (/\#(?:[\w-]+) { (.*)+; }/).exec(string);
+			var map = {};
+
+			if (match && match[1]) {
+				var rules = match[1].split(/;\s?/);
+
+				for (var i = 0, j = rules.length; i < j; i++) {
+					var rule = rules[i].split(/:\s?/);
+					map[rule[0]] = rule[1];
+				}
+			}
+
+			return JSON.stringify(map, null, "\t\t").replace(/\}/g, "\t}");
+		};
+
+		var formatJS = function (parent, items) {
+			return "window.flexValues = {\n\t\"container\": " + toJSON(parent) + ",\n\t\"items\": [" + (function () {
+				var arr = [];
+
+				for (var i = 0, j = items.length; i < j; i++) {
+					arr.push(toJSON(items[i]));
+				}
+
+				return arr.join(", ");
+			}()) + "]\n};\n";
+		};
+
+		var css = formatCSS(parent, items);
+		var js = formatJS(parent, items);
 
 		fs.writeFileSync(failCSSFile, css);
 		fs.writeFileSync(failJSFile, js);
@@ -87,7 +143,7 @@ app.configure(function () {
 });
 
 app.get("/properties", function (req, res) {
-	var file = fs.readFileSync(__dirname + "/data/flex-properties.js");
+	var file = fs.readFileSync(__dirname + "/data/pairwise/flex-tests.js");
 	res.json(JSON.parse(file));
 });
 

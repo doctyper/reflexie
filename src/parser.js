@@ -6,7 +6,11 @@ Flexbox.parser = {
 			"flex-wrap": true,
 			"justify-content": true,
 			"align-items": true,
-			"align-content": true
+			"align-content": true,
+
+			// Shorthand support
+			// Combines flex-direction and flex-wrap
+			"flex-flow": true
 		},
 
 		items : {
@@ -14,7 +18,11 @@ Flexbox.parser = {
 			"flex-grow": true,
 			"flex-shrink": true,
 			"flex-basis": true,
-			"align-self": true
+			"align-self": true,
+
+			// Shorthand support
+			// Combines flex-grow, flex-shrink, and flex-basis
+			"flex": true
 		}
 	},
 
@@ -68,32 +76,23 @@ Flexbox.parser = {
 	},
 
 	validateContainer : function (styles) {
-		return this.validateRules(this.properties.container, styles);
+		var rules = this.validateRules(this.properties.container, styles);
+
+		// For container to be valid, it must have a display value
+		// Of either flex or inline-flex
+		var display = (rules || {}).display;
+
+		switch (display) {
+		case "flex":
+		case "inline-flex":
+			return rules;
+		}
+
+		return undefined;
 	},
 
 	validateItems : function (styles) {
 		return this.validateRules(this.properties.items, styles);
-	},
-
-	// Copyright (C) 2011 Alex Kloss <alexthkloss@web.de>
-	// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-	keys : function (object) {
-		return (Object.keys || function (object, key, result) {
-			// initialize object and result
-			result = [];
-
-			// iterate over object keys
-			for (key in object) {
-
-				// fill result array with non-prototypical keys
-				if (result.hasOwnProperty.call(object, key)) {
-					result.push(key);
-				}
-
-				// return result
-				return result;
-			}
-		}).call(object, object);
 	},
 
 	sortByDescendingSpecificity : function (a, b) {
@@ -108,9 +107,10 @@ Flexbox.parser = {
 
 	checkMatchingSelectors : function (map) {
 		var specificityMap = {}, matchesMap = {},
+			matchesSelector = Flexbox.utils.matchesSelector,
 			selector, elements, current,
 			key, sibling, specificity, combinedMap,
-			keys = this.keys(map), dominant,
+			keys = Flexbox.utils.keys(map), dominant,
 			i, j, k, l;
 
 		// Start a while loop using keys as the driver.
@@ -134,7 +134,7 @@ Flexbox.parser = {
 
 					// Don't match against itself
 					if (sibling !== selector) {
-						var match = this.matchesSelector(current, sibling);
+						var match = matchesSelector(current, sibling);
 
 						// If true, we have a duplicate match
 						// Gather matches into array for later merging
@@ -219,40 +219,96 @@ Flexbox.parser = {
 		return map;
 	},
 
-	matchesSelector : function (elem, selector) {
-		return (Element.prototype.matchesSelector || Element.prototype.webkitMatchesSelector || Element.prototype.mozMatchesSelector || function (selector) {
-			var els = document.querySelectorAll(selector),
-				i, j;
+	buildSelector : function (container, item, index) {
+		var parts = [container, " > "],
+			classes, i, j, attribute, nth;
 
-			for (i = 0, j = els.length; i < j; i++) {
-				if (els[i] === this) {
-					return true;
+		// First start with the element name
+		parts.push(item.nodeName.toLowerCase());
+
+		// Add an ID if present
+		if (item.id) {
+			parts.push("#" + item.id);
+		}
+
+		// Add classes if present
+		if (item.className) {
+			classes = item.className.trim().split(" ");
+
+			for (i = 0, j = classes.length; i < j; i++) {
+				parts.push("." + classes[i]);
+			}
+		}
+
+		if (item.attributes.length) {
+			for (i = 0; i < item.attributes.length; i++) {
+				attribute = item.attributes[i];
+
+				if (attribute.specified) {
+					switch (attribute.name) {
+					case "class":
+					case "id":
+						break;
+
+					default:
+						parts.push("[" + attribute.name + "=" + attribute.value + "]");
+						break;
+					}
 				}
 			}
+		}
 
-			return false;
-		}).call(elem, selector);
+		// If parts length is 3, there aren't any identifiers strong enough
+		// So let's improvise
+		if (parts.length === 3) {
+			var supportsNth = Flexbox.utils.nthChildSupport();
+
+			if (supportsNth) {
+				parts.push(":nth-child(" + (index + 1) + ")");
+			} else {
+				nth = "nth-child-" + (index + 1);
+				item.className += " " + nth;
+				parts.push("." + nth);
+			}
+		}
+
+		return parts.join("");
 	},
 
-	mapChildren : function (container, items) {
-		var related = [];
-
-		var children = container.childNodes,
-			i, j, item, child;
+	mapChildren : function (container, selector, items) {
+		var matchesSelector = Flexbox.utils.matchesSelector,
+			children = container.childNodes,
+			i, j, item, child, match, x = 0,
+			related = [];
 
 		for (i = 0, j = children.length; i < j; i++) {
 			child = children[i];
 
 			if (child.nodeType === 1) {
+				match = false;
+
 				for (item in items) {
-					if (this.matchesSelector(child, item)) {
+					if (matchesSelector(child, item)) {
 						related.push({
 							element: child,
 							selector: item,
 							properties: items[item]
 						});
+
+						match = true;
+						break;
 					}
 				}
+
+				if (!match) {
+					related.push({
+						element: child,
+						selector: this.buildSelector(selector, child, x),
+						properties: {}
+					});
+				}
+
+				x++;
 			}
 		}
 
@@ -269,7 +325,7 @@ Flexbox.parser = {
 
 		var container, children, selector,
 			containerElements, containerElement,
-			i, j, itemElement;
+			i, j;
 
 		for (selector in containers) {
 			container = containers[selector];
@@ -279,7 +335,7 @@ Flexbox.parser = {
 				containerElement = containerElements[i];
 
 				if (containerElement) {
-					children = this.mapChildren(containerElement, items);
+					children = this.mapChildren(containerElement, selector, items);
 
 					relationships.push({
 						container: {
@@ -304,7 +360,9 @@ Flexbox.parser = {
 		var containers = [];
 		var items = [];
 
-		for (i = 0, j = rules.length; i < j; i++) {
+		// Rules are returned in order of cascade
+		// We want them in ascending order
+		for (i = rules.length - 1, j = 0; i >= j; i--) {
 			group = rules[i];
 			styles = group.style;
 

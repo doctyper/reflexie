@@ -57,7 +57,7 @@
 		"Flexbox",
 		"StyleLoader",
 		"CSSParser",
-		"domReady",
-		"SPECIFICITY"
+		"SPECIFICITY",
+		"MicroEvent"
 	]
 }

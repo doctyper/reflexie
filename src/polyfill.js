@@ -5,10 +5,10 @@ Flexie = function (settings) {
 
 Flexie.prototype = {
 	box : function (settings) {
-		if (Flexbox.support === true) {
+		if (Flexie.support === true) {
 			return true;
 		}
 
-		var container = new Flexbox.container(settings);
+		return new Flexbox.container(settings);
 	}
 };

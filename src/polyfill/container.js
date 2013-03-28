@@ -20,7 +20,8 @@ Flexbox.container = (function () {
 			justifyContent : models.justifyContent,
 			alignItems : models.alignItems,
 			alignSelf : models.alignSelf,
-			alignContent : models.alignContent
+			alignContent : models.alignContent,
+			flexGrow : models.flexGrow
 		},
 
 		generateUID : function (container) {
@@ -226,6 +227,13 @@ Flexbox.container = (function () {
 
 			// Final positioning
 			Flexbox.utils.applyPositioning(this.uid, this.container, this.items, this.values);
+
+			// Emit complete
+			Flexie.event.trigger("complete", {
+				uid: this.uid,
+				container: this.container,
+				items: this.items
+			});
 		}
 	};
 
