@@ -56,12 +56,6 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 		minOrMax = (availSpace < 0 ? "min-" : "max-");
 		flexGSdir = (availSpace < 0 ? -1 : 1);
 
-		if(availSpace < 0){
-			// TODO: stop flew-shrink acting when a explicit height/width is given
-			// Currently: doesn't do anything with flex-shrink
-			continue;
-		}
-
 		flexTotal = 0;
 		for (j = 0; j < noOfItems; j++) {
 		    if(flexGSdir == 1){
