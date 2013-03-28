@@ -14,6 +14,7 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 
 	var crossTotal = crossStart + "Total";
 
+	var isWrapReverse = properties["flex-wrap"] === "wrap-reverse";
 	var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 	var isAlignContentStretch = properties["align-content"] === "stretch";
 
@@ -25,6 +26,8 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 	var prevCrossSize = container.debug.padding[crossStart];
 	var nextLine, lineCrossSize, lineMaxSize;
 
+	var reverser = this.reverser;
+
 	for (i = 0, j = lines.length; i < j; i++) {
 		line = lines[i];
 
@@ -34,7 +37,12 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 
 			if (nextLine) {
 				nextLine = nextLine.items[0];
-				lineCrossSize = nextLine[crossStart];
+
+				if (isWrapReverse) {
+					lineCrossSize -= nextLine[crossStart] + nextLine.debug.inner[crossStart] + nextLine.debug.margin[crossTotal];
+				} else {
+					lineCrossSize = nextLine[crossStart];
+				}
 			}
 
 			lineCrossSize -= prevCrossSize;
@@ -75,7 +83,12 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 					item[crossSize] = lineRemainder - item.debug.inner[crossStart] - item.debug.margin[crossTotal];
 				}
 			} else if (isStretch && item.debug.auto[crossSize]) {
+				var currentCrossSize = item[crossSize];
 				item[crossSize] = lineMaxSize - item.debug.inner[crossStart] - item.debug.margin[crossTotal];
+
+				if (isWrapReverse) {
+					item[crossStart] += currentCrossSize - item[crossSize];
+				}
 			}
 
 			// No furths if any of these apply
@@ -95,10 +108,10 @@ Flexbox.models.alignSelf = function (alignment, properties) {
 			lineRemainder = line.maxItemSize;
 
 			// Remove margin from crossStart
-			item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
+			item[crossStart] -= (item.debug.margin[crossTotal] * multiplier) * reverser;
 
 			// Magic line
-			item[crossStart] += currentRemainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
+			item[crossStart] += (currentRemainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier) * reverser;
 		}
 
 		if (isAlignContentStretch) {

@@ -22,6 +22,8 @@ Flexbox.models.alignContent = function (alignment, properties, model) {
 
 		crossTotal = crossStart + "Total",
 
+		reverser = this.reverser,
+
 		lineLength = lines.length,
 		startIndex = 0;
 
@@ -82,7 +84,7 @@ Flexbox.models.alignContent = function (alignment, properties, model) {
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
-				item[crossStart] += halfLineRemainder;
+				item[crossStart] += halfLineRemainder * reverser;
 			}
 
 			lineRemainder += halfLineRemainder;
@@ -94,7 +96,7 @@ Flexbox.models.alignContent = function (alignment, properties, model) {
 
 		for (k = 0, l = line.items.length; k < l; k++) {
 			item = line.items[k];
-			item[crossStart] += (lineRemainder * multiplier);
+			item[crossStart] += (lineRemainder * multiplier) * reverser;
 		}
 
 		lineRemainder += currentLineRemainder;
