@@ -122,15 +122,7 @@ define([
 		var flex = $("#flex-target");
 
 		// TODO: Get rid of this kludgy mess
-		if (desc.parent.display === "inline-flex") {
-			return;
-		}
-
 		if (desc.parent["align-items"] === "baseline") {
-			return;
-		}
-
-		if (desc.parent["flex-flow"].indexOf("wrap-reverse") !== -1) {
 			return;
 		}
 		// TODO: Get rid of this kludgy mess
