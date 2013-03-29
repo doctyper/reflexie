@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-28-2013
+ * Date: 3-29-2013
  */
 (function (window, undefined) {
 
@@ -1147,16 +1147,16 @@
 		},
 
 		flexBasisToPx : function (flexBasis, currLength, containerSize) {
-			if (typeof flexBasis === "undefined" || flexBasis == "auto"){
+			if (typeof flexBasis === "undefined" || flexBasis === "auto") {
 				return currLength;
-			} else if (flexBasis == "0") {
+			} else if (flexBasis === "0") {
 				return 0;
-			} else if (flexBasis.slice(-2) == "px"){
-				return flexBasis.slice(1,-2) << 0;
-			} else if (flexBasis.slice(-1) == "%"){
-				return containerSize*0.01*parseFloat(flexBasis.slice(-1));
+			} else if (flexBasis.slice(-2) === "px") {
+				return parseFloat(flexBasis.slice(0, -2));
+			} else if (flexBasis.slice(-1) === "%") {
+				return containerSize * 0.01 * parseFloat(flexBasis.slice(0, -1));
 			}
-			// TODO: implent other lengths, probably by a slow DOM insertion & measurment
+			// TODO: implent other lengths, probably by a slow DOM insertion & measurement
 		}
 	};
 	
@@ -1815,7 +1815,7 @@
 
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
-				itemSize = utils.flexBasisToPx(item.debug.properties['flex-basis'], item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal], containerSize);
+				itemSize = utils.flexBasisToPx(item.debug.properties["flex-basis"], item[mainSize], containerSize) + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
 
 				if (currMainStart + itemSize > breakPoint) {
 					lines.push(line);
