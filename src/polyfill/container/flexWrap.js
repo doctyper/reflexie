@@ -72,7 +72,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
-			itemSize = utils.flexBasisToPx(item.debug.properties['flex-basis'], item[mainSize], containerSize) + item.debug.padding[mainTotal] + item.debug.border[mainTotal] + item.debug.margin[mainTotal];
+			itemSize = utils.flexBasisToPx(item.debug.properties["flex-basis"], item[mainSize], containerSize) + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
 
 			if (currMainStart + itemSize > breakPoint) {
 				lines.push(line);
