@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-27-2013
+ * Date: 3-28-2013
  */
 (function (window, undefined) {
 
@@ -1144,6 +1144,19 @@
 			}
 
 			head.appendChild(style);
+		},
+
+		flexBasisToPx : function (flexBasis, currLength, containerSize) {
+			if (typeof flexBasis === "undefined" || flexBasis == "auto"){
+				return currLength;
+			} else if (flexBasis == "0") {
+				return 0;
+			} else if (flexBasis.slice(-2) == "px"){
+				return flexBasis.slice(1,-2) << 0;
+			} else if (flexBasis.slice(-1) == "%"){
+				return containerSize*0.01*parseFloat(flexBasis.slice(-1));
+			}
+			// TODO: implent other lengths, probably by a slow DOM insertion & measurment
 		}
 	};
 	
@@ -1760,7 +1773,7 @@
 
 		var item;
 		var items;
-		var prevItem;
+		var prevItem, itemSize;
 
 		var mainTotal = mainStart + "Total";
 		var crossTotal = crossStart + "Total";
@@ -1802,8 +1815,9 @@
 
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
+				itemSize = utils.flexBasisToPx(item.debug.properties['flex-basis'], item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal], containerSize);
 
-				if (currMainStart + (item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal]) > breakPoint) {
+				if (currMainStart + itemSize > breakPoint) {
 					lines.push(line);
 
 					line = {
@@ -1834,7 +1848,7 @@
 				item[mainStart] -= prevMainStart * multiplier;
 				item[crossStart] += prevCrossStart * reverser;
 
-				currMainStart += (item[mainSize] + item.debug.inner[mainStart]) + item.debug.margin[mainTotal];
+				currMainStart += itemSize;
 				currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 
 				if (isColumn) {
