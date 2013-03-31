@@ -1697,24 +1697,18 @@
 		var values = this.values,
 			container = values.container,
 
-			crossStart = this.crossStart,
 			mainStart = this.mainStart,
-
 			mainSize = this.mainSize,
-			crossSize = this.crossSize,
 
 			containerMainSize = container[mainSize],
-			containerCrossSize = container[crossSize],
 			lines = this.lines;
 
 		var utils = Flexbox.utils,
-			colArray = ["column", "column-reverse"],
 			revArray = ["row-reverse", "column-reverse"],
 			flexDirection = properties["flex-direction"],
-			isColumn = utils.assert(flexDirection, colArray),
 			isReverse = utils.assert(flexDirection, revArray);
 
-		var i, ilim, j, jlim, line, noOfItems, usedSpace,
+		var i, ilim, j, line, noOfItems, usedSpace,
 			availSpace, flexTotal, curr, minMaxSize, runningDiff,
 			dir, minMaxChange, freezeList, flexBasis, flexGS, flexGSdir,
 			minOrMax, weights, sizeStore;
@@ -2106,7 +2100,7 @@
 		}
 	};
 	
-	Flexbox.models.alignItems = function () {
+	Flexbox.models.alignItems = function (alignment, properties) {
 		var crossStart = this.crossStart,
 			crossSize = this.crossSize,
 			lines = this.lines;
@@ -2117,6 +2111,7 @@
 		var containerSize = values.container[mainSize];
 
 		var crossTotal = crossStart + "Total";
+		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 
 		var remainderSize = containerSize;
 		var i, j, k, l, line, item;
@@ -2136,7 +2131,7 @@
 		remainderSize /= lines.length;
 
 		// Expose remainderSize
-		this.remainderSize = Math.max(0, remainderSize);
+		this.remainderSize = isNotFlexWrap ? remainderSize : Math.max(0, remainderSize);
 	};
 	
 	Flexbox.models.alignContent = function (alignment, properties, model) {
