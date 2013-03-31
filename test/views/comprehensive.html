@@ -1,30 +1,24 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Reflexie Tests</title>
+		<title>Reflexie Demo</title>
 		<link rel="stylesheet" href="css/runner.css" />
 
 		<style>
-			#error, #result {
+			#result {
 				padding: 10px;
-				right: 20px;
+				right: 330px;
 				bottom: 20px;
 				position: fixed;
-				border: 1px dashed #555;
-				background: #eee;
+				border: 1px dashed #050;
+				background: rgba(0, 255, 0, 0.3);
 				z-index: 10;
 				width: 270px;
 			}
 
-			#error pre, #result pre {
+			#result pre {
 				margin: 0;
 				font-size: 12px;
-			}
-
-			#result {
-				right: 330px;
-				border-color: #050;
-				background: rgba(0, 255, 0, 0.3);
 			}
 		</style>
 
@@ -34,17 +28,45 @@
 				/*right: 0;*/
 				opacity: 1;
 				z-index: 1;
+				position: relative;
 			}
 
 			#flex-target {
 				overflow: visible;
 			}
 
+			#flex-target div {
+				opacity: 0.5;
+			}
+		</style>
+
+		<style>
+			#flex-target {
+				-webkit-display: flex;
+				display: flex;
+
+				-webkit-justify-content: flex-start;
+				justify-content: flex-start;
+
+				-webkit-align-items: flex-start;
+				align-items: flex-start;
+
+				-webkit-align-content: flex-start;
+				align-content: flex-start;
+
+				-webkit-flex-flow: row nowrap;
+				flex-flow: row nowrap;
+			}
+
 			#flex-target p {
-				margin: 10px;
-				padding: 15px;
-				border: 5px solid #005;
-				background: rgba(0, 0, 255, 0.3);
+				margin: 20px;
+				padding: 20px;
+				border: 3px solid green;
+				background: rgba(255, 0, 0, 0.2);
+				/*width: 300px;*/
+
+				-webkit-flex: 0 1 auto;
+				flex: 0 1 auto;
 			}
 		</style>
 
@@ -116,6 +138,17 @@
 					result.innerHTML = JSON.stringify(json, null, 3);
 				};
 
+				var applyClass = function (flx, el) {
+					var direction = flx["flex-direction"] || "";
+					direction += flx["flex-flow"] || "";
+
+					if ((/row/).test(direction)) {
+						el.className = "stretch-row";
+					} else if ((/column/).test(direction)) {
+						el.className = "stretch-col";
+					}
+				};
+
 				// Error Reporting Setup
 				(function () {
 					if (Flexie.support) {
@@ -134,15 +167,17 @@
 
 		<div id="flex-container">
 			<div id="flex-target">
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nec dolor tellus, et dignissim risus. Pellentesque tincidunt ultrices gravida. Nunc lobortis tincidunt tortor vitae molestie. Donec ac magna sed enim sagittis convallis. Praesent at enim at tellus tincidunt commodo. Sed ullamcorper lacus ut eros scelerisque mollis. Nulla nisi risus, interdum vel ultricies consequat, lobortis id mi. Morbi quis quam orci, consectetur vestibulum magna. Duis blandit tristique magna at rutrum. Phasellus feugiat suscipit lorem vel placerat. Sed vel sapien eu velit blandit aliquet. Fusce viverra semper consequat. Duis pretium metus sed sem porta pulvinar faucibus libero semper.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam auctor leo ut diam rhoncus mattis. Donec lacinia leo in enim tristique tincidunt. Morbi lectus urna, vulputate varius sollicitudin ac, scelerisque quis enim. Nunc lacus dui, pretium id aliquet a, sagittis a massa. Phasellus faucibus, arcu eu condimentum mattis, tellus purus fermentum eros, vel ultrices lectus lorem ut enim. Etiam et sapien non nisi iaculis scelerisque a pretium quam. Nam malesuada molestie est, non convallis dolor placerat quis. Quisque tristique commodo condimentum. Nulla ultricies, dolor vehicula porttitor mollis, turpis ipsum porta orci, ac pharetra felis erat sed purus. Quisque pretium, turpis quis ultricies blandit, nisi elit rhoncus libero, quis volutpat tellus neque nec tortor. Pellentesque cursus interdum ligula, non porttitor arcu sollicitudin id. Praesent vel erat nec purus pharetra porta et at ipsum. Cras auctor gravida volutpat.</p>
 
-				<p>Ut vitae augue dui. Praesent id fermentum nunc. Aliquam dolor neque, pretium ac viverra ut, rhoncus sit amet lectus. Sed mattis varius est, et gravida turpis tincidunt quis. Ut laoreet bibendum sapien vitae aliquam. Aenean vel augue leo, nec facilisis ante. Phasellus tristique nisi a lorem vehicula ut congue libero bibendum. Aenean rutrum magna a ipsum ornare ac venenatis tellus venenatis. Cras sem risus, congue quis convallis a, ultricies in arcu. Vestibulum eget pulvinar nunc. Maecenas sit amet magna sed quam sodales vulputate a sed lacus. Fusce pharetra hendrerit turpis id volutpat. Vivamus eget tortor dolor, bibendum egestas urna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras gravida magna ac nunc molestie id aliquet tortor pellentesque.</p>
+				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla sodales ornare metus eget pellentesque. Vivamus ultrices auctor laoreet. Sed vel condimentum risus. Praesent urna tellus, dapibus in tempor condimentum, hendrerit sit amet nunc. Etiam ultricies quam at enim ultrices dapibus. Etiam vel varius mauris. Sed sit amet lorem sit amet libero sodales sodales eu at eros. Vivamus sed tincidunt arcu. Fusce tortor magna, tincidunt eu sodales eget, accumsan ac dolor. Nulla sit amet viverra lorem.</p>
 
-				<!--<p>Fusce et orci erat, ut faucibus dui. Sed quis tristique purus. Phasellus vitae magna ac libero mollis vestibulum. Aenean cursus pretium lacus, vel auctor elit ultricies eget. Donec accumsan, justo et tempus fermentum, lectus risus aliquet justo, quis luctus neque sapien at dolor. Donec quam sapien, rutrum at tempor et, pharetra nec ipsum. Mauris nec justo a odio fermentum suscipit. Maecenas libero mauris, ultricies ut posuere et, rhoncus quis enim. Ut non augue in diam blandit elementum vel a dolor. Curabitur enim erat, sagittis eget iaculis et, sagittis quis diam. Ut eget purus id libero elementum facilisis sit amet id felis. Nam cursus auctor viverra. Morbi interdum, nisl vel venenatis consectetur, tortor magna faucibus magna, eu convallis mi risus et felis. Cras tortor justo, elementum eu consectetur et, imperdiet vitae purus. Mauris a gravida arcu. Nullam rhoncus consequat metus non aliquam.</p>
+				<p>Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros. Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros. Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros. Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros.</p>
 
-				<p>Integer dictum nibh ut mi tincidunt viverra. Nullam id est nisl. In eget nunc erat. Phasellus at justo ut tortor sagittis dapibus eu vitae nulla. In leo diam, pulvinar vitae vehicula imperdiet, vehicula vitae diam. Morbi mollis porttitor elementum. Sed dignissim luctus nisl non tristique. Quisque lobortis, purus euismod molestie adipiscing, lacus ipsum posuere enim, eget gravida elit purus molestie arcu. Nunc vitae eros ligula. Vestibulum et metus metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+				<!-- <p>Nam ultricies rhoncus libero eu sodales. Aenean sed aliquam arcu. Quisque euismod congue ante, vitae blandit purus commodo eget. Sed eget turpis nec ante tristique dignissim. Maecenas vitae est vitae lacus ultricies malesuada id in urna. Proin molestie, elit eget hendrerit eleifend, dolor sem sollicitudin leo, ut sagittis neque odio at lorem. Proin feugiat arcu ut eros cursus non cursus magna auctor.</p>
 
-				<p>Donec gravida erat quis lectus scelerisque feugiat. Curabitur vitae sodales dolor. Fusce vel tincidunt enim. Nulla porttitor ligula ut dolor mattis consectetur. Suspendisse sed nulla non mauris accumsan eleifend at a metus. Nulla faucibus auctor magna nec dictum. Nunc erat dolor, fringilla sed ultricies in, fermentum quis turpis. Fusce cursus vulputate sem sit amet ultrices. Nulla condimentum suscipit justo, bibendum sollicitudin felis varius id. Donec nec tellus dolor. Suspendisse augue mi, rutrum vel faucibus sed, aliquet vitae lectus. Integer rutrum dapibus feugiat. Proin a augue ante.</p>-->
+				<p>Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros.</p>
+
+				<p>Donec sed ipsum eu libero lobortis consequat vitae in mi. In convallis convallis neque, at euismod mauris convallis eleifend. Morbi convallis mattis neque in rutrum. In nisl nulla, tincidunt eu iaculis ut, pellentesque pharetra purus. Mauris vel elit orci. Phasellus at leo id quam vehicula rutrum. Suspendisse potenti. Aliquam eleifend ullamcorper elit, nec varius mi pulvinar at.</p> -->
 			</div>
 		</div>
 
