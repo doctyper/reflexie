@@ -166,6 +166,60 @@ Flexbox.utils = {
 		return this.getValues(element, "padding");
 	},
 
+	getMin : function (element, dimension) {
+		var scrollMap = {
+			width: "scrollLeft",
+			height: "scrollTop"
+		};
+
+		var style = element.style;
+		var minDimension = 0;
+		var scrollType = scrollMap[dimension];
+
+		var oDimension = style[dimension] || "";
+		var oOverflow = style.overflow || "";
+
+		style[dimension] = minDimension;
+		style.overflow = "auto";
+
+		element[scrollType] = 1;
+
+		// First, increment in blocks of 10px
+		// This cuts down on write cycles
+		// until we get into the ballpark
+		while (element[scrollType]) {
+			minDimension += 10;
+			style[dimension] = minDimension + "px";
+		}
+
+		// We're in the ballpark. Reset by 10
+		minDimension -= 10;
+		style[dimension] = minDimension + "px";
+
+		// Reset scrollType
+		element[scrollType] = 1;
+
+		// Increment by one until we get the exact dimension
+		while (element[scrollType]) {
+			minDimension += 1;
+			style[dimension] = minDimension + "px";
+		}
+
+		var box = element.getBoundingClientRect();
+		// var altDimension = element.offsetHeight;
+		// console.log(altDimension);
+
+		// Reset dimension & overflow
+		style[dimension] = oDimension;
+		style.overflow = oOverflow;
+
+		// Return minDimension
+		return {
+			width: box.width,
+			height: box.height
+		};
+	},
+
 	getPristineBox : function (element, position) {
 		position = position || "absolute";
 
