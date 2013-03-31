@@ -5,8 +5,7 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 	// Figure out remainders & max item sizes
 	var values = this.values;
-	var mainSize = this.mainSize;
-	var containerSize = values.container[mainSize];
+	var containerSize = values.container[crossSize];
 
 	var crossTotal = crossStart + "Total";
 	var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
