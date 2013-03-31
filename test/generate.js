@@ -66,6 +66,10 @@ io.sockets.on("connection", function (socket) {
 					var rule = rules[i].split(/:\s?/);
 
 					for (var k = 0, l = prefixes.length; k < l; k++) {
+						if (rule[0] === "main-size") {
+							continue;
+						}
+
 						if (rule[0] === "display") {
 							newString += rule[0] + ": " + prefixes[k] + rule[1];
 						} else {
