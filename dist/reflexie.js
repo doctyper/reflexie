@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-29-2013
+ * Date: 3-31-2013
  */
 (function (window, undefined) {
 
@@ -1779,6 +1779,7 @@
 		var crossTotal = crossStart + "Total";
 
 		var currMainStart = 0;
+		var currLineLength = 0;
 		var prevMainStart = 0;
 		var currCrossStart = 0;
 		var prevCrossStart = 0;
@@ -1842,6 +1843,7 @@
 					}
 
 					currMainStart = 0;
+					currLineLength = 0;
 					currCrossStart = 0;
 				}
 

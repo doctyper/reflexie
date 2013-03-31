@@ -36,6 +36,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	var crossTotal = crossStart + "Total";
 
 	var currMainStart = 0;
+	var currLineLength = 0;
 	var prevMainStart = 0;
 	var currCrossStart = 0;
 	var prevCrossStart = 0;
@@ -99,6 +100,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 				}
 
 				currMainStart = 0;
+				currLineLength = 0;
 				currCrossStart = 0;
 			}
 
