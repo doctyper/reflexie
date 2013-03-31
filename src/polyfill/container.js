@@ -17,6 +17,7 @@ Flexbox.container = (function () {
 			order: models.order,
 			flexDirection : models.flexDirection,
 			flexWrap : models.flexWrap,
+			flexGrow : models.flexGrow,
 			alignContentStretch : models.alignContent,
 			justifyContent : models.justifyContent,
 			alignItems : models.alignItems,
