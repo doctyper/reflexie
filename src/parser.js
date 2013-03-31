@@ -219,6 +219,23 @@ Flexbox.parser = {
 		return map;
 	},
 
+	appendNthChildSelector : function (item, index) {
+		this.supportsNth = this.supportsNth || Flexbox.utils.nthChildSupport();
+
+		var supportsNth = this.supportsNth,
+			nth;
+
+		if (supportsNth) {
+			nth = ":nth-child(" + (index + 1) + ")";
+		} else {
+			nth = "nth-child-" + (index + 1);
+			item.className += " " + nth;
+			nth = "." + nth;
+		}
+
+		return nth;
+	},
+
 	buildSelector : function (container, item, index) {
 		var parts = [container, " > "],
 			classes, i, j, attribute, nth;
@@ -261,15 +278,7 @@ Flexbox.parser = {
 		// If parts length is 3, there aren't any identifiers strong enough
 		// So let's improvise
 		if (parts.length === 3) {
-			var supportsNth = Flexbox.utils.nthChildSupport();
-
-			if (supportsNth) {
-				parts.push(":nth-child(" + (index + 1) + ")");
-			} else {
-				nth = "nth-child-" + (index + 1);
-				item.className += " " + nth;
-				parts.push("." + nth);
-			}
+			parts.push(this.appendNthChildSelector(item, index));
 		}
 
 		return parts.join("");
@@ -291,7 +300,7 @@ Flexbox.parser = {
 					if (matchesSelector(child, item)) {
 						related.push({
 							element: child,
-							selector: item,
+							selector: item + this.appendNthChildSelector(child, x),
 							properties: items[item]
 						});
 
