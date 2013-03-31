@@ -78,9 +78,9 @@ Flexbox.container = (function () {
 		expandFlex : function (properties) {
 			var map = {
 				"align-self": "auto",
-				"order": 0,
-				"flex-grow": 0,
-				"flex-shrink": 1,
+				"order": "0",
+				"flex-grow": "0",
+				"flex-shrink": "1",
 				"flex-basis": "auto"
 			};
 
@@ -118,13 +118,13 @@ Flexbox.container = (function () {
 								// flex-grow: 1;
 								// flex-shrink: default;
 								// flex-basis: val;
-								map["flex-grow"] = 1;
+								map["flex-grow"] = "1";
 								map["flex-basis"] = val;
 								break;
 
 							case "none":
 								// Equivalent to "flex: 0 0 auto"
-								map["flex-shrink"] = 0;
+								map["flex-shrink"] = "0";
 								break;
 
 							default:
@@ -132,7 +132,7 @@ Flexbox.container = (function () {
 								// flex-grow: 1;
 								// flex-shrink: default;
 								// flex-basis: val;
-								map["flex-grow"] = 1;
+								map["flex-grow"] = "1";
 								map["flex-basis"] = val;
 								break;
 							}
