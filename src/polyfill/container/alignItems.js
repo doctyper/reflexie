@@ -28,5 +28,5 @@ Flexbox.models.alignItems = function () {
 	remainderSize /= lines.length;
 
 	// Expose remainderSize
-	this.remainderSize = remainderSize;
+	this.remainderSize = Math.max(0, remainderSize);
 };
