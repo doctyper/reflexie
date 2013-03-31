@@ -75,9 +75,21 @@
 
 					var values = $.map(items, function (child) {
 						var box = child.getBoundingClientRect();
-						delete box.bottom;
+						var keys = Object.keys(box).sort();
 
-						return box;
+						var results = {};
+
+						for (i = 0, j = keys.length; i < j; i++) {
+							var key = keys[i];
+
+							if (key === "bottom") {
+								continue;
+							}
+
+							results[key] = box[key];
+						}
+
+						return results;
 					});
 
 					var flexbox = flex[0].getBoundingClientRect();
