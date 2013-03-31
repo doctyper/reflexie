@@ -15,6 +15,7 @@ io.configure(function () {
 
 	var css = __dirname + "/css/runner.css";
 	var data = __dirname + "/data/pairwise/flex-tests.js";
+	var generate = __dirname + "/views/generate.html";
 	var test = __dirname + "/lib/tests.js";
 	var src = __dirname + "/../dist/reflexie.js";
 
@@ -23,7 +24,11 @@ io.configure(function () {
 	});
 
 	fs.watchFile(data, function (curr, prev) {
-		io.sockets.emit("datachange");
+		io.sockets.emit("testchange");
+	});
+
+	fs.watchFile(generate, function (curr, prev) {
+		io.sockets.emit("testchange");
 	});
 
 	fs.watchFile(test, function (curr, prev) {

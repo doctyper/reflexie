@@ -125,16 +125,17 @@
 
 					// Apply children styles
 					for (var i = 0, j = children.length; i < j; i++) {
-						$(children[i]).css(items[i]);
-					}
+						var item = JSON.parse(JSON.stringify(items[i])),
+							mainSize = item["main-size"];
 
-					// Special case stretch properties
-					var isStretch = parent["align-items"] === "stretch";
-					isStretch = isStretch || parent["align-content"] === "stretch";
+						if (mainSize === "auto") {
+							var direction = sizeMap[parent["flex-direction"]];
 
-					if (isStretch) {
-						currDir = sizeMap[parent["flex-direction"]];
-						children.css(currDir, "auto");
+							item[direction] = "auto";
+						}
+
+						delete item["main-size"];
+						$(children[i]).css(item);
 					}
 
 					return getFlexValues(flex);
@@ -172,10 +173,14 @@
 		<script src="http://0.0.0.0:9999/socket.io/socket.io.js"></script>
 		<script>
 			var socket = io.connect("http://0.0.0.0:9999");
-			socket.on("csschange", function (data) {
+
+			var onSocket = function (data) {
 				socket.disconnect();
 				window.location.reload();
-			});
+			};
+
+			socket.on("csschange", onSocket);
+			socket.on("testchange", onSocket);
 		</script>
 	</body>
 </html>
