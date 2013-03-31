@@ -58,7 +58,7 @@ Flexbox.models.alignContent = function (alignment, properties, model) {
 	// The current line remainder
 	currentLineRemainder = 0;
 
-	if ((isBetween || isAround) && lineRemainder <= 0) {
+	if ((isBetween || isAround || isStretch) && lineRemainder <= 0) {
 		if (isAround) {
 			isAround = false;
 			isCenter = true;
