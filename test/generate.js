@@ -168,6 +168,10 @@ app.get("/tester", function (req, res) {
 	res.render("tester.html");
 });
 
+app.get("/comprehensive", function (req, res) {
+	res.render("comprehensive.html");
+});
+
 app.post("/flex", function (req, res) {
 	var dataPath = __dirname + "/data";
 	var dataFile = dataPath + "/flex.js";
