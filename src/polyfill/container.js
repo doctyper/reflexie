@@ -103,22 +103,35 @@ Flexbox.container = (function () {
 
 						if (!isNaN(val)) {
 							// A single, valid integer is mapped to flex-grow
+							// Equivalent to: "flex: <positive-number> 1 0px"
 							map["flex-grow"] = val;
+							map["flex-basis"] = "0px";
 						} else {
 							switch (val) {
 							case "initial":
+								// Equivalent to: "flex: 0 1 auto"
 								break;
 
 							case "auto":
+								// Assume value is a width value, in which case
+								// flex-grow: 1;
+								// flex-shrink: default;
+								// flex-basis: val;
 								map["flex-grow"] = 1;
+								map["flex-basis"] = val;
 								break;
 
 							case "none":
+								// Equivalent to "flex: 0 0 auto"
 								map["flex-shrink"] = 0;
 								break;
 
 							default:
-								// Assume value is a width value, map to flex-basis
+								// Assume value is a width value, in which case
+								// flex-grow: 1;
+								// flex-shrink: default;
+								// flex-basis: val;
+								map["flex-grow"] = 1;
 								map["flex-basis"] = val;
 								break;
 							}

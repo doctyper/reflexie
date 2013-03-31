@@ -51,9 +51,9 @@
 						var item = items[i];
 
 						item["flex"] = [
-							item["flex-grow"],
-							item["flex-shrink"],
-							item["flex-basis"]
+							item["flex-grow"] || "0",
+							item["flex-shrink"] || "1",
+							item["flex-basis"] || "auto"
 						].join(" ").trim();
 
 						delete item["flex-grow"];
