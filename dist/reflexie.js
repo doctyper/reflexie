@@ -21,7 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
+<<<<<<< HEAD
  * Date: 3-31-2013
+=======
+ * Date: 3-29-2013
+>>>>>>> develop
  */
 (function (window, undefined) {
 
@@ -1818,7 +1822,11 @@
 				item = itemValues[i];
 				itemSize = utils.flexBasisToPx(item.debug.properties["flex-basis"], item[mainSize], containerSize) + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
 
+<<<<<<< HEAD
 				if (currLineLength + itemSize > breakPoint) {
+=======
+				if (currMainStart + itemSize > breakPoint) {
+>>>>>>> develop
 					lines.push(line);
 
 					line = {
@@ -1850,8 +1858,12 @@
 				item[mainStart] -= prevMainStart * multiplier;
 				item[crossStart] += prevCrossStart * reverser;
 
+<<<<<<< HEAD
 				currMainStart += item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
 				currLineLength += itemSize;
+=======
+				currMainStart += itemSize;
+>>>>>>> develop
 				currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 
 				if (isColumn) {
