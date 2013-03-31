@@ -107,7 +107,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 			item[mainStart] -= prevMainStart * multiplier;
 			item[crossStart] += prevCrossStart * reverser;
 
-			currMainStart += item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal];
+			currMainStart += item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
 			currLineLength += itemSize;
 			currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 
