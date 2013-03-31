@@ -118,6 +118,10 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 			}
 		}
 
+		if (availSpace <= 0) {
+			continue;
+		}
+
 		runningDiff = 0;
 		dir = (isReverse ?  -1 : 1);
 		for (j = 0; j < noOfItems; j++) {
