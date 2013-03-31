@@ -1,4 +1,4 @@
-Flexbox.models.alignContent = function (alignment, properties) {
+Flexbox.models.alignContent = function (alignment, properties, model) {
 	var values = this.values,
 		container = values.container,
 
@@ -10,20 +10,22 @@ Flexbox.models.alignContent = function (alignment, properties) {
 		isCenter = (alignment === "center"),
 		isBetween = (alignment === "space-between"),
 		isAround = (alignment === "space-around"),
-		isStretch = (alignment === "stretch"),
+
+		isStretch = (properties["align-content"] === "stretch"),
+		timeToStretch = (model === "alignContentStretch"),
 
 		isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 		lines = this.lines,
-		i, j, k, l, line, items, item,
+		i, j, k, l, line, item,
 		lineRemainder, currentLineRemainder,
-		multiplier = 1, x, halfLineRemainder;
+		multiplier = 1, halfLineRemainder,
 
-	var alignItems = properties["align-items"];
-	var isAlignItemsStretch = alignItems === "stretch";
-	var crossTotal = crossStart + "Total";
+		crossTotal = crossStart + "Total",
 
-	var lineLength = lines.length;
-	var startIndex = 0;
+		reverser = this.reverser,
+
+		lineLength = lines.length,
+		startIndex = 0;
 
 	// http://www.w3.org/TR/css3-flexbox/#align-content-property
 	//  Note, this property has no effect when the flexbox has only a single line.
@@ -33,7 +35,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 	lineRemainder = containerSize;
 
-	if (isStart) {
+	if (isStart || (isStretch && !timeToStretch) || (!isStretch && timeToStretch)) {
 		return;
 	}
 
@@ -82,7 +84,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
-				item[crossStart] += halfLineRemainder;
+				item[crossStart] += halfLineRemainder * reverser;
 			}
 
 			lineRemainder += halfLineRemainder;
@@ -94,7 +96,7 @@ Flexbox.models.alignContent = function (alignment, properties) {
 
 		for (k = 0, l = line.items.length; k < l; k++) {
 			item = line.items[k];
-			item[crossStart] += (lineRemainder * multiplier);
+			item[crossStart] += (lineRemainder * multiplier) * reverser;
 		}
 
 		lineRemainder += currentLineRemainder;

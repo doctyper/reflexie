@@ -122,23 +122,12 @@ define([
 		var flex = $("#flex-target");
 
 		// TODO: Get rid of this kludgy mess
-		if (desc.parent.display === "inline-flex") {
-			return;
-		}
-
 		if (desc.parent["align-items"] === "baseline") {
-			return;
-		}
-
-		if (desc.parent["flex-flow"].indexOf("wrap-reverse") !== -1) {
 			return;
 		}
 		// TODO: Get rid of this kludgy mess
 
 		var children = flex.children();
-
-		var isStretch = (desc.parent["align-items"] === "stretch");
-		isStretch = isStretch || (desc.parent["align-content"] === "stretch");
 
 		describe(prettifyDescription("#flex-target", desc.parent), function () {
 
@@ -151,15 +140,27 @@ define([
 
 				if (hasSupport) {
 					flex.css(desc.parent);
-
-					for (var i = 0, j = children.length; i < j; i++) {
-						$(children[i]).css(desc.items[i]);
-					}
 				}
 
-				if (isStretch) {
-					var sizeValue = getSizeValue(desc.parent);
-					flex.children().addClass(sizeValue);
+				for (var i = 0, j = children.length; i < j; i++) {
+					var el = $(children[i]),
+						item = desc.items[i],
+						mainSize = item["main-size"];
+
+					if (mainSize === "auto") {
+						var sizeValue = getSizeValue(desc.parent);
+
+						if (hasSupport) {
+							item[sizeValue] = "auto";
+						} else {
+							el.addClass(sizeValue);
+						}
+					}
+
+					if (hasSupport) {
+						delete item["main-size"];
+						el.css(item);
+					}
 				}
 
 				var flx = new Flexie({
@@ -178,7 +179,8 @@ define([
 
 					var child = $("#flex-target").children().get(index);
 					var box = child.getBoundingClientRect();
-					var range = (isStretch) ? 4 : 2;
+					// var range = (isStretch) ? 4 : 2;
+					var range = 4;
 
 					expect(Math.floor(box[prop])).to.be.within(val - range,  val + range);
 				});

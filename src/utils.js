@@ -320,5 +320,18 @@ Flexbox.utils = {
 		}
 
 		head.appendChild(style);
+	},
+
+	flexBasisToPx : function (flexBasis, currLength, containerSize) {
+		if (typeof flexBasis === "undefined" || flexBasis === "auto") {
+			return currLength;
+		} else if (flexBasis === "0") {
+			return 0;
+		} else if (flexBasis.slice(-2) === "px") {
+			return parseFloat(flexBasis.slice(0, -2));
+		} else if (flexBasis.slice(-1) === "%") {
+			return containerSize * 0.01 * parseFloat(flexBasis.slice(0, -1));
+		}
+		// TODO: implent other lengths, probably by a slow DOM insertion & measurement
 	}
 };

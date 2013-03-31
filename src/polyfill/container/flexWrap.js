@@ -36,11 +36,13 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	var crossTotal = crossStart + "Total";
 
 	var currMainStart = 0;
+	var currLineLength = 0;
 	var prevMainStart = 0;
 	var currCrossStart = 0;
 	var prevCrossStart = 0;
 
-	var multiplier = isReverse ? -1 : 1;
+	var multiplier = (isReverse ? -1 : 1);
+	var reverser = (isWrapReverse ? -1 : 1);
 
 	// TODO: Implement `flex-wrap: wrap-reverse;`
 	if (isWrap || isWrapReverse) {
@@ -53,12 +55,27 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 
 		var revStart = revValues[mainStart];
 
+		if (isWrapReverse) {
+			var maxNoWrapLineSize = 0;
+
+			for (i = 0, j = itemValues.length; i < j; i++) {
+				item = itemValues[i];
+				maxNoWrapLineSize = Math.max(maxNoWrapLineSize, item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal]);
+			}
+
+			var revStartRemainder = containerSize - maxNoWrapLineSize;
+
+			for (i = 0, j = itemValues.length; i < j; i++) {
+				item = itemValues[i];
+				item[crossStart] += revStartRemainder + (maxNoWrapLineSize - (item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal]));
+			}
+		}
+
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
-			// Note: assumes px
-			itemSize = ((typeof item.debug.properties['flex-basis'] === "undefined" || item.debug.properties["flex-basis"] === "auto") ? item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal] : item.debug.properties['flex-basis'].slice(0,-2) << 0);
+			itemSize = utils.flexBasisToPx(item.debug.properties["flex-basis"], item[mainSize], containerSize) + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
 
-			if (currMainStart + itemSize > breakPoint) {
+			if (currLineLength + itemSize > breakPoint) {
 				lines.push(line);
 
 				line = {
@@ -83,13 +100,15 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 				}
 
 				currMainStart = 0;
+				currLineLength = 0;
 				currCrossStart = 0;
 			}
 
 			item[mainStart] -= prevMainStart * multiplier;
-			item[crossStart] += prevCrossStart;
+			item[crossStart] += prevCrossStart * reverser;
 
-			currMainStart += itemSize;
+			currMainStart += item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
+			currLineLength += itemSize;
 			currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 
 			if (isColumn) {
@@ -130,4 +149,7 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 
 	// Expose lines
 	this.lines = lines;
+
+	// Expose reverser
+	this.reverser = reverser;
 };

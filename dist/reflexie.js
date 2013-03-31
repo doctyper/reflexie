@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-27-2013
+ * Date: 3-31-2013
  */
 (function (window, undefined) {
 
@@ -1144,6 +1144,19 @@
 			}
 
 			head.appendChild(style);
+		},
+
+		flexBasisToPx : function (flexBasis, currLength, containerSize) {
+			if (typeof flexBasis === "undefined" || flexBasis === "auto") {
+				return currLength;
+			} else if (flexBasis === "0") {
+				return 0;
+			} else if (flexBasis.slice(-2) === "px") {
+				return parseFloat(flexBasis.slice(0, -2));
+			} else if (flexBasis.slice(-1) === "%") {
+				return containerSize * 0.01 * parseFloat(flexBasis.slice(0, -1));
+			}
+			// TODO: implent other lengths, probably by a slow DOM insertion & measurement
 		}
 	};
 	
@@ -1533,7 +1546,7 @@
 		}
 	};
 	
-	Flexbox.models.order = function (order) {
+	Flexbox.models.order = function () {
 		this.items.sort(function (a, b) {
 			var aProps = a.properties;
 			var bProps = b.properties;
@@ -1567,21 +1580,48 @@
 
 		var values = this.values;
 		var mainSize = this.mainSize;
-		var containerSize = values.container[mainSize];
+
+		var container = values.container;
+		var containerSize = container[mainSize];
 
 		var crossTotal = crossStart + "Total";
 
+		var isWrapReverse = properties["flex-wrap"] === "wrap-reverse";
 		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 		var isAlignContentStretch = properties["align-content"] === "stretch";
 
-		var alignSelf, lineSize;
-		var isStart, isCenter, isStretch, isBaseline;
+		var alignSelf, isStart, isCenter, isStretch, isBaseline;
 
 		var remainderSize = this.remainderSize;
 		var currentRemainderSize;
 
+		var prevCrossSize = container.debug.padding[crossStart];
+		var nextLine, lineCrossSize, lineMaxSize;
+
+		var reverser = this.reverser;
+
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
+
+			if (isAlignContentStretch) {
+				nextLine = lines[i + 1];
+				lineCrossSize = containerSize + container.debug.padding[crossStart];
+
+				if (nextLine) {
+					nextLine = nextLine.items[0];
+
+					if (isWrapReverse) {
+						lineCrossSize -= nextLine[crossStart] + nextLine.debug.inner[crossStart] + nextLine.debug.margin[crossTotal];
+					} else {
+						lineCrossSize = nextLine[crossStart];
+					}
+				}
+
+				lineCrossSize -= prevCrossSize;
+				lineMaxSize = lineCrossSize;
+			} else {
+				lineMaxSize = line.maxItemSize;
+			}
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
@@ -1589,7 +1629,7 @@
 				currentRemainderSize = remainderSize;
 
 				if (!item.debug || !item.debug.properties) {
-					return;
+					continue;
 				}
 
 				alignSelf = item.debug.properties["align-self"];
@@ -1612,11 +1652,14 @@
 							item[crossStart] += (lineRemainder - item[crossSize]) * i;
 						}
 
-						item[crossSize] = (lineRemainder - item.debug.inner[crossStart] - item.debug.margin[crossTotal]);
+						item[crossSize] = lineRemainder - item.debug.inner[crossStart] - item.debug.margin[crossTotal];
 					}
-				} else if (isStretch) {
-					if (item.debug.auto[crossSize]) {
-						item[crossSize] = ((isAlignContentStretch ? line.maxSize : line.maxItemSize) - item.debug.inner[crossStart]) - item.debug.margin[crossTotal];
+				} else if (isStretch && item.debug.auto[crossSize]) {
+					var currentCrossSize = item[crossSize];
+					item[crossSize] = lineMaxSize - item.debug.inner[crossStart] - item.debug.margin[crossTotal];
+
+					if (isWrapReverse) {
+						item[crossStart] += currentCrossSize - item[crossSize];
 					}
 				}
 
@@ -1637,10 +1680,14 @@
 				lineRemainder = line.maxItemSize;
 
 				// Remove margin from crossStart
-				item[crossStart] -= item.debug.margin[crossTotal] * multiplier;
+				item[crossStart] -= (item.debug.margin[crossTotal] * multiplier) * reverser;
 
 				// Magic line
-				item[crossStart] += currentRemainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier;
+				item[crossStart] += (currentRemainderSize + (lineRemainder - (item[crossSize] + item.debug.inner[crossStart])) * multiplier) * reverser;
+			}
+
+			if (isAlignContentStretch) {
+				prevCrossSize += lineCrossSize;
 			}
 		}
 	};
@@ -1702,12 +1749,6 @@
 			flexGS = (availSpace < 0 ? "flex-shrink" : "flex-grow");
 			minOrMax = (availSpace < 0 ? "min-" : "max-");
 			flexGSdir = (availSpace < 0 ? -1 : 1);
-
-			if(availSpace < 0){
-				// TODO: stop flew-shrink acting when a explicit height/width is given
-				// Currently: doesn't do anything with flex-shrink
-				continue;
-			}
 
 			flexTotal = 0;
 			for (j = 0; j < noOfItems; j++) {
@@ -1780,7 +1821,7 @@
 		}
 
 	};
-	Flexbox.models.flexDirection = function (direction/*, properties*/) {
+	Flexbox.models.flexDirection = function (direction) {
 		var values = this.values,
 			container = values.container,
 			itemValues = values.items,
@@ -1790,25 +1831,14 @@
 			revArray = ["row-reverse", "column-reverse"],
 			isColumn = utils.assert(direction, colArray),
 			isReverse = utils.assert(direction, revArray),
-			needsIncrement = (!isColumn || isReverse),
 			crossStart = (isColumn ? "left" : "top"),
 			mainStart = (isColumn ? "top" : "left"),
 			mainSize = Flexbox.dimValues[mainStart],
 			crossSize = Flexbox.dimValues[crossStart],
 			mainStartOffset = 0,
 			storedVal = 0,
-			containerSize;
-
-		var mainTotal = mainStart + "Total";
-
-		var revValues = {
-			"top": "bottom",
-			"left": "right"
-		};
-
-		containerSize = container[mainSize];
-
-		var revStart = revValues[mainStart];
+			mainTotal = mainStart + "Total",
+			containerSize = container[mainSize];
 
 		for (i = 0, j = itemValues.length; i < j; i++) {
 			item = itemValues[i];
@@ -1878,11 +1908,13 @@
 		var crossTotal = crossStart + "Total";
 
 		var currMainStart = 0;
+		var currLineLength = 0;
 		var prevMainStart = 0;
 		var currCrossStart = 0;
 		var prevCrossStart = 0;
 
-		var multiplier = isReverse ? -1 : 1;
+		var multiplier = (isReverse ? -1 : 1);
+		var reverser = (isWrapReverse ? -1 : 1);
 
 		// TODO: Implement `flex-wrap: wrap-reverse;`
 		if (isWrap || isWrapReverse) {
@@ -1895,12 +1927,27 @@
 
 			var revStart = revValues[mainStart];
 
+			if (isWrapReverse) {
+				var maxNoWrapLineSize = 0;
+
+				for (i = 0, j = itemValues.length; i < j; i++) {
+					item = itemValues[i];
+					maxNoWrapLineSize = Math.max(maxNoWrapLineSize, item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal]);
+				}
+
+				var revStartRemainder = containerSize - maxNoWrapLineSize;
+
+				for (i = 0, j = itemValues.length; i < j; i++) {
+					item = itemValues[i];
+					item[crossStart] += revStartRemainder + (maxNoWrapLineSize - (item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal]));
+				}
+			}
+
 			for (i = 0, j = itemValues.length; i < j; i++) {
 				item = itemValues[i];
-				// Note: assumes px
-				itemSize = ((typeof item.debug.properties['flex-basis'] === "undefined" || item.debug.properties["flex-basis"] === "auto") ? item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal] : item.debug.properties['flex-basis'].slice(0,-2) << 0);
+				itemSize = utils.flexBasisToPx(item.debug.properties["flex-basis"], item[mainSize], containerSize) + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
 
-				if (currMainStart + itemSize > breakPoint) {
+				if (currLineLength + itemSize > breakPoint) {
 					lines.push(line);
 
 					line = {
@@ -1925,13 +1972,15 @@
 					}
 
 					currMainStart = 0;
+					currLineLength = 0;
 					currCrossStart = 0;
 				}
 
 				item[mainStart] -= prevMainStart * multiplier;
-				item[crossStart] += prevCrossStart;
+				item[crossStart] += prevCrossStart * reverser;
 
-				currMainStart += itemSize;
+				currMainStart += item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
+				currLineLength += itemSize;
 				currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 
 				if (isColumn) {
@@ -1972,6 +2021,9 @@
 
 		// Expose lines
 		this.lines = lines;
+
+		// Expose reverser
+		this.reverser = reverser;
 	};
 	
 	Flexbox.models.justifyContent = function (justification, properties) {
@@ -2043,7 +2095,7 @@
 		}
 	};
 	
-	Flexbox.models.alignItems = function (alignment, properties) {
+	Flexbox.models.alignItems = function () {
 		var crossStart = this.crossStart,
 			crossSize = this.crossSize,
 			lines = this.lines;
@@ -2060,7 +2112,6 @@
 
 		for (i = 0, j = lines.length; i < j; i++) {
 			line = lines[i];
-			line.maxSize = line.maxSize || (containerSize / j);
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
@@ -2074,10 +2125,10 @@
 		remainderSize /= lines.length;
 
 		// Expose remainderSize
-		this.remainderSize = remainderSize;
+		this.remainderSize = Math.max(0, remainderSize);
 	};
 	
-	Flexbox.models.alignContent = function (alignment, properties) {
+	Flexbox.models.alignContent = function (alignment, properties, model) {
 		var values = this.values,
 			container = values.container,
 
@@ -2089,20 +2140,22 @@
 			isCenter = (alignment === "center"),
 			isBetween = (alignment === "space-between"),
 			isAround = (alignment === "space-around"),
-			isStretch = (alignment === "stretch"),
+
+			isStretch = (properties["align-content"] === "stretch"),
+			timeToStretch = (model === "alignContentStretch"),
 
 			isNotFlexWrap = (properties["flex-wrap"] === "nowrap"),
 			lines = this.lines,
-			i, j, k, l, line, items, item,
+			i, j, k, l, line, item,
 			lineRemainder, currentLineRemainder,
-			multiplier = 1, x, halfLineRemainder;
+			multiplier = 1, halfLineRemainder,
 
-		var alignItems = properties["align-items"];
-		var isAlignItemsStretch = alignItems === "stretch";
-		var crossTotal = crossStart + "Total";
+			crossTotal = crossStart + "Total",
 
-		var lineLength = lines.length;
-		var startIndex = 0;
+			reverser = this.reverser,
+
+			lineLength = lines.length,
+			startIndex = 0;
 
 		// http://www.w3.org/TR/css3-flexbox/#align-content-property
 		//  Note, this property has no effect when the flexbox has only a single line.
@@ -2112,7 +2165,7 @@
 
 		lineRemainder = containerSize;
 
-		if (isStart) {
+		if (isStart || (isStretch && !timeToStretch) || (!isStretch && timeToStretch)) {
 			return;
 		}
 
@@ -2161,7 +2214,7 @@
 
 				for (k = 0, l = line.items.length; k < l; k++) {
 					item = line.items[k];
-					item[crossStart] += halfLineRemainder;
+					item[crossStart] += halfLineRemainder * reverser;
 				}
 
 				lineRemainder += halfLineRemainder;
@@ -2173,7 +2226,7 @@
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
-				item[crossStart] += (lineRemainder * multiplier);
+				item[crossStart] += (lineRemainder * multiplier) * reverser;
 			}
 
 			lineRemainder += currentLineRemainder;
@@ -2199,6 +2252,7 @@
 				order: models.order,
 				flexDirection : models.flexDirection,
 				flexWrap : models.flexWrap,
+				alignContentStretch : models.alignContent,
 				justifyContent : models.justifyContent,
 				alignItems : models.alignItems,
 				alignSelf : models.alignSelf,
@@ -2285,22 +2339,35 @@
 
 							if (!isNaN(val)) {
 								// A single, valid integer is mapped to flex-grow
+								// Equivalent to: "flex: <positive-number> 1 0px"
 								map["flex-grow"] = val;
+								map["flex-basis"] = "0px";
 							} else {
 								switch (val) {
 								case "initial":
+									// Equivalent to: "flex: 0 1 auto"
 									break;
 
 								case "auto":
+									// Assume value is a width value, in which case
+									// flex-grow: 1;
+									// flex-shrink: default;
+									// flex-basis: val;
 									map["flex-grow"] = 1;
+									map["flex-basis"] = val;
 									break;
 
 								case "none":
+									// Equivalent to "flex: 0 0 auto"
 									map["flex-shrink"] = 0;
 									break;
 
 								default:
-									// Assume value is a width value, map to flex-basis
+									// Assume value is a width value, in which case
+									// flex-grow: 1;
+									// flex-shrink: default;
+									// flex-basis: val;
+									map["flex-grow"] = 1;
 									map["flex-basis"] = val;
 									break;
 								}
@@ -2404,7 +2471,7 @@
 
 				for (var key in models) {
 					var prop = utils.toDashedCase(key);
-					models[key].call(this, properties[prop], properties);
+					models[key].call(this, properties[prop], properties, key);
 				}
 
 				// Final positioning

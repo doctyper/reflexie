@@ -1,4 +1,4 @@
-Flexbox.models.alignItems = function (alignment, properties) {
+Flexbox.models.alignItems = function () {
 	var crossStart = this.crossStart,
 		crossSize = this.crossSize,
 		lines = this.lines;
@@ -15,7 +15,6 @@ Flexbox.models.alignItems = function (alignment, properties) {
 
 	for (i = 0, j = lines.length; i < j; i++) {
 		line = lines[i];
-		line.maxSize = line.maxSize || (containerSize / j);
 
 		for (k = 0, l = line.items.length; k < l; k++) {
 			item = line.items[k];
@@ -29,5 +28,5 @@ Flexbox.models.alignItems = function (alignment, properties) {
 	remainderSize /= lines.length;
 
 	// Expose remainderSize
-	this.remainderSize = remainderSize;
+	this.remainderSize = Math.max(0, remainderSize);
 };
