@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-30-2013
+ * Date: 3-31-2013
  */
 (function (window, undefined) {
 
@@ -1850,7 +1850,7 @@
 				item[mainStart] -= prevMainStart * multiplier;
 				item[crossStart] += prevCrossStart * reverser;
 
-				currMainStart += item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal];
+				currMainStart += item[mainSize] + item.debug.inner[mainStart] + item.debug.margin[mainTotal];
 				currLineLength += itemSize;
 				currCrossStart = Math.max(currCrossStart, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
 
