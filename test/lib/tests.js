@@ -192,7 +192,7 @@ define([
 					var child = $("#flex-target").children().get(index);
 					var box = child.getBoundingClientRect();
 					// var range = (isStretch) ? 4 : 2;
-					var range = 4;
+					var range = 3;
 
 					expect(Math.floor(box[prop])).to.be.within(val - range,  val + range);
 				});
