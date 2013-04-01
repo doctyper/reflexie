@@ -19,12 +19,6 @@
 
 /* line 49, ../scss/runner.scss */
 #flex-target {
-  /*  As of August 2012, only supported in Chrome 21+ */
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flex;
-  display: -o-flex;
-  display: flex;
   border: solid gray;
   border-width: 2px 4px 19px 13px;
   margin: 27px 44px 0px 35px;

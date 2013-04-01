@@ -47,9 +47,6 @@
 }
 
 #flex-target {
-	/*  As of August 2012, only supported in Chrome 21+ */
-	@include experimental-value(display, flex);
-
 	@include box-properties(false);
 
 	width: 600px;
