@@ -26,6 +26,7 @@
   width: 600px;
   height: 600px;
   overflow: hidden;
+  vertical-align: top;
 }
 
 /* line 61, ../scss/runner.scss */
