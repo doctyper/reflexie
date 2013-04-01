@@ -134,7 +134,7 @@ define([
 
 		describe(prettifyDescription("#flex-target", desc.parent), function () {
 
-			before(function () {
+			before(function (done) {
 				flex = $("#flex-target");
 				flex.empty();
 
@@ -175,6 +175,13 @@ define([
 
 					items: set
 				});
+
+				if ($.browser.msie) {
+					// Bug in Internet Explorer throws stack overflows unless we throttle each test
+					setTimeout(done, 0);
+				} else {
+					done();
+				}
 			});
 
 			var setupItemTests = function (prop, val, index) {
