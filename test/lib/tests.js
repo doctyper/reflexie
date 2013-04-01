@@ -2,7 +2,8 @@ define([
 	"jquery",
 	"dist/reflexie",
 	"lib/mocha",
-	"lib/expect"
+	"lib/expect",
+	"JSON3"
 ], function ($, Flexie) {
 	"use strict";
 
