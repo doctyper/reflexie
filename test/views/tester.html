@@ -88,7 +88,13 @@
 
 					if (el) {
 						var rect = el.getBoundingClientRect();
-						var keys = Object.keys(rect).sort();
+						var keys = [];
+
+						for (var key in rect) {
+							keys.push(key);
+						}
+
+						keys = keys.sort();
 
 						for (var i = 0, j = keys.length; i < j; i++) {
 							var key = keys[i];
