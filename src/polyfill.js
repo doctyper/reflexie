@@ -27,7 +27,7 @@ Flexie.prototype = {
 		selector = selector.replace(/\:/g, "pseudo-");
 		selector = selector.replace(/\s/g, "-");
 
-		this.uid = "flexie-" + selector;
+		this.uid = "flexie-" + selector + "-" + (++Flexbox.count);
 		return this.uid;
 	},
 
