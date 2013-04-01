@@ -1,7 +1,7 @@
-@charset "UTF-8";
-#mocha {
-  /*font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-  font: 11px/1.35 "Anonymous Pro", Monaco, monospace;
+@charset "utf-8";
+
+body {
+  font: normal 11px/1.35 "Anonymous Pro", Monaco, monospace;
   padding: 60px 50px;
 }
 
@@ -16,15 +16,13 @@
 
 #mocha h1, #mocha h2 {
   margin: 0;
-  font-size: 11px;
   font-weight: normal;
 }
 
 #mocha h1 {
   /*margin-top: 15px;*/
-  /*font-size: 0.6em;*/
+  font-size: 1em;
   /*font-weight: 200;*/
-  white-space: pre;
 }
 
 #mocha h1 a {
@@ -46,38 +44,23 @@
 }
 
 #mocha h2 {
-  /*font-size: 12px;*/
+  font-size: 11px;
   /*font-weight: normal;*/
   cursor: pointer;
 }
 
 #mocha .suite {
-  padding-left: 12px;
-  overflow: hidden;
   margin-left: 15px;
-}
-
-#mocha .suite.pass {
-  padding-left: 0;
-  opacity: 0.35;
-}
-
-#mocha .suite.pass::before {
-  content: '✓';
-  /*font-size: 12px;*/
-  display: block;
-  float: left;
-  margin-right: 5px;
-  color: #00d6b2;
 }
 
 #mocha .test {
   margin-left: 15px;
+  overflow: hidden;
 }
 
 #mocha .test.pending:hover h2::after {
   content: '(pending)';
-  /*font-family: arial;*/
+  font-family: arial;
 }
 
 #mocha .test.pass.medium .duration {
@@ -149,8 +132,10 @@
 }
 
 #mocha .test pre {
-  display: inline-block;
-  /*font: 11px/1.35 "Anonymous Pro", Monaco, monospace;*/
+  display: block;
+  float: left;
+  clear: left;
+  font: 12px/1.5 monaco, monospace;
   margin: 5px;
   padding: 15px;
   border: 1px solid #eee;
@@ -168,7 +153,7 @@
 #mocha .test a.replay {
   position: absolute;
   top: 3px;
-  right: -20px;
+  right: 0;
   text-decoration: none;
   vertical-align: middle;
   display: block;
@@ -183,7 +168,7 @@
   -webkit-transition: opacity 200ms;
   -moz-transition: opacity 200ms;
   transition: opacity 200ms;
-  opacity: 0.2;
+  opacity: 0.3;
   color: #888;
 }
 
@@ -191,22 +176,22 @@
   opacity: 1;
 }
 
-#report.pass .test.fail {
+#mocha-report.pass .test.fail {
   display: none;
 }
 
-#report.fail .test.pass {
+#mocha-report.fail .test.pass {
   display: none;
 }
 
-#error {
+#mocha-error {
   color: #c00;
   /*font-size: 1.5  em;*/
-  /*font-weight: 100;*/
+  font-weight: 100;
   letter-spacing: 1px;
 }
 
-#stats {
+#mocha-stats {
   position: fixed;
   top: 15px;
   right: 10px;
@@ -215,29 +200,34 @@
   color: #888;
 }
 
-#stats .progress {
+#mocha-stats .progress {
   float: right;
   padding-top: 0;
 }
 
-#stats em {
+#mocha-stats em {
   color: black;
 }
 
-#stats a {
+#mocha-stats a {
   text-decoration: none;
   color: inherit;
 }
 
-#stats a:hover {
+#mocha-stats a:hover {
   border-bottom: 1px solid #eee;
 }
 
-#stats li {
+#mocha-stats li {
   display: inline-block;
   margin: 0 5px;
   list-style: none;
   padding-top: 11px;
+}
+
+#mocha-stats canvas {
+  width: 40px;
+  height: 40px;
 }
 
 code .comment { color: #ddd }
@@ -245,3 +235,13 @@ code .init { color: #2F6FAD }
 code .string { color: #5890AD }
 code .keyword { color: #8A6343 }
 code .number { color: #2F6FAD }
+
+@media screen and (max-device-width: 480px) {
+  body {
+    padding: 60px 0px;
+  }
+
+  #stats {
+    position: absolute;
+  }
+}
