@@ -90,11 +90,13 @@ define([
 	};
 
 	var prettifyDescription = function (selector, rules) {
-		var string = JSON.stringify(rules);
-		string = string.replace(/^\{/, selector + " { ").replace(/\}$/, "; }");
-		string = string.replace(/\"/g, "");
-		string = string.replace(/\:/g, ": ");
-		string = string.replace(/\,/g, "; ");
+		var string = selector + " { ";
+
+		for (var key in rules) {
+			string += key + ": " + rules[key] + "; ";
+		}
+
+		string += "}";
 
 		return string;
 	};
