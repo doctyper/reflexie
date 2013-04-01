@@ -29,6 +29,25 @@
 	}
 }
 
+// On complete
+@include keyframes(complete) {
+	from {
+		background: #fff;
+	}
+
+	50% {
+		background: rgba(#0f0, 0.5);
+	}
+
+	to {
+		background: #fff;
+	}
+}
+
+.complete {
+	@include animation(complete 0.5s linear);
+}
+
 #flex-container, #flex-container * {
 	margin: 0;
 	padding: 0;
