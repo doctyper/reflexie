@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-31-2013
+ * Date: 4-1-2013
  */
 (function (window, undefined) {
 
@@ -817,10 +817,14 @@
 	}
 	
 
-	var Flexie;
-
-	var Flexbox = {};
-	Flexbox.models = {};
+	var Flexbox = {
+		count: 0,
+		models: {},
+		dimValues: {
+			"left": "width",
+			"top": "height"
+		}
+	};
 	
 	Flexbox.utils = {
 		assert : function (prop, values) {
@@ -1135,6 +1139,7 @@
 			if (!existing) {
 				style.id = id;
 				style.type = "text/css";
+				style.setAttribute("data-flexie", "true");
 			}
 
 			if (style.styleSheet) {
@@ -1828,7 +1833,7 @@
 				line.items[j][mainSize] = flexBasis[j] + curr;
 				line.items[j][mainStart] += (isReverse ?  -runningDiff - line.items[j][mainSize] + sizeStore : runningDiff);
 				// For Debug uncomment next line
-				console.log("Col " + (j + 1) + "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize, " by ", curr);
+				// console.log("Col " + (j + 1) + "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize, " by ", curr);
 				runningDiff += line.items[j][mainSize] - sizeStore;
 			}
 		}
@@ -1921,11 +1926,21 @@
 		var mainTotal = mainStart + "Total";
 		var crossTotal = crossStart + "Total";
 
-		var currMainStart = 0;
-		var currLineLength = 0;
-		var prevMainStart = 0;
-		var currCrossStart = 0;
-		var prevCrossStart = 0;
+		// Weird IE9 scope(???) issue here
+		// IE9 loses variable scope following the iterators below
+		// Attaching vars to the current prototype seems to resolve the issue
+		// ...SO WEIRD.
+		this.currMainStart = 0;
+		this.currLineLength = 0;
+		this.prevMainStart = 0;
+		this.currCrossStart = 0;
+		this.prevCrossStart = 0;
+
+		var currMainStart = this.currMainStart;
+		var currLineLength = this.currLineLength;
+		var prevMainStart = this.prevMainStart;
+		var currCrossStart = this.currCrossStart;
+		var prevCrossStart = this.prevCrossStart;
 
 		var multiplier = (isReverse ? -1 : 1);
 		var reverser = (isWrapReverse ? -1 : 1);
@@ -2032,6 +2047,13 @@
 				}
 			}
 		}
+
+		// Remove exposed vars, they're polluting the object.
+		delete this.currMainStart;
+		delete this.currLineLength;
+		delete this.prevMainStart;
+		delete this.currCrossStart;
+		delete this.prevCrossStart;
 
 		// Expose lines
 		this.lines = lines;
@@ -2248,290 +2270,257 @@
 		}
 	};
 	
-	Flexbox.container = (function () {
-		var utils = Flexbox.utils;
-		var models = Flexbox.models;
-
-		Flexbox.dimValues = {
-			"left": "width",
-			"top": "height"
-		};
-
-		var container = function (settings) {
-			this.settings = settings;
-			return this.render(settings);
-		};
-
-		container.prototype = {
-			models : {
-				order: models.order,
-				flexDirection : models.flexDirection,
-				flexWrap : models.flexWrap,
-				flexGrow : models.flexGrow,
-				alignContentStretch : models.alignContent,
-				justifyContent : models.justifyContent,
-				alignItems : models.alignItems,
-				alignSelf : models.alignSelf,
-				alignContent : models.alignContent
-			},
-
-			generateUID : function (container) {
-				if (this.uid) {
-					return this.uid;
-				}
-
-				var selector = container.selector;
-				selector = selector.replace(/\#/g, "id-");
-				selector = selector.replace(/\./g, "class-");
-				selector = selector.replace(/\:/g, "pseudo-");
-				selector = selector.replace(/\s/g, "-");
-
-				this.uid = "flexie-" + selector;
-				return this.uid;
-			},
-
-			expandFlexFlow : function (properties) {
-				var map = {
-					"display": "flex",
-					"flex-direction": "row",
-					"flex-wrap": "nowrap",
-					"justify-content": "flex-start",
-					"align-items": "stretch",
-					"align-content": "stretch"
-				};
-
-				var i, j;
-
-				for (var key in properties) {
-					var value = properties[key];
-
-					if (key === "flex-flow") {
-						value = value.split(" ");
-
-						for (i = 0, j = value.length; i < j; i++) {
-							var val = value[i];
-
-							if (/row|column/.test(val)) {
-								map["flex-direction"] = val;
-							} else {
-								map["flex-wrap"] = val;
-							}
-						}
-					} else {
-						map[key] = value;
-					}
-				}
-
-				return map;
-			},
-
-			expandFlex : function (properties) {
-				var map = {
-					"align-self": "auto",
-					"order": 0,
-					"flex-grow": 0,
-					"flex-shrink": 1,
-					"flex-basis": "auto"
-				};
-
-				for (var key in properties) {
-					var value = properties[key];
-					var val, i, j;
-
-					if (key === "flex") {
-						value = value.split(" ");
-
-						switch (value.length) {
-						case 1:
-							// Can be either of:
-							// flex: initial;
-							// flex: auto;
-							// flex: none;
-							// flex: <positive number>;
-							// flex: <width-value>;
-
-							val = value[0];
-
-							if (!isNaN(val)) {
-								// A single, valid integer is mapped to flex-grow
-								// Equivalent to: "flex: <positive-number> 1 0px"
-								map["flex-grow"] = val;
-								map["flex-basis"] = "0px";
-							} else {
-								switch (val) {
-								case "initial":
-									// Equivalent to: "flex: 0 1 auto"
-									break;
-
-								case "auto":
-									// Assume value is a width value, in which case
-									// flex-grow: 1;
-									// flex-shrink: default;
-									// flex-basis: val;
-									map["flex-grow"] = 1;
-									map["flex-basis"] = val;
-									break;
-
-								case "none":
-									// Equivalent to "flex: 0 0 auto"
-									map["flex-shrink"] = 0;
-									break;
-
-								default:
-									// Assume value is a width value, in which case
-									// flex-grow: 1;
-									// flex-shrink: default;
-									// flex-basis: val;
-									map["flex-grow"] = 1;
-									map["flex-basis"] = val;
-									break;
-								}
-							}
-							break;
-						case 2:
-							// Can be either of:
-							// flex: <flex-grow> <flex-basis>;
-							// flex: <flex-basis> <flex-grow>;
-							// flex: <flex-grow> <flex-shrink>;
-
-							var hasNoBasis = !isNaN(value[0]) && !isNaN(value[1]);
-
-							// If both are valid numbers, map to flex-grow and flex-shrink
-							if (hasNoBasis) {
-								map["flex-grow"] = value[0];
-								map["flex-shrink"] = value[1];
-							} else {
-								// Map valid number to flex-grow, width value to flex-basis
-								for (i = 0, j = value.length; i < j; i++) {
-									val = value[i];
-
-									if (!isNaN(val)) {
-										map["flex-grow"] = val;
-									} else {
-										map["flex-basis"] = val;
-									}
-								}
-							}
-							break;
-						case 3:
-							var grown, shrunk, based;
-
-							for (i = 0, j = value.length; i < j; i++) {
-								val = value[i];
-
-								if (!isNaN(val)) {
-									if (!grown) {
-										map["flex-grow"] = val;
-										grown = true;
-									} else if (!shrunk) {
-										map["flex-shrink"] = val;
-										shrunk = true;
-									}
-								} else {
-									if (!based) {
-										map["flex-basis"] = val;
-										based = true;
-									}
-								}
-							}
-							break;
-						}
-					} else {
-						map[key] = value;
-					}
-				}
-
-				return map;
-			},
-
-			render : function (settings) {
-				this.uid = this.generateUID(settings.container);
-
-				// Clean DOM, remove pre-existing styles
-				utils.removeStyles(this.uid);
-
-				this.container = settings.container;
-				this.items = settings.items;
-
-				// Expand flex property to individual rules
-				var i, j, item;
-
-				for (i = 0, j = this.items.length; i < j; i++) {
-					item = this.items[i];
-					item.properties = this.expandFlex(item.properties);
-				}
-
-				this.dom = this.dom || {};
-				this.dom.values = utils.storePositionValues(this.container, this.items);
-				this.values = utils.clonePositionValues(this.dom.values, this.items);
-
-				// Handle `flex-flow` shorthand property
-				var properties = this.expandFlexFlow(this.container.properties);
-				var models = this.models;
-
-				// So the way this works:
-				//
-				// All properties get a chance to override each other, in this order:
-				// - order
-				// - flex-direction
-				// - flex-wrap
-				// - justify-content
-				// - align-content
-				// - align-items
-				//
-				// `this.items` is modified (if needed) by each property method,
-				// adjusting for positioning (if necessary).
-				//
-				// The result is then written to the DOM using only one write cycle.
-
-				for (var key in models) {
-					var prop = utils.toDashedCase(key);
-					models[key].call(this, properties[prop], properties, key);
-				}
-
-				// Final positioning
-				Flexbox.utils.applyPositioning(this.uid, this.container, this.items, this.values);
-
-				// Emit complete
-				Flexie.event.trigger("complete", {
-					uid: this.uid,
-					container: this.container,
-					items: this.items
-				});
-			}
-		};
-
-		return container;
-
-	}());
-	
-	Flexbox.items = (function () {
-		var Items = function (properties) {
-			this.properties = properties;
-			return this.render(properties);
-		};
-
-		Items.prototype = {
-			render : function () {
-
-			}
-		};
-
-		return Items;
-	}());
-	
-	Flexie = function (settings) {
+	var Flexie = function (settings) {
 		this.settings = settings;
 		return this.box(settings);
 	};
 
 	Flexie.prototype = {
+		models : {
+			order: Flexbox.models.order,
+			flexDirection : Flexbox.models.flexDirection,
+			flexWrap : Flexbox.models.flexWrap,
+			flexGrow : Flexbox.models.flexGrow,
+			alignContentStretch : Flexbox.models.alignContent,
+			justifyContent : Flexbox.models.justifyContent,
+			alignItems : Flexbox.models.alignItems,
+			alignSelf : Flexbox.models.alignSelf,
+			alignContent : Flexbox.models.alignContent
+		},
+
+		generateUID : function (container) {
+			if (this.uid) {
+				return this.uid;
+			}
+
+			var selector = container.selector;
+			selector = selector.replace(/\#/g, "id-");
+			selector = selector.replace(/\./g, "class-");
+			selector = selector.replace(/\:/g, "pseudo-");
+			selector = selector.replace(/\s/g, "-");
+
+			this.uid = "flexie-" + selector + "-" + (++Flexbox.count);
+			return this.uid;
+		},
+
+		expandFlexFlow : function (properties) {
+			var map = {
+				"display": "flex",
+				"flex-direction": "row",
+				"flex-wrap": "nowrap",
+				"justify-content": "flex-start",
+				"align-items": "stretch",
+				"align-content": "stretch"
+			};
+
+			var i, j;
+
+			for (var key in properties) {
+				var value = properties[key];
+
+				if (key === "flex-flow") {
+					value = value.split(" ");
+
+					for (i = 0, j = value.length; i < j; i++) {
+						var val = value[i];
+
+						if (/row|column/.test(val)) {
+							map["flex-direction"] = val;
+						} else {
+							map["flex-wrap"] = val;
+						}
+					}
+				} else {
+					map[key] = value;
+				}
+			}
+
+			return map;
+		},
+
+		expandFlex : function (properties) {
+			var map = {
+				"align-self": "auto",
+				"order": 0,
+				"flex-grow": 0,
+				"flex-shrink": 1,
+				"flex-basis": "auto"
+			};
+
+			for (var key in properties) {
+				var value = properties[key];
+				var val, i, j;
+
+				if (key === "flex") {
+					value = value.split(" ");
+
+					switch (value.length) {
+					case 1:
+						// Can be either of:
+						// flex: initial;
+						// flex: auto;
+						// flex: none;
+						// flex: <positive number>;
+						// flex: <width-value>;
+
+						val = value[0];
+
+						if (!isNaN(val)) {
+							// A single, valid integer is mapped to flex-grow
+							// Equivalent to: "flex: <positive-number> 1 0px"
+							map["flex-grow"] = val;
+							map["flex-basis"] = "0px";
+						} else {
+							switch (val) {
+							case "initial":
+								// Equivalent to: "flex: 0 1 auto"
+								break;
+
+							case "auto":
+								// Assume value is a width value, in which case
+								// flex-grow: 1;
+								// flex-shrink: default;
+								// flex-basis: val;
+								map["flex-grow"] = 1;
+								map["flex-basis"] = val;
+								break;
+
+							case "none":
+								// Equivalent to "flex: 0 0 auto"
+								map["flex-shrink"] = 0;
+								break;
+
+							default:
+								// Assume value is a width value, in which case
+								// flex-grow: 1;
+								// flex-shrink: default;
+								// flex-basis: val;
+								map["flex-grow"] = 1;
+								map["flex-basis"] = val;
+								break;
+							}
+						}
+						break;
+					case 2:
+						// Can be either of:
+						// flex: <flex-grow> <flex-basis>;
+						// flex: <flex-basis> <flex-grow>;
+						// flex: <flex-grow> <flex-shrink>;
+
+						var hasNoBasis = !isNaN(value[0]) && !isNaN(value[1]);
+
+						// If both are valid numbers, map to flex-grow and flex-shrink
+						if (hasNoBasis) {
+							map["flex-grow"] = value[0];
+							map["flex-shrink"] = value[1];
+						} else {
+							// Map valid number to flex-grow, width value to flex-basis
+							for (i = 0, j = value.length; i < j; i++) {
+								val = value[i];
+
+								if (!isNaN(val)) {
+									map["flex-grow"] = val;
+								} else {
+									map["flex-basis"] = val;
+								}
+							}
+						}
+						break;
+					case 3:
+						var grown, shrunk, based;
+
+						for (i = 0, j = value.length; i < j; i++) {
+							val = value[i];
+
+							if (!isNaN(val)) {
+								if (!grown) {
+									map["flex-grow"] = val;
+									grown = true;
+								} else if (!shrunk) {
+									map["flex-shrink"] = val;
+									shrunk = true;
+								}
+							} else {
+								if (!based) {
+									map["flex-basis"] = val;
+									based = true;
+								}
+							}
+						}
+						break;
+					}
+				} else {
+					map[key] = value;
+				}
+			}
+
+			return map;
+		},
+
+		render : function (settings) {
+			var utils = Flexbox.utils;
+
+			this.uid = this.generateUID(settings.container);
+
+			// Clean DOM, remove pre-existing styles
+			utils.removeStyles(this.uid);
+
+			this.container = settings.container;
+			this.items = settings.items;
+
+			// Expand flex property to individual rules
+			var i, j, item;
+
+			for (i = 0, j = this.items.length; i < j; i++) {
+				item = this.items[i];
+				item.properties = this.expandFlex(item.properties);
+			}
+
+			this.dom = this.dom || {};
+			this.dom.values = utils.storePositionValues(this.container, this.items);
+			this.values = utils.clonePositionValues(this.dom.values, this.items);
+
+			// Handle `flex-flow` shorthand property
+			var properties = this.expandFlexFlow(this.container.properties);
+			var models = this.models;
+
+			// So the way this works:
+			//
+			// All properties get a chance to override each other, in this order:
+			// - order
+			// - flex-direction
+			// - flex-wrap
+			// - justify-content
+			// - align-content
+			// - align-items
+			//
+			// `this.items` is modified (if needed) by each property method,
+			// adjusting for positioning (if necessary).
+			//
+			// The result is then written to the DOM using only one write cycle.
+
+			for (var key in models) {
+				var prop = utils.toDashedCase(key);
+				models[key].call(this, properties[prop], properties, key);
+			}
+
+			// Final positioning
+			utils.applyPositioning(this.uid, this.container, this.items, this.values);
+
+			// Emit complete
+			Flexie.event.trigger("complete", {
+				uid: this.uid,
+				container: this.container,
+				items: this.items
+			});
+		},
+
 		box : function (settings) {
 			if (Flexie.support === true) {
 				return true;
 			}
 
-			return new Flexbox.container(settings);
+			return this.render(settings);
 		}
 	};
 	
