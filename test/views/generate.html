@@ -10,10 +10,24 @@
 			<div id="flex-target"></div>
 		</div>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="lib/require.js"></script>
+		<script>
+			require.config({
+				paths: {
+					"jquery": "http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min",
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io"
+				},
+				urlArgs : "cacheBust=" + (new Date()).getTime()
+			});
+		</script>
 
 		<script>
-			document.addEventListener("DOMContentLoaded", function () {
+			require([
+				"jquery",
+				"socket.io",
+				"lib/tests",
+				"lib/text"
+			], function ($, io, tests, text) {
 				if (!$.browser.chrome) {
 					console.error("Only Chrome 21 supports Flexbox.");
 					return;
@@ -111,7 +125,7 @@
 					// Append children based on incoming property
 					for (var i = 0, j = count; i < j; i++) {
 						var idx = (i + 1);
-						flex.append('<div id="flex-col-' + idx + '">Col ' + idx + '</div>');
+						flex.append('<div id="flex-col-' + idx + '">' + text[i] + '</div>');
 					}
 
 					// Fresh reference to children
@@ -167,20 +181,18 @@
 						document.title = data;
 					});
 				});
+
+
+				var socket = io.connect("http://0.0.0.0:9999");
+
+				var onSocket = function (data) {
+					socket.disconnect();
+					window.location.reload();
+				};
+
+				socket.on("csschange", onSocket);
+				socket.on("testchange", onSocket);
 			});
-		</script>
-
-		<script src="http://0.0.0.0:9999/socket.io/socket.io.js"></script>
-		<script>
-			var socket = io.connect("http://0.0.0.0:9999");
-
-			var onSocket = function (data) {
-				socket.disconnect();
-				window.location.reload();
-			};
-
-			socket.on("csschange", onSocket);
-			socket.on("testchange", onSocket);
 		</script>
 	</body>
 </html>

@@ -1,9 +1,10 @@
 define([
 	"jquery",
 	"dist/reflexie",
+	"lib/text",
 	"lib/mocha",
 	"lib/expect"
-], function ($, Flexie) {
+], function ($, Flexie, text) {
 	"use strict";
 
 	var DEBUG = true;
@@ -48,7 +49,7 @@ define([
 		for (i = 0, j = children; i < j; i++) {
 			idx = (i + 1);
 			selector = "flex-col-" + idx;
-			element = $('<div id="' + selector + '">Col ' + idx + '</div>');
+			element = $('<div id="' + selector + '">' + text[i] + '</div>');
 
 			set.push({
 				selector: "#" + selector,

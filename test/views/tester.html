@@ -69,8 +69,9 @@
 		<script>
 			require([
 				"dist/reflexie",
-				"socket.io"
-			], function (Flexie, io) {
+				"socket.io",
+				"lib/text"
+			], function (Flexie, io, text) {
 				var socket = io.connect("http://0.0.0.0:9999");
 
 				socket.on("errorchange", function (data) {
@@ -155,7 +156,7 @@
 
 						var element = document.createElement("div");
 						element.setAttribute("id", "flex-col-" + index);
-						element.innerHTML = "<h1>Col " + index + "</h1>";
+						element.innerHTML = text[i];
 
 						target.appendChild(element);
 

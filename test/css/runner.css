@@ -34,6 +34,10 @@
   overflow: hidden;
 }
 
+#flex-target div {
+  overflow: hidden;
+}
+
 /* line 61, ../scss/runner.scss */
 #flex-target div.width {
   width: auto;
