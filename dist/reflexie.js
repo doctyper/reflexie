@@ -990,6 +990,60 @@
 			return this.getValues(element, "padding");
 		},
 
+		getMin : function (element, dimension) {
+			var scrollMap = {
+				width: "scrollLeft",
+				height: "scrollTop"
+			};
+
+			var style = element.style;
+			var minDimension = 0;
+			var scrollType = scrollMap[dimension];
+
+			var oDimension = style[dimension] || "";
+			var oOverflow = style.overflow || "";
+
+			style[dimension] = minDimension;
+			style.overflow = "auto";
+
+			element[scrollType] = 1;
+
+			// First, increment in blocks of 10px
+			// This cuts down on write cycles
+			// until we get into the ballpark
+			while (element[scrollType]) {
+				minDimension += 10;
+				style[dimension] = minDimension + "px";
+			}
+
+			// We're in the ballpark. Reset by 10
+			minDimension -= 10;
+			style[dimension] = minDimension + "px";
+
+			// Reset scrollType
+			element[scrollType] = 1;
+
+			// Increment by one until we get the exact dimension
+			while (element[scrollType]) {
+				minDimension += 1;
+				style[dimension] = minDimension + "px";
+			}
+
+			var box = element.getBoundingClientRect();
+			// var altDimension = element.offsetHeight;
+			// console.log(altDimension);
+
+			// Reset dimension & overflow
+			style[dimension] = oDimension;
+			style.overflow = oOverflow;
+
+			// Return minDimension
+			return {
+				width: box.width,
+				height: box.height
+			};
+		},
+
 		getPristineBox : function (element, position) {
 			position = position || "absolute";
 
@@ -1761,7 +1815,7 @@
 				} else {
 					// flex-shrink (based on size*flex-shrink"
 					if (isNaN(line.items[j].debug.properties["flex-shrink"])) {
-						line.items[j].debug.properties["flex-shrink"] = 1;
+						line.items[j].debug.properties["flex-shrink"] = "1";
 					}
 					weights[j] = flexBasis[j] * line.items[j].debug.properties["flex-shrink"];
 				}
@@ -2116,8 +2170,7 @@
 
 		// Figure out remainders & max item sizes
 		var values = this.values;
-		var mainSize = this.mainSize;
-		var containerSize = values.container[mainSize];
+		var containerSize = values.container[crossSize];
 
 		var crossTotal = crossStart + "Total";
 		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
@@ -2130,7 +2183,7 @@
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
-				line.maxItemSize = Math.max(line.maxItemSize || 0, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
+				line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal]);
 			}
 
 			remainderSize -= line.maxItemSize;
@@ -2248,6 +2301,56 @@
 		}
 	};
 	
+	Flexbox.models.autoSize = function (size, properties, model) {
+		var values = this.values,
+			container = values.container,
+			itemValues = values.items,
+			i, j, item,
+			crossStart = this.crossStart,
+			mainStart = this.mainStart,
+			mainSize = this.mainSize,
+			crossSize = this.crossSize,
+			containerSize = container[mainSize],
+			isNotFlexWrap = properties["flex-wrap"] === "nowrap";
+
+		if (isNotFlexWrap) {
+			var totalMainSize = 0,
+				currMainDiff = 0,
+				mainDiff, element, min, padding, border;
+
+			for (i = 0, j = itemValues.length; i < j; i++) {
+				item = itemValues[i];
+				mainDiff = 0;
+
+				if (!item.debug.auto[mainSize]) {
+					continue;
+				}
+
+				element = this.items[i].element;
+
+				min = Flexbox.utils.getMin(element, mainSize);
+				padding = item.debug.padding;
+				border = item.debug.border;
+
+				var currMainSize = item[mainSize];
+
+				var minMainSize = min[mainSize] - (padding.left + padding.right) - (border.left + border.right);
+				var minCrossSize = min[crossSize] - (padding.top + padding.bottom) - (border.top + border.bottom);
+
+				item[mainSize] = minMainSize;
+				item[crossSize] = minCrossSize;
+
+				if (itemValues[i + 1]) {
+					mainDiff = currMainDiff + currMainSize - minMainSize;
+					itemValues[i + 1][mainStart] -= mainDiff;
+				}
+
+				currMainDiff += mainDiff;
+				totalMainSize += minMainSize;
+			}
+		}
+	};
+	
 	Flexbox.container = (function () {
 		var utils = Flexbox.utils;
 		var models = Flexbox.models;
@@ -2266,6 +2369,7 @@
 			models : {
 				order: models.order,
 				flexDirection : models.flexDirection,
+				// autoSize : models.autoSize,
 				flexWrap : models.flexWrap,
 				flexGrow : models.flexGrow,
 				alignContentStretch : models.alignContent,
@@ -2328,9 +2432,9 @@
 			expandFlex : function (properties) {
 				var map = {
 					"align-self": "auto",
-					"order": 0,
-					"flex-grow": 0,
-					"flex-shrink": 1,
+					"order": "0",
+					"flex-grow": "0",
+					"flex-shrink": "1",
 					"flex-basis": "auto"
 				};
 
@@ -2368,13 +2472,13 @@
 									// flex-grow: 1;
 									// flex-shrink: default;
 									// flex-basis: val;
-									map["flex-grow"] = 1;
+									map["flex-grow"] = "1";
 									map["flex-basis"] = val;
 									break;
 
 								case "none":
 									// Equivalent to "flex: 0 0 auto"
-									map["flex-shrink"] = 0;
+									map["flex-shrink"] = "0";
 									break;
 
 								default:
@@ -2382,7 +2486,7 @@
 									// flex-grow: 1;
 									// flex-shrink: default;
 									// flex-basis: val;
-									map["flex-grow"] = 1;
+									map["flex-grow"] = "1";
 									map["flex-basis"] = val;
 									break;
 								}
