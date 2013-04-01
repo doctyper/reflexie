@@ -135,6 +135,8 @@ define([
 		describe(prettifyDescription("#flex-target", desc.parent), function () {
 
 			before(function (done) {
+				$("style[data-flexie]").remove();
+
 				flex = $("#flex-target");
 				flex.empty();
 

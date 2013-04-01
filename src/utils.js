@@ -311,6 +311,7 @@ Flexbox.utils = {
 		if (!existing) {
 			style.id = id;
 			style.type = "text/css";
+			style.setAttribute("data-flexie", "true");
 		}
 
 		if (style.styleSheet) {
