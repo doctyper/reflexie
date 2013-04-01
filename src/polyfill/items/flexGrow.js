@@ -125,7 +125,7 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 			line.items[j][mainSize] = flexBasis[j] + curr;
 			line.items[j][mainStart] += (isReverse ?  -runningDiff - line.items[j][mainSize] + sizeStore : runningDiff);
 			// For Debug uncomment next line
-			console.log("Col " + (j + 1) + "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize, " by ", curr);
+			// console.log("Col " + (j + 1) + "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize, " by ", curr);
 			runningDiff += line.items[j][mainSize] - sizeStore;
 		}
 	}
