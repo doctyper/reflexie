@@ -97,11 +97,12 @@
 								console.error(suite.title);
 								// throw new Error();
 							} else {
-								var parentSuite = $("#report .suite .suite .suite");
-								parentSuite.find(".suite").remove();
+								var parentSuite = $("#mocha-report > .suite").filter(function (i, suite) {
+									return !($(suite).find(".fail").length);
+								});
 
-								if (parentSuite.length > 6) {
-									parentSuite.remove();
+								if (parentSuite.length > 1) {
+									parentSuite.first().remove();
 								}
 							}
 						});
