@@ -35,11 +35,21 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 	var mainTotal = mainStart + "Total";
 	var crossTotal = crossStart + "Total";
 
-	var currMainStart = 0;
-	var currLineLength = 0;
-	var prevMainStart = 0;
-	var currCrossStart = 0;
-	var prevCrossStart = 0;
+	// Weird IE9 scope(???) issue here
+	// IE9 loses variable scope following the iterators below
+	// Attaching vars to the current prototype seems to resolve the issue
+	// ...SO WEIRD.
+	this.currMainStart = 0;
+	this.currLineLength = 0;
+	this.prevMainStart = 0;
+	this.currCrossStart = 0;
+	this.prevCrossStart = 0;
+
+	var currMainStart = this.currMainStart;
+	var currLineLength = this.currLineLength;
+	var prevMainStart = this.prevMainStart;
+	var currCrossStart = this.currCrossStart;
+	var prevCrossStart = this.prevCrossStart;
 
 	var multiplier = (isReverse ? -1 : 1);
 	var reverser = (isWrapReverse ? -1 : 1);
@@ -146,6 +156,13 @@ Flexbox.models.flexWrap = function (wrap, properties) {
 			}
 		}
 	}
+
+	// Remove exposed vars, they're polluting the object.
+	delete this.currMainStart;
+	delete this.currLineLength;
+	delete this.prevMainStart;
+	delete this.currCrossStart;
+	delete this.prevCrossStart;
 
 	// Expose lines
 	this.lines = lines;

@@ -91,11 +91,13 @@ define([
 	};
 
 	var prettifyDescription = function (selector, rules) {
-		var string = JSON.stringify(rules);
-		string = string.replace(/^\{/, selector + " { ").replace(/\}$/, "; }");
-		string = string.replace(/\"/g, "");
-		string = string.replace(/\:/g, ": ");
-		string = string.replace(/\,/g, "; ");
+		var string = selector + " { ";
+
+		for (var key in rules) {
+			string += key + ": " + rules[key] + "; ";
+		}
+
+		string += "}";
 
 		return string;
 	};
@@ -132,7 +134,9 @@ define([
 
 		describe(prettifyDescription("#flex-target", desc.parent), function () {
 
-			before(function () {
+			before(function (done) {
+				$("style[data-flexie]").remove();
+
 				flex = $("#flex-target");
 				flex.empty();
 
@@ -173,6 +177,13 @@ define([
 
 					items: set
 				});
+
+				if ($.browser.msie) {
+					// Bug in Internet Explorer throws stack overflows unless we throttle each test
+					setTimeout(done, 0);
+				} else {
+					done();
+				}
 			});
 
 			var setupItemTests = function (prop, val, index) {
@@ -181,7 +192,7 @@ define([
 					var child = $("#flex-target").children().get(index);
 					var box = child.getBoundingClientRect();
 					// var range = (isStretch) ? 4 : 2;
-					var range = 4;
+					var range = 3;
 
 					expect(Math.floor(box[prop])).to.be.within(val - range,  val + range);
 				});

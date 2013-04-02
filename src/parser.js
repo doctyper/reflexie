@@ -28,7 +28,8 @@ Flexbox.parser = {
 
 	onStylesLoaded : function (stylesheets) {
 		var parser = new CSSParser(),
-			i, j, sheet, relationships, flex;
+			support = Flexie.support,
+			i, j, sheet, relation, relationships, flex;
 
 		for (i = 0, j = stylesheets.length; i < j; i++) {
 			sheet = stylesheets[i];
@@ -45,8 +46,121 @@ Flexbox.parser = {
 
 		// All done. Pass the new relationships to Flexie
 		for (i = 0, j = relationships.length; i < j; i++) {
-			flex = new Flexie(relationships[i]);
+			relation = relationships[i];
+
+			if (support === true) {
+				flex = new Flexie(relation);
+			} else if (support === "partial") {
+				this.mapPartialSupportRules(relation);
+			}
 		}
+	},
+
+	getPrefix : function () {
+		if (this.prefix) {
+			return this.prefix;
+		}
+
+		var dummy = document.createElement("flx"),
+			prefixes = ["", "ms", "webkit", "moz", "o"],
+			testProp = "FlexOrder",
+			i, j, prefix, prop;
+
+		for (i = 0, j = prefixes.length; i < j; i++) {
+			prefix = prefixes[i];
+			prop = prefix + testProp;
+
+			if (typeof dummy.style[prop] !== "undefined") {
+				prefix = prefix ? ("-" + prefix + "-") : prefix;
+				break;
+			}
+		}
+
+		this.prefix = prefix;
+		return prefix;
+	},
+
+	mapPartialSupportRules : function (relation) {
+		var prefix = this.getPrefix();
+
+		var container = relation.container.properties,
+			items = relation.items,
+			i, j, parts, part, item, flex,
+			partialProperties, partialValues,
+			prop, val;
+
+		if (container.display) {
+			// IE10 undersands display: flexbox; or display: inline-flexbox;
+			container.display = prefix + container.display + "box";
+		}
+
+		// IE10: No support for flex-flow?
+		if (container["flex-flow"]) {
+			parts = container["flex-flow"].split(" ");
+
+			for (i = 0, j = parts.length; i < j; i++) {
+				part = parts[i];
+
+				if ((/row|column/).test(part)) {
+					container["flex-direction"] = part;
+				} else {
+					if (part === "nowrap") {
+						part = "none";
+					}
+
+					container["flex-wrap"] = part;
+				}
+			}
+
+			delete container["flex-flow"];
+		}
+
+		partialProperties = {
+			"flex-direction": "flex-direction",
+			"flex-wrap": "flex-wrap",
+			"justify-content": "flex-pack",
+			"align-items": "flex-align",
+			"align-content": "flex-line-pack"
+		};
+
+		partialValues = {
+			"flex-start": "start",
+			"flex-end": "end",
+			"space-between": "justify",
+			"space-around": "distribute"
+		};
+
+		for (prop in partialProperties) {
+			if (typeof container[prop] !== "undefined") {
+				container[prefix + partialProperties[prop]] = partialValues[container[prop]] || container[prop];
+				delete container[prop];
+			}
+		}
+
+		partialProperties = {
+			"align-self": "flex-item-align",
+			"order": "flex-order",
+			"flex-grow": "flex-positive",
+			"flex-shrink": "flex-negative",
+			"flex-basis": "flex-preferred-size",
+			"flex": "flex"
+		};
+
+		for (i = 0, j = items.length; i < j; i++) {
+			item = items[i].properties;
+
+			for (prop in partialProperties) {
+				if (typeof item[prop] !== "undefined") {
+					item[prefix + partialProperties[prop]] = partialValues[item[prop]] || item[prop];
+					delete item[prop];
+				}
+			}
+		}
+
+		// Flag as partial support
+		relation.partial = true;
+
+		flex = new Flexie(relation);
 	},
 
 	validateRules : function (valid, rules) {

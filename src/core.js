@@ -1,5 +1,9 @@
 
-var Flexie;
-
-var Flexbox = {};
-Flexbox.models = {};
+var Flexbox = {
+	count: 0,
+	models: {},
+	dimValues: {
+		"left": "width",
+		"top": "height"
+	}
+};

@@ -137,6 +137,10 @@
 					// Apply styles
 					flex.css(parent);
 
+					if (parent.display) {
+						flex.css("display", "-webkit-" + parent.display);
+					}
+
 					// Apply children styles
 					for (var i = 0, j = children.length; i < j; i++) {
 						var item = JSON.parse(JSON.stringify(items[i])),

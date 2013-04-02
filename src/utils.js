@@ -365,6 +365,7 @@ Flexbox.utils = {
 		if (!existing) {
 			style.id = id;
 			style.type = "text/css";
+			style.setAttribute("data-flexie", "true");
 		}
 
 		if (style.styleSheet) {
@@ -374,6 +375,17 @@ Flexbox.utils = {
 		}
 
 		head.appendChild(style);
+	},
+
+	applyPartialValues : function (id, container, items) {
+		var i, j, item;
+
+		this.applyStyles(id, container.selector, container.properties);
+
+		for (i = 0, j = items.length; i < j; i++) {
+			item = items[i];
+			this.applyStyles(id, item.selector, item.properties);
+		}
 	},
 
 	flexBasisToPx : function (flexBasis, currLength, containerSize) {

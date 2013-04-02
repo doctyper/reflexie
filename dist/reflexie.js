@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 3-31-2013
+ * Date: 4-1-2013
  */
 (function (window, undefined) {
 
@@ -817,10 +817,14 @@
 	}
 	
 
-	var Flexie;
-
-	var Flexbox = {};
-	Flexbox.models = {};
+	var Flexbox = {
+		count: 0,
+		models: {},
+		dimValues: {
+			"left": "width",
+			"top": "height"
+		}
+	};
 	
 	Flexbox.utils = {
 		assert : function (prop, values) {
@@ -1189,6 +1193,7 @@
 			if (!existing) {
 				style.id = id;
 				style.type = "text/css";
+				style.setAttribute("data-flexie", "true");
 			}
 
 			if (style.styleSheet) {
@@ -1198,6 +1203,17 @@
 			}
 
 			head.appendChild(style);
+		},
+
+		applyPartialValues : function (id, container, items) {
+			var i, j, item;
+
+			this.applyStyles(id, container.selector, container.properties);
+
+			for (i = 0, j = items.length; i < j; i++) {
+				item = items[i];
+				this.applyStyles(id, item.selector, item.properties);
+			}
 		},
 
 		flexBasisToPx : function (flexBasis, currLength, containerSize) {
@@ -1244,7 +1260,8 @@
 
 		onStylesLoaded : function (stylesheets) {
 			var parser = new CSSParser(),
-				i, j, sheet, relationships, flex;
+				support = Flexie.support,
+				i, j, sheet, relation, relationships, flex;
 
 			for (i = 0, j = stylesheets.length; i < j; i++) {
 				sheet = stylesheets[i];
@@ -1261,8 +1278,121 @@
 
 			// All done. Pass the new relationships to Flexie
 			for (i = 0, j = relationships.length; i < j; i++) {
-				flex = new Flexie(relationships[i]);
+				relation = relationships[i];
+
+				if (support === true) {
+					flex = new Flexie(relation);
+				} else if (support === "partial") {
+					this.mapPartialSupportRules(relation);
+				}
 			}
+		},
+
+		getPrefix : function () {
+			if (this.prefix) {
+				return this.prefix;
+			}
+
+			var dummy = document.createElement("flx"),
+				prefixes = ["", "ms", "webkit", "moz", "o"],
+				testProp = "FlexOrder",
+				i, j, prefix, prop;
+
+			for (i = 0, j = prefixes.length; i < j; i++) {
+				prefix = prefixes[i];
+				prop = prefix + testProp;
+
+				if (typeof dummy.style[prop] !== "undefined") {
+					prefix = prefix ? ("-" + prefix + "-") : prefix;
+					break;
+				}
+			}
+
+			this.prefix = prefix;
+			return prefix;
+		},
+
+		mapPartialSupportRules : function (relation) {
+			var prefix = this.getPrefix();
+
+			var container = relation.container.properties,
+				items = relation.items,
+				i, j, parts, part, item, flex,
+				partialProperties, partialValues,
+				prop, val;
+
+			if (container.display) {
+				// IE10 undersands display: flexbox; or display: inline-flexbox;
+				container.display = prefix + container.display + "box";
+			}
+
+			// IE10: No support for flex-flow?
+			if (container["flex-flow"]) {
+				parts = container["flex-flow"].split(" ");
+
+				for (i = 0, j = parts.length; i < j; i++) {
+					part = parts[i];
+
+					if ((/row|column/).test(part)) {
+						container["flex-direction"] = part;
+					} else {
+						if (part === "nowrap") {
+							part = "none";
+						}
+
+						container["flex-wrap"] = part;
+					}
+				}
+
+				delete container["flex-flow"];
+			}
+
+			partialProperties = {
+				"flex-direction": "flex-direction",
+				"flex-wrap": "flex-wrap",
+				"justify-content": "flex-pack",
+				"align-items": "flex-align",
+				"align-content": "flex-line-pack"
+			};
+
+			partialValues = {
+				"flex-start": "start",
+				"flex-end": "end",
+				"space-between": "justify",
+				"space-around": "distribute"
+			};
+
+			for (prop in partialProperties) {
+				if (typeof container[prop] !== "undefined") {
+					container[prefix + partialProperties[prop]] = partialValues[container[prop]] || container[prop];
+					delete container[prop];
+				}
+			}
+
+			partialProperties = {
+				"align-self": "flex-item-align",
+				"order": "flex-order",
+				"flex-grow": "flex-positive",
+				"flex-shrink": "flex-negative",
+				"flex-basis": "flex-preferred-size",
+				"flex": "flex"
+			};
+
+			for (i = 0, j = items.length; i < j; i++) {
+				item = items[i].properties;
+
+				for (prop in partialProperties) {
+					if (typeof item[prop] !== "undefined") {
+						item[prefix + partialProperties[prop]] = partialValues[item[prop]] || item[prop];
+						delete item[prop];
+					}
+				}
+			}
+
+			// Flag as partial support
+			relation.partial = true;
+
+			flex = new Flexie(relation);
 		},
 
 		validateRules : function (valid, rules) {
@@ -1882,7 +2012,7 @@
 				line.items[j][mainSize] = flexBasis[j] + curr;
 				line.items[j][mainStart] += (isReverse ?  -runningDiff - line.items[j][mainSize] + sizeStore : runningDiff);
 				// For Debug uncomment next line
-				console.log("Col " + (j + 1) + "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize, " by ", curr);
+				// console.log("Col " + (j + 1) + "'s ", mainStart, " was moved by ", (isReverse ?  -runningDiff - curr : runningDiff), " and inc ", mainSize, " by ", curr);
 				runningDiff += line.items[j][mainSize] - sizeStore;
 			}
 		}
@@ -1975,11 +2105,21 @@
 		var mainTotal = mainStart + "Total";
 		var crossTotal = crossStart + "Total";
 
-		var currMainStart = 0;
-		var currLineLength = 0;
-		var prevMainStart = 0;
-		var currCrossStart = 0;
-		var prevCrossStart = 0;
+		// Weird IE9 scope(???) issue here
+		// IE9 loses variable scope following the iterators below
+		// Attaching vars to the current prototype seems to resolve the issue
+		// ...SO WEIRD.
+		this.currMainStart = 0;
+		this.currLineLength = 0;
+		this.prevMainStart = 0;
+		this.currCrossStart = 0;
+		this.prevCrossStart = 0;
+
+		var currMainStart = this.currMainStart;
+		var currLineLength = this.currLineLength;
+		var prevMainStart = this.prevMainStart;
+		var currCrossStart = this.currCrossStart;
+		var prevCrossStart = this.prevCrossStart;
 
 		var multiplier = (isReverse ? -1 : 1);
 		var reverser = (isWrapReverse ? -1 : 1);
@@ -2086,6 +2226,13 @@
 				}
 			}
 		}
+
+		// Remove exposed vars, they're polluting the object.
+		delete this.currMainStart;
+		delete this.currLineLength;
+		delete this.prevMainStart;
+		delete this.currCrossStart;
+		delete this.prevCrossStart;
 
 		// Expose lines
 		this.lines = lines;
@@ -2351,212 +2498,206 @@
 		}
 	};
 	
-	Flexbox.container = (function () {
-		var utils = Flexbox.utils;
-		var models = Flexbox.models;
+	var Flexie = function (settings) {
+		this.settings = settings;
+		return this.box(settings);
+	};
 
-		Flexbox.dimValues = {
-			"left": "width",
-			"top": "height"
-		};
+	Flexie.prototype = {
+		models : {
+			order: Flexbox.models.order,
+			flexDirection : Flexbox.models.flexDirection,
+			flexWrap : Flexbox.models.flexWrap,
+			// autoSize : Flexbox.models.autoSize,
+			flexGrow : Flexbox.models.flexGrow,
+			alignContentStretch : Flexbox.models.alignContent,
+			justifyContent : Flexbox.models.justifyContent,
+			alignItems : Flexbox.models.alignItems,
+			alignSelf : Flexbox.models.alignSelf,
+			alignContent : Flexbox.models.alignContent
+		},
 
-		var container = function (settings) {
-			this.settings = settings;
-			return this.render(settings);
-		};
-
-		container.prototype = {
-			models : {
-				order: models.order,
-				flexDirection : models.flexDirection,
-				// autoSize : models.autoSize,
-				flexWrap : models.flexWrap,
-				flexGrow : models.flexGrow,
-				alignContentStretch : models.alignContent,
-				justifyContent : models.justifyContent,
-				alignItems : models.alignItems,
-				alignSelf : models.alignSelf,
-				alignContent : models.alignContent
-			},
-
-			generateUID : function (container) {
-				if (this.uid) {
-					return this.uid;
-				}
-
-				var selector = container.selector;
-				selector = selector.replace(/\#/g, "id-");
-				selector = selector.replace(/\./g, "class-");
-				selector = selector.replace(/\:/g, "pseudo-");
-				selector = selector.replace(/\s/g, "-");
-
-				this.uid = "flexie-" + selector;
+		generateUID : function (container) {
+			if (this.uid) {
 				return this.uid;
-			},
+			}
 
-			expandFlexFlow : function (properties) {
-				var map = {
-					"display": "flex",
-					"flex-direction": "row",
-					"flex-wrap": "nowrap",
-					"justify-content": "flex-start",
-					"align-items": "stretch",
-					"align-content": "stretch"
-				};
+			var selector = container.selector;
+			selector = selector.replace(/\#/g, "id-");
+			selector = selector.replace(/\./g, "class-");
+			selector = selector.replace(/\:/g, "pseudo-");
+			selector = selector.replace(/\s/g, "-");
 
-				var i, j;
+			this.uid = "flexie-" + selector + "-" + (++Flexbox.count);
+			return this.uid;
+		},
 
-				for (var key in properties) {
-					var value = properties[key];
+		expandFlexFlow : function (properties) {
+			var map = {
+				"display": "flex",
+				"flex-direction": "row",
+				"flex-wrap": "nowrap",
+				"justify-content": "flex-start",
+				"align-items": "stretch",
+				"align-content": "stretch"
+			};
 
-					if (key === "flex-flow") {
-						value = value.split(" ");
+			var i, j;
 
-						for (i = 0, j = value.length; i < j; i++) {
-							var val = value[i];
+			for (var key in properties) {
+				var value = properties[key];
 
-							if (/row|column/.test(val)) {
-								map["flex-direction"] = val;
-							} else {
-								map["flex-wrap"] = val;
+				if (key === "flex-flow") {
+					value = value.split(" ");
+
+					for (i = 0, j = value.length; i < j; i++) {
+						var val = value[i];
+
+						if (/row|column/.test(val)) {
+							map["flex-direction"] = val;
+						} else {
+							map["flex-wrap"] = val;
+						}
+					}
+				} else {
+					map[key] = value;
+				}
+			}
+
+			return map;
+		},
+
+		expandFlex : function (properties) {
+			var map = {
+				"align-self": "auto",
+				"order": 0,
+				"flex-grow": 0,
+				"flex-shrink": 1,
+				"flex-basis": "auto"
+			};
+
+			for (var key in properties) {
+				var value = properties[key];
+				var val, i, j;
+
+				if (key === "flex") {
+					value = value.split(" ");
+
+					switch (value.length) {
+					case 1:
+						// Can be either of:
+						// flex: initial;
+						// flex: auto;
+						// flex: none;
+						// flex: <positive number>;
+						// flex: <width-value>;
+
+						val = value[0];
+
+						if (!isNaN(val)) {
+							// A single, valid integer is mapped to flex-grow
+							// Equivalent to: "flex: <positive-number> 1 0px"
+							map["flex-grow"] = val;
+							map["flex-basis"] = "0px";
+						} else {
+							switch (val) {
+							case "initial":
+								// Equivalent to: "flex: 0 1 auto"
+								break;
+
+							case "auto":
+								// Assume value is a width value, in which case
+								// flex-grow: 1;
+								// flex-shrink: default;
+								// flex-basis: val;
+								map["flex-grow"] = 1;
+								map["flex-basis"] = val;
+								break;
+
+							case "none":
+								// Equivalent to "flex: 0 0 auto"
+								map["flex-shrink"] = 0;
+								break;
+
+							default:
+								// Assume value is a width value, in which case
+								// flex-grow: 1;
+								// flex-shrink: default;
+								// flex-basis: val;
+								map["flex-grow"] = 1;
+								map["flex-basis"] = val;
+								break;
 							}
 						}
-					} else {
-						map[key] = value;
-					}
-				}
+						break;
+					case 2:
+						// Can be either of:
+						// flex: <flex-grow> <flex-basis>;
+						// flex: <flex-basis> <flex-grow>;
+						// flex: <flex-grow> <flex-shrink>;
 
-				return map;
-			},
+						var hasNoBasis = !isNaN(value[0]) && !isNaN(value[1]);
 
-			expandFlex : function (properties) {
-				var map = {
-					"align-self": "auto",
-					"order": "0",
-					"flex-grow": "0",
-					"flex-shrink": "1",
-					"flex-basis": "auto"
-				};
-
-				for (var key in properties) {
-					var value = properties[key];
-					var val, i, j;
-
-					if (key === "flex") {
-						value = value.split(" ");
-
-						switch (value.length) {
-						case 1:
-							// Can be either of:
-							// flex: initial;
-							// flex: auto;
-							// flex: none;
-							// flex: <positive number>;
-							// flex: <width-value>;
-
-							val = value[0];
-
-							if (!isNaN(val)) {
-								// A single, valid integer is mapped to flex-grow
-								// Equivalent to: "flex: <positive-number> 1 0px"
-								map["flex-grow"] = val;
-								map["flex-basis"] = "0px";
-							} else {
-								switch (val) {
-								case "initial":
-									// Equivalent to: "flex: 0 1 auto"
-									break;
-
-								case "auto":
-									// Assume value is a width value, in which case
-									// flex-grow: 1;
-									// flex-shrink: default;
-									// flex-basis: val;
-									map["flex-grow"] = "1";
-									map["flex-basis"] = val;
-									break;
-
-								case "none":
-									// Equivalent to "flex: 0 0 auto"
-									map["flex-shrink"] = "0";
-									break;
-
-								default:
-									// Assume value is a width value, in which case
-									// flex-grow: 1;
-									// flex-shrink: default;
-									// flex-basis: val;
-									map["flex-grow"] = "1";
-									map["flex-basis"] = val;
-									break;
-								}
-							}
-							break;
-						case 2:
-							// Can be either of:
-							// flex: <flex-grow> <flex-basis>;
-							// flex: <flex-basis> <flex-grow>;
-							// flex: <flex-grow> <flex-shrink>;
-
-							var hasNoBasis = !isNaN(value[0]) && !isNaN(value[1]);
-
-							// If both are valid numbers, map to flex-grow and flex-shrink
-							if (hasNoBasis) {
-								map["flex-grow"] = value[0];
-								map["flex-shrink"] = value[1];
-							} else {
-								// Map valid number to flex-grow, width value to flex-basis
-								for (i = 0, j = value.length; i < j; i++) {
-									val = value[i];
-
-									if (!isNaN(val)) {
-										map["flex-grow"] = val;
-									} else {
-										map["flex-basis"] = val;
-									}
-								}
-							}
-							break;
-						case 3:
-							var grown, shrunk, based;
-
+						// If both are valid numbers, map to flex-grow and flex-shrink
+						if (hasNoBasis) {
+							map["flex-grow"] = value[0];
+							map["flex-shrink"] = value[1];
+						} else {
+							// Map valid number to flex-grow, width value to flex-basis
 							for (i = 0, j = value.length; i < j; i++) {
 								val = value[i];
 
 								if (!isNaN(val)) {
-									if (!grown) {
-										map["flex-grow"] = val;
-										grown = true;
-									} else if (!shrunk) {
-										map["flex-shrink"] = val;
-										shrunk = true;
-									}
+									map["flex-grow"] = val;
 								} else {
-									if (!based) {
-										map["flex-basis"] = val;
-										based = true;
-									}
+									map["flex-basis"] = val;
 								}
 							}
-							break;
 						}
-					} else {
-						map[key] = value;
+						break;
+					case 3:
+						var grown, shrunk, based;
+
+						for (i = 0, j = value.length; i < j; i++) {
+							val = value[i];
+
+							if (!isNaN(val)) {
+								if (!grown) {
+									map["flex-grow"] = val;
+									grown = true;
+								} else if (!shrunk) {
+									map["flex-shrink"] = val;
+									shrunk = true;
+								}
+							} else {
+								if (!based) {
+									map["flex-basis"] = val;
+									based = true;
+								}
+							}
+						}
+						break;
 					}
+				} else {
+					map[key] = value;
 				}
+			}
 
-				return map;
-			},
+			return map;
+		},
 
-			render : function (settings) {
-				this.uid = this.generateUID(settings.container);
+		render : function (settings) {
+			var utils = Flexbox.utils;
 
-				// Clean DOM, remove pre-existing styles
-				utils.removeStyles(this.uid);
+			this.uid = this.generateUID(settings.container);
 
-				this.container = settings.container;
-				this.items = settings.items;
+			// Clean DOM, remove pre-existing styles
+			utils.removeStyles(this.uid);
 
+			this.container = settings.container;
+			this.items = settings.items;
+
+			if (settings.partial !== true) {
 				// Expand flex property to individual rules
 				var i, j, item;
 
@@ -2594,74 +2735,60 @@
 				}
 
 				// Final positioning
-				Flexbox.utils.applyPositioning(this.uid, this.container, this.items, this.values);
-
-				// Emit complete
-				Flexie.event.trigger("complete", {
-					uid: this.uid,
-					container: this.container,
-					items: this.items
-				});
+				utils.applyPositioning(this.uid, this.container, this.items, this.values);
+			} else {
+				utils.applyPartialValues(this.uid, this.container, this.items);
 			}
-		};
 
-		return container;
+			// Emit complete
+			Flexie.event.trigger("complete", {
+				uid: this.uid,
+				container: this.container,
+				items: this.items
+			});
+		},
 
-	}());
-	
-	Flexbox.items = (function () {
-		var Items = function (properties) {
-			this.properties = properties;
-			return this.render(properties);
-		};
-
-		Items.prototype = {
-			render : function () {
-
-			}
-		};
-
-		return Items;
-	}());
-	
-	Flexie = function (settings) {
-		this.settings = settings;
-		return this.box(settings);
-	};
-
-	Flexie.prototype = {
 		box : function (settings) {
 			if (Flexie.support === true) {
 				return true;
 			}
 
-			return new Flexbox.container(settings);
+			return this.render(settings);
 		}
 	};
 	
 	Flexie.support = (function () {
-		var testProp = "flexWrap";
 		var prefixes = "webkit moz o ms".split(" ");
 		var dummy = document.createElement("flx");
-		var i, j, prop;
+		var i, j, p;
 
 		var typeTest = function (prop) {
 			return typeof dummy.style[prop] !== "undefined";
 		};
 
-		var flexboxSupport = typeTest(testProp);
+		var testProp = function (prop) {
+			var propSupport = typeTest(prop);
 
-		if (!flexboxSupport) {
-			testProp = testProp.charAt(0).toUpperCase() + testProp.slice(1);
+			if (!propSupport) {
+				prop = prop.charAt(0).toUpperCase() + prop.slice(1);
 
-			for (i = 0, j = prefixes.length; i < j; i++) {
-				prop = prefixes[i] + testProp;
-				flexboxSupport = typeTest(prop);
+				for (i = 0, j = prefixes.length; i < j; i++) {
+					p = prefixes[i] + prop;
+					propSupport = typeTest(p);
 
-				if (flexboxSupport) {
-					return flexboxSupport;
+					if (propSupport) {
+						break;
+					}
 				}
 			}
+
+			return propSupport;
+		};
+
+		var flexboxSupport = testProp("flexWrap");
+
+		if (flexboxSupport) {
+			flexboxSupport = testProp("flexOrder") ? "partial" : flexboxSupport;
 		}
 
 		return flexboxSupport;
