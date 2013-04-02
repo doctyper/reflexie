@@ -1,26 +1,35 @@
 Flexie.support = (function () {
-	var testProp = "flexWrap";
 	var prefixes = "webkit moz o ms".split(" ");
 	var dummy = document.createElement("flx");
-	var i, j, prop;
+	var i, j, p;
 
 	var typeTest = function (prop) {
 		return typeof dummy.style[prop] !== "undefined";
 	};
 
-	var flexboxSupport = typeTest(testProp);
+	var testProp = function (prop) {
+		var propSupport = typeTest(prop);
 
-	if (!flexboxSupport) {
-		testProp = testProp.charAt(0).toUpperCase() + testProp.slice(1);
+		if (!propSupport) {
+			prop = prop.charAt(0).toUpperCase() + prop.slice(1);
 
-		for (i = 0, j = prefixes.length; i < j; i++) {
-			prop = prefixes[i] + testProp;
-			flexboxSupport = typeTest(prop);
+			for (i = 0, j = prefixes.length; i < j; i++) {
+				p = prefixes[i] + prop;
+				propSupport = typeTest(p);
 
-			if (flexboxSupport) {
-				return flexboxSupport;
+				if (propSupport) {
+					break;
+				}
 			}
 		}
+
+		return propSupport;
+	};
+
+	var flexboxSupport = testProp("flexWrap");
+
+	if (flexboxSupport) {
+		flexboxSupport = testProp("flexOrder") ? "partial" : flexboxSupport;
 	}
 
 	return flexboxSupport;

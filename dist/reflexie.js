@@ -1151,6 +1151,17 @@
 			head.appendChild(style);
 		},
 
+		applyPartialValues : function (id, container, items) {
+			var i, j, item;
+
+			this.applyStyles(id, container.selector, container.properties);
+
+			for (i = 0, j = items.length; i < j; i++) {
+				item = items[i];
+				this.applyStyles(id, item.selector, item.properties);
+			}
+		},
+
 		flexBasisToPx : function (flexBasis, currLength, containerSize) {
 			if (typeof flexBasis === "undefined" || flexBasis === "auto") {
 				return currLength;
@@ -1195,7 +1206,8 @@
 
 		onStylesLoaded : function (stylesheets) {
 			var parser = new CSSParser(),
-				i, j, sheet, relationships, flex;
+				support = Flexie.support,
+				i, j, sheet, relation, relationships, flex;
 
 			for (i = 0, j = stylesheets.length; i < j; i++) {
 				sheet = stylesheets[i];
@@ -1212,8 +1224,121 @@
 
 			// All done. Pass the new relationships to Flexie
 			for (i = 0, j = relationships.length; i < j; i++) {
-				flex = new Flexie(relationships[i]);
+				relation = relationships[i];
+
+				if (support === true) {
+					flex = new Flexie(relation);
+				} else if (support === "partial") {
+					this.mapPartialSupportRules(relation);
+				}
 			}
+		},
+
+		getPrefix : function () {
+			if (this.prefix) {
+				return this.prefix;
+			}
+
+			var dummy = document.createElement("flx"),
+				prefixes = ["", "ms", "webkit", "moz", "o"],
+				testProp = "FlexOrder",
+				i, j, prefix, prop;
+
+			for (i = 0, j = prefixes.length; i < j; i++) {
+				prefix = prefixes[i];
+				prop = prefix + testProp;
+
+				if (typeof dummy.style[prop] !== "undefined") {
+					prefix = prefix ? ("-" + prefix + "-") : prefix;
+					break;
+				}
+			}
+
+			this.prefix = prefix;
+			return prefix;
+		},
+
+		mapPartialSupportRules : function (relation) {
+			var prefix = this.getPrefix();
+
+			var container = relation.container.properties,
+				items = relation.items,
+				i, j, parts, part, item, flex,
+				partialProperties, partialValues,
+				prop, val;
+
+			if (container.display) {
+				// IE10 undersands display: flexbox; or display: inline-flexbox;
+				container.display = prefix + container.display + "box";
+			}
+
+			// IE10: No support for flex-flow?
+			if (container["flex-flow"]) {
+				parts = container["flex-flow"].split(" ");
+
+				for (i = 0, j = parts.length; i < j; i++) {
+					part = parts[i];
+
+					if ((/row|column/).test(part)) {
+						container["flex-direction"] = part;
+					} else {
+						if (part === "nowrap") {
+							part = "none";
+						}
+
+						container["flex-wrap"] = part;
+					}
+				}
+
+				delete container["flex-flow"];
+			}
+
+			partialProperties = {
+				"flex-direction": "flex-direction",
+				"flex-wrap": "flex-wrap",
+				"justify-content": "flex-pack",
+				"align-items": "flex-align",
+				"align-content": "flex-line-pack"
+			};
+
+			partialValues = {
+				"flex-start": "start",
+				"flex-end": "end",
+				"space-between": "justify",
+				"space-around": "distribute"
+			};
+
+			for (prop in partialProperties) {
+				if (typeof container[prop] !== "undefined") {
+					container[prefix + partialProperties[prop]] = partialValues[container[prop]] || container[prop];
+					delete container[prop];
+				}
+			}
+
+			partialProperties = {
+				"align-self": "flex-item-align",
+				"order": "flex-order",
+				"flex-grow": "flex-positive",
+				"flex-shrink": "flex-negative",
+				"flex-basis": "flex-preferred-size",
+				"flex": "flex"
+			};
+
+			for (i = 0, j = items.length; i < j; i++) {
+				item = items[i].properties;
+
+				for (prop in partialProperties) {
+					if (typeof item[prop] !== "undefined") {
+						item[prefix + partialProperties[prop]] = partialValues[item[prop]] || item[prop];
+						delete item[prop];
+					}
+				}
+			}
+
+			// Flag as partial support
+			relation.partial = true;
+
+			flex = new Flexie(relation);
 		},
 
 		validateRules : function (valid, rules) {
@@ -2468,44 +2593,48 @@
 			this.container = settings.container;
 			this.items = settings.items;
 
-			// Expand flex property to individual rules
-			var i, j, item;
+			if (settings.partial !== true) {
+				// Expand flex property to individual rules
+				var i, j, item;
 
-			for (i = 0, j = this.items.length; i < j; i++) {
-				item = this.items[i];
-				item.properties = this.expandFlex(item.properties);
+				for (i = 0, j = this.items.length; i < j; i++) {
+					item = this.items[i];
+					item.properties = this.expandFlex(item.properties);
+				}
+
+				this.dom = this.dom || {};
+				this.dom.values = utils.storePositionValues(this.container, this.items);
+				this.values = utils.clonePositionValues(this.dom.values, this.items);
+
+				// Handle `flex-flow` shorthand property
+				var properties = this.expandFlexFlow(this.container.properties);
+				var models = this.models;
+
+				// So the way this works:
+				//
+				// All properties get a chance to override each other, in this order:
+				// - order
+				// - flex-direction
+				// - flex-wrap
+				// - justify-content
+				// - align-content
+				// - align-items
+				//
+				// `this.items` is modified (if needed) by each property method,
+				// adjusting for positioning (if necessary).
+				//
+				// The result is then written to the DOM using only one write cycle.
+
+				for (var key in models) {
+					var prop = utils.toDashedCase(key);
+					models[key].call(this, properties[prop], properties, key);
+				}
+
+				// Final positioning
+				utils.applyPositioning(this.uid, this.container, this.items, this.values);
+			} else {
+				utils.applyPartialValues(this.uid, this.container, this.items);
 			}
-
-			this.dom = this.dom || {};
-			this.dom.values = utils.storePositionValues(this.container, this.items);
-			this.values = utils.clonePositionValues(this.dom.values, this.items);
-
-			// Handle `flex-flow` shorthand property
-			var properties = this.expandFlexFlow(this.container.properties);
-			var models = this.models;
-
-			// So the way this works:
-			//
-			// All properties get a chance to override each other, in this order:
-			// - order
-			// - flex-direction
-			// - flex-wrap
-			// - justify-content
-			// - align-content
-			// - align-items
-			//
-			// `this.items` is modified (if needed) by each property method,
-			// adjusting for positioning (if necessary).
-			//
-			// The result is then written to the DOM using only one write cycle.
-
-			for (var key in models) {
-				var prop = utils.toDashedCase(key);
-				models[key].call(this, properties[prop], properties, key);
-			}
-
-			// Final positioning
-			utils.applyPositioning(this.uid, this.container, this.items, this.values);
 
 			// Emit complete
 			Flexie.event.trigger("complete", {
@@ -2525,28 +2654,37 @@
 	};
 	
 	Flexie.support = (function () {
-		var testProp = "flexWrap";
 		var prefixes = "webkit moz o ms".split(" ");
 		var dummy = document.createElement("flx");
-		var i, j, prop;
+		var i, j, p;
 
 		var typeTest = function (prop) {
 			return typeof dummy.style[prop] !== "undefined";
 		};
 
-		var flexboxSupport = typeTest(testProp);
+		var testProp = function (prop) {
+			var propSupport = typeTest(prop);
 
-		if (!flexboxSupport) {
-			testProp = testProp.charAt(0).toUpperCase() + testProp.slice(1);
+			if (!propSupport) {
+				prop = prop.charAt(0).toUpperCase() + prop.slice(1);
 
-			for (i = 0, j = prefixes.length; i < j; i++) {
-				prop = prefixes[i] + testProp;
-				flexboxSupport = typeTest(prop);
+				for (i = 0, j = prefixes.length; i < j; i++) {
+					p = prefixes[i] + prop;
+					propSupport = typeTest(p);
 
-				if (flexboxSupport) {
-					return flexboxSupport;
+					if (propSupport) {
+						break;
+					}
 				}
 			}
+
+			return propSupport;
+		};
+
+		var flexboxSupport = testProp("flexWrap");
+
+		if (flexboxSupport) {
+			flexboxSupport = testProp("flexOrder") ? "partial" : flexboxSupport;
 		}
 
 		return flexboxSupport;

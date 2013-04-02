@@ -196,44 +196,48 @@ Flexie.prototype = {
 		this.container = settings.container;
 		this.items = settings.items;
 
-		// Expand flex property to individual rules
-		var i, j, item;
+		if (settings.partial !== true) {
+			// Expand flex property to individual rules
+			var i, j, item;
 
-		for (i = 0, j = this.items.length; i < j; i++) {
-			item = this.items[i];
-			item.properties = this.expandFlex(item.properties);
+			for (i = 0, j = this.items.length; i < j; i++) {
+				item = this.items[i];
+				item.properties = this.expandFlex(item.properties);
+			}
+
+			this.dom = this.dom || {};
+			this.dom.values = utils.storePositionValues(this.container, this.items);
+			this.values = utils.clonePositionValues(this.dom.values, this.items);
+
+			// Handle `flex-flow` shorthand property
+			var properties = this.expandFlexFlow(this.container.properties);
+			var models = this.models;
+
+			// So the way this works:
+			//
+			// All properties get a chance to override each other, in this order:
+			// - order
+			// - flex-direction
+			// - flex-wrap
+			// - justify-content
+			// - align-content
+			// - align-items
+			//
+			// `this.items` is modified (if needed) by each property method,
+			// adjusting for positioning (if necessary).
+			//
+			// The result is then written to the DOM using only one write cycle.
+
+			for (var key in models) {
+				var prop = utils.toDashedCase(key);
+				models[key].call(this, properties[prop], properties, key);
+			}
+
+			// Final positioning
+			utils.applyPositioning(this.uid, this.container, this.items, this.values);
+		} else {
+			utils.applyPartialValues(this.uid, this.container, this.items);
 		}
-
-		this.dom = this.dom || {};
-		this.dom.values = utils.storePositionValues(this.container, this.items);
-		this.values = utils.clonePositionValues(this.dom.values, this.items);
-
-		// Handle `flex-flow` shorthand property
-		var properties = this.expandFlexFlow(this.container.properties);
-		var models = this.models;
-
-		// So the way this works:
-		//
-		// All properties get a chance to override each other, in this order:
-		// - order
-		// - flex-direction
-		// - flex-wrap
-		// - justify-content
-		// - align-content
-		// - align-items
-		//
-		// `this.items` is modified (if needed) by each property method,
-		// adjusting for positioning (if necessary).
-		//
-		// The result is then written to the DOM using only one write cycle.
-
-		for (var key in models) {
-			var prop = utils.toDashedCase(key);
-			models[key].call(this, properties[prop], properties, key);
-		}
-
-		// Final positioning
-		utils.applyPositioning(this.uid, this.container, this.items, this.values);
 
 		// Emit complete
 		Flexie.event.trigger("complete", {
