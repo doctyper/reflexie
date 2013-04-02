@@ -63,11 +63,20 @@ define([
 		return set;
 	};
 
-	var sizeMap = {
-		"row": "height",
-		"row-reverse": "height",
-		"column": "width",
-		"column-reverse": "width"
+	var map = {
+		"mainSize": {
+			"row": "height",
+			"row-reverse": "height",
+			"column": "width",
+			"column-reverse": "width"
+		},
+
+		"crossSize": {
+			"row": "width",
+			"row-reverse": "width",
+			"column": "height",
+			"column-reverse": "height"
+		}
 	};
 
 	var logger = {
@@ -102,16 +111,16 @@ define([
 		return string;
 	};
 
-	var getSizeValue = function (data) {
+	var getSizeValue = function (data, type) {
 		var sizeValue;
 
 		if (data["flex-direction"]) {
-			sizeValue = sizeMap[data["flex-direction"]];
+			sizeValue = map[type][data["flex-direction"]];
 		} else {
 			var possibleDirection = data["flex-flow"].split(" ");
 
 			for (var i = 0, j = possibleDirection.length; i < j; i++) {
-				sizeValue = sizeValue || sizeMap[possibleDirection[i]];
+				sizeValue = sizeValue || map[type][possibleDirection[i]];
 			}
 		}
 
@@ -143,17 +152,37 @@ define([
 				var set = appendFlexChildren(flex, desc.items, data.items.length);
 				children = flex.children();
 
+				var i, j;
+
 				if (hasSupport) {
+					var prefixes = "webkit moz ms o".split(" ");
+
+					for (i = 0, j = prefixes.length; i < j; i++) {
+						flex.css("display", "-" + prefixes[i] + "-" + desc.parent.display);
+					}
+
 					flex.css(desc.parent);
 				}
 
-				for (var i = 0, j = children.length; i < j; i++) {
+				for (i = 0, j = children.length; i < j; i++) {
 					var el = $(children[i]),
 						item = desc.items[i],
-						mainSize = item["main-size"];
+						mainSize = item["main-size"],
+						crossSize = item["cross-size"],
+						sizeValue;
 
 					if (mainSize === "auto") {
-						var sizeValue = getSizeValue(desc.parent);
+						sizeValue = getSizeValue(desc.parent, "mainSize");
+
+						if (hasSupport) {
+							item[sizeValue] = "auto";
+						} else {
+							el.addClass(sizeValue);
+						}
+					}
+
+					if (crossSize === "auto") {
+						sizeValue = getSizeValue(desc.parent, "crossSize");
 
 						if (hasSupport) {
 							item[sizeValue] = "auto";
@@ -164,6 +193,7 @@ define([
 
 					if (hasSupport) {
 						delete item["main-size"];
+						delete item["cross-size"];
 						el.css(item);
 					}
 				}
@@ -217,8 +247,9 @@ define([
 			}
 
 			after(function () {
-				var sizeValue = getSizeValue(desc.parent);
-				flex.children().removeClass(sizeValue);
+				children = flex.children();
+				children.removeClass(getSizeValue(desc.parent, "mainSize"));
+				children.removeClass(getSizeValue(desc.parent, "crossSize"));
 			});
 		});
 	};

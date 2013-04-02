@@ -66,7 +66,7 @@ io.sockets.on("connection", function (socket) {
 					var rule = rules[i].split(/:\s?/);
 
 					for (var k = 0, l = prefixes.length; k < l; k++) {
-						if (rule[0] === "main-size") {
+						if (rule[0] === "main-size" || rule[0] === "cross-size") {
 							continue;
 						}
 

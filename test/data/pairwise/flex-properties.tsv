@@ -1,7 +1,7 @@
-display	children	flex-direction	flex-wrap	justify-content	align-items	align-content	main-size-nth-1	align-self-nth-1	order-nth-1	flex-grow-nth-1	flex-shrink-nth-1	flex-basis-nth-1	main-size-nth-2	align-self-nth-2	order-nth-2	flex-grow-nth-2	flex-shrink-nth-2	flex-basis-nth-2	main-size-nth-3	align-self-nth-3	order-nth-3	flex-grow-nth-3	flex-shrink-nth-3	flex-basis-nth-3
-flex	3	row	nowrap	flex-start	flex-start	flex-start	auto	auto	0	0	0	auto	auto	auto	0	0	0	auto	auto	auto	0	0	0	auto
-inline-flex	6	row-reverse	wrap	flex-end	flex-end	flex-end	declared	flex-start	-1	1	1	10px	declared	flex-start	-1	1	1	10px	declared	flex-start	-1	1	1	10px
-		column	wrap-reverse	center	center	center		flex-end	2	2	2	20px		flex-end	2	2	2	20px		flex-end	2	2	2	20px
-		column-reverse		space-between	stretch	space-between		center						center						center				
-				space-around		space-around		stretch						stretch						stretch				
-						stretch																		
+display	children	flex-direction	flex-wrap	justify-content	align-items	align-content	main-size-nth-1	cross-size-nth-1	align-self-nth-1	order-nth-1	flex-basis-nth-1	main-size-nth-2	cross-size-nth-2	align-self-nth-2	order-nth-2	flex-basis-nth-2	main-size-nth-3	cross-size-nth-3	align-self-nth-3	order-nth-3	flex-basis-nth-3
+flex	3	row	nowrap	flex-start	flex-start	flex-start	auto	auto	auto	0	auto	auto	auto	auto	0	auto	auto	auto	auto	0	auto
+inline-flex	6	row-reverse	wrap	flex-end	flex-end	flex-end	declared	declared	flex-start	-1	10px	declared	declared	flex-start	-1	10px	declared	declared	flex-start	-1	10px
+		column	wrap-reverse	center	center	center			flex-end	2	20px			flex-end	2	20px			flex-end	2	20px
+		column-reverse		space-between	stretch	space-between			center					center					center		
+				space-around		space-around			stretch					stretch					stretch		
+						stretch															

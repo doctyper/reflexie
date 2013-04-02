@@ -33,11 +33,18 @@
 					return;
 				}
 
-				var sizeMap = {
+				var mainSizeMap = {
 					"row": "height",
 					"row-reverse": "height",
 					"column": "width",
 					"column-reverse": "width"
+				};
+
+				var crossSizeMap = {
+					"row": "width",
+					"row-reverse": "width",
+					"column": "height",
+					"column-reverse": "height"
 				};
 
 				document.title = "Generating results...";
@@ -144,15 +151,23 @@
 					// Apply children styles
 					for (var i = 0, j = children.length; i < j; i++) {
 						var item = JSON.parse(JSON.stringify(items[i])),
-							mainSize = item["main-size"];
+							mainSize = item["main-size"],
+							crossSize = item["cross-size"],
+							direction;
 
 						if (mainSize === "auto") {
-							var direction = sizeMap[parent["flex-direction"]];
+							direction = mainSizeMap[parent["flex-direction"]];
+							item[direction] = "auto";
+						}
 
+						if (crossSize === "auto") {
+							direction = crossSizeMap[parent["flex-direction"]];
 							item[direction] = "auto";
 						}
 
 						delete item["main-size"];
+						delete item["cross-size"];
+
 						$(children[i]).css(item);
 					}
 

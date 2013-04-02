@@ -131,14 +131,22 @@
 					result.innerHTML = JSON.stringify(json, null, 3);
 				};
 
-				var applyClass = function (flx, el) {
+				var applyClass = function (flx, el, reverse) {
 					var direction = flx["flex-direction"] || "";
 					direction += flx["flex-flow"] || "";
 
-					if ((/row/).test(direction)) {
-						el.className = "stretch-row";
-					} else if ((/column/).test(direction)) {
-						el.className = "stretch-col";
+					if (!reverse) {
+						if ((/row/).test(direction)) {
+							el.className += " stretch-row";
+						} else if ((/column/).test(direction)) {
+							el.className += " stretch-col";
+						}
+					} else {
+						if ((/row/).test(direction)) {
+							el.className += " stretch-col";
+						} else if ((/column/).test(direction)) {
+							el.className += " stretch-row";
+						}
 					}
 				};
 
@@ -168,6 +176,10 @@
 
 						if (item["main-size"] === "auto") {
 							applyClass(flx.container, element);
+						}
+
+						if (item["cross-size"] === "auto") {
+							applyClass(flx.container, element, true);
 						}
 					}
 
