@@ -31,160 +31,6 @@ Flexie.prototype = {
 		return this.uid;
 	},
 
-	expandFlexFlow : function (properties) {
-		var map = {
-			"display": "flex",
-			"flex-direction": "row",
-			"flex-wrap": "nowrap",
-			"justify-content": "flex-start",
-			"align-items": "stretch",
-			"align-content": "stretch"
-		};
-
-		var i, j;
-
-		for (var key in properties) {
-			var value = properties[key];
-
-			if (key === "flex-flow") {
-				value = value.split(" ");
-
-				for (i = 0, j = value.length; i < j; i++) {
-					var val = value[i];
-
-					if (/row|column/.test(val)) {
-						map["flex-direction"] = val;
-					} else {
-						map["flex-wrap"] = val;
-					}
-				}
-			} else {
-				map[key] = value;
-			}
-		}
-
-		return map;
-	},
-
-	expandFlex : function (properties) {
-		var map = {
-			"align-self": "auto",
-			"order": 0,
-			"flex-grow": 0,
-			"flex-shrink": 1,
-			"flex-basis": "auto"
-		};
-
-		for (var key in properties) {
-			var value = properties[key];
-			var val, i, j;
-
-			if (key === "flex") {
-				value = value.split(" ");
-
-				switch (value.length) {
-				case 1:
-					// Can be either of:
-					// flex: initial;
-					// flex: auto;
-					// flex: none;
-					// flex: <positive number>;
-					// flex: <width-value>;
-
-					val = value[0];
-
-					if (!isNaN(val)) {
-						// A single, valid integer is mapped to flex-grow
-						// Equivalent to: "flex: <positive-number> 1 0px"
-						map["flex-grow"] = val;
-						map["flex-basis"] = "0px";
-					} else {
-						switch (val) {
-						case "initial":
-							// Equivalent to: "flex: 0 1 auto"
-							break;
-
-						case "auto":
-							// Assume value is a width value, in which case
-							// flex-grow: 1;
-							// flex-shrink: default;
-							// flex-basis: val;
-							map["flex-grow"] = 1;
-							map["flex-basis"] = val;
-							break;
-
-						case "none":
-							// Equivalent to "flex: 0 0 auto"
-							map["flex-shrink"] = 0;
-							break;
-
-						default:
-							// Assume value is a width value, in which case
-							// flex-grow: 1;
-							// flex-shrink: default;
-							// flex-basis: val;
-							map["flex-grow"] = 1;
-							map["flex-basis"] = val;
-							break;
-						}
-					}
-					break;
-				case 2:
-					// Can be either of:
-					// flex: <flex-grow> <flex-basis>;
-					// flex: <flex-basis> <flex-grow>;
-					// flex: <flex-grow> <flex-shrink>;
-
-					var hasNoBasis = !isNaN(value[0]) && !isNaN(value[1]);
-
-					// If both are valid numbers, map to flex-grow and flex-shrink
-					if (hasNoBasis) {
-						map["flex-grow"] = value[0];
-						map["flex-shrink"] = value[1];
-					} else {
-						// Map valid number to flex-grow, width value to flex-basis
-						for (i = 0, j = value.length; i < j; i++) {
-							val = value[i];
-
-							if (!isNaN(val)) {
-								map["flex-grow"] = val;
-							} else {
-								map["flex-basis"] = val;
-							}
-						}
-					}
-					break;
-				case 3:
-					var grown, shrunk, based;
-
-					for (i = 0, j = value.length; i < j; i++) {
-						val = value[i];
-
-						if (!isNaN(val)) {
-							if (!grown) {
-								map["flex-grow"] = val;
-								grown = true;
-							} else if (!shrunk) {
-								map["flex-shrink"] = val;
-								shrunk = true;
-							}
-						} else {
-							if (!based) {
-								map["flex-basis"] = val;
-								based = true;
-							}
-						}
-					}
-					break;
-				}
-			} else {
-				map[key] = value;
-			}
-		}
-
-		return map;
-	},
-
 	render : function (settings) {
 		var utils = Flexbox.utils;
 
@@ -202,7 +48,7 @@ Flexie.prototype = {
 
 			for (i = 0, j = this.items.length; i < j; i++) {
 				item = this.items[i];
-				item.properties = this.expandFlex(item.properties);
+				item.properties = utils.expandFlex(item.properties);
 			}
 
 			this.dom = this.dom || {};
@@ -210,7 +56,7 @@ Flexie.prototype = {
 			this.values = utils.clonePositionValues(this.dom.values, this.items);
 
 			// Handle `flex-flow` shorthand property
-			var properties = this.expandFlexFlow(this.container.properties);
+			var properties = utils.expandFlexFlow(this.container.properties);
 			var models = this.models;
 
 			// So the way this works:
