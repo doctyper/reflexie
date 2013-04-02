@@ -48,7 +48,7 @@ Flexbox.parser = {
 		for (i = 0, j = relationships.length; i < j; i++) {
 			relation = relationships[i];
 
-			if (support === true) {
+			if (support === false) {
 				flex = new Flexie(relation);
 			} else if (support === "partial") {
 				this.mapPartialSupportRules(relation);
