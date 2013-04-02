@@ -266,19 +266,13 @@ Flexbox.utils = {
 			height: sizeBox.height - (padding.top + padding.bottom) - (border.top + border.bottom),
 			debug: {
 				auto: autoValues,
-				values: {
-					width: widthValues,
-					height: heightValues
-				},
 				border: border,
 				margin: margin,
 				padding: padding,
 				inner: {
 					left: (padding.left + padding.right) + (border.left + border.right),
 					top: (padding.top + padding.bottom) + (border.top + border.bottom)
-				},
-				width: sizeBox.width + widthValues,
-				height: sizeBox.height + heightValues
+				}
 			}
 		};
 	},
