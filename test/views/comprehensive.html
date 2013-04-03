@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Reflexie Demo</title>
+		<link rel="stylesheet" href="css/runner.css" />
+
+		<style>
+			#result {
+				padding: 10px;
+				right: 330px;
+				bottom: 20px;
+				position: fixed;
+				border: 1px dashed #050;
+				background: rgba(0, 255, 0, 0.3);
+				z-index: 10;
+				width: 270px;
+			}
+
+			#result pre {
+				margin: 0;
+				font-size: 12px;
+			}
+		</style>
+
+		<style>
+			#flex-container {
+				/*left: auto;*/
+				/*right: 0;*/
+				opacity: 1;
+				z-index: 1;
+				position: relative;
+			}
+
+			#flex-target {
+				overflow: visible;
+			}
+
+			#flex-target div {
+				opacity: 0.5;
+			}
+		</style>
+
+		<style>
+			#flex-target {
+				margin: 20px;
+				padding: 20px;
+				border-width: 20px;
+
+				display: -webkit-flex;
+				display: flex;
+
+				-webkit-justify-content: flex-start;
+				justify-content: flex-start;
+
+				-webkit-align-items: flex-start;
+				align-items: flex-start;
+
+				-webkit-align-content: flex-start;
+				align-content: flex-start;
+
+				-webkit-flex-flow: row nowrap;
+				flex-flow: row nowrap;
+			}
+
+			#flex-target p {
+				margin: 20px;
+				padding: 20px;
+				border: 3px solid green;
+				background: rgba(255, 0, 0, 0.2);
+				/*width: 300px;*/
+
+				-webkit-flex: 0 1 auto;
+				flex: 0 1 auto;
+			}
+		</style>
+
+		<script src="lib/require.js"></script>
+		<script>
+			require.config({
+				paths: {
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io"
+				},
+				urlArgs : "cacheBust=" + (new Date()).getTime()
+			});
+		</script>
+
+		<script>
+			require([
+				"dist/reflexie",
+				"socket.io"
+			], function (Flexie, io) {
+				var socket = io.connect("http://0.0.0.0:9999");
+
+				socket.on("errorchange", function (data) {
+					socket.disconnect();
+					window.location.reload();
+				});
+
+				socket.on("srcchange", function (data) {
+					socket.disconnect();
+					window.location.reload();
+				});
+
+				var getRect = function (el) {
+					var box = {};
+
+					if (el) {
+						var rect = el.getBoundingClientRect();
+						var keys = [];
+
+						for (var key in rect) {
+							keys.push(key);
+						}
+
+						keys = keys.sort();
+
+						for (var i = 0, j = keys.length; i < j; i++) {
+							var key = keys[i];
+
+							if (key !== "bottom") {
+								box[key] = rect[key];
+							}
+						}
+					}
+
+					return box;
+				};
+
+				var onComplete = function (data) {
+					var result = document.querySelector("#result pre");
+					var container = document.querySelector("#flex-target");
+
+					var json = {
+						container : getRect(container),
+						items : (function () {
+							var items = document.querySelectorAll("#flex-target > p");
+
+							var arr = [];
+
+							for (var i = 0, j = items.length; i < j; i++) {
+								arr.push(getRect(items[i]));
+							}
+
+							return arr;
+						}())
+					};
+
+					result.innerHTML = JSON.stringify(json, null, 3);
+				};
+
+				var applyClass = function (flx, el) {
+					var direction = flx["flex-direction"] || "";
+					direction += flx["flex-flow"] || "";
+
+					if ((/row/).test(direction)) {
+						el.className = "stretch-row";
+					} else if ((/column/).test(direction)) {
+						el.className = "stretch-col";
+					}
+				};
+
+				// Error Reporting Setup
+				(function () {
+					if (Flexie.support === true) {
+						onComplete();
+					} else {
+						Flexie.init({
+							complete: onComplete
+						});
+					}
+				}());
+
+			});
+		</script>
+	</head>
+	<body>
+
+		<div id="flex-container">
+			<div id="flex-target">
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam auctor leo ut diam rhoncus mattis. Donec lacinia leo in enim tristique tincidunt. Morbi lectus urna, vulputate varius sollicitudin ac, scelerisque quis enim. Nunc lacus dui, pretium id aliquet a, sagittis a massa. Phasellus faucibus, arcu eu condimentum mattis, tellus purus fermentum eros, vel ultrices lectus lorem ut enim. Etiam et sapien non nisi iaculis scelerisque a pretium quam. Nam malesuada molestie est, non convallis dolor placerat quis. Quisque tristique commodo condimentum. Nulla ultricies, dolor vehicula porttitor mollis, turpis ipsum porta orci, ac pharetra felis erat sed purus. Quisque pretium, turpis quis ultricies blandit, nisi elit rhoncus libero, quis volutpat tellus neque nec tortor. Pellentesque cursus interdum ligula, non porttitor arcu sollicitudin id. Praesent vel erat nec purus pharetra porta et at ipsum. Cras auctor gravida volutpat.</p>
+
+				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla sodales ornare metus eget pellentesque. Vivamus ultrices auctor laoreet. Sed vel condimentum risus. Praesent urna tellus, dapibus in tempor condimentum, hendrerit sit amet nunc. Etiam ultricies quam at enim ultrices dapibus. Etiam vel varius mauris. Sed sit amet lorem sit amet libero sodales sodales eu at eros. Vivamus sed tincidunt arcu. Fusce tortor magna, tincidunt eu sodales eget, accumsan ac dolor. Nulla sit amet viverra lorem.</p>
+
+				<p>Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros. Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros. Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros. Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros.</p>
+
+				<!-- <p>Nam ultricies rhoncus libero eu sodales. Aenean sed aliquam arcu. Quisque euismod congue ante, vitae blandit purus commodo eget. Sed eget turpis nec ante tristique dignissim. Maecenas vitae est vitae lacus ultricies malesuada id in urna. Proin molestie, elit eget hendrerit eleifend, dolor sem sollicitudin leo, ut sagittis neque odio at lorem. Proin feugiat arcu ut eros cursus non cursus magna auctor.</p>
+
+				<p>Morbi id accumsan tortor. Suspendisse potenti. In ut ullamcorper nunc. Vestibulum at nisl pharetra justo dictum laoreet. Curabitur accumsan, magna vel condimentum aliquet, urna quam semper lorem, eget congue leo nunc sed enim. Integer pulvinar, nunc eu mattis faucibus, urna est porttitor lorem, in facilisis sapien enim pellentesque nunc. Nam vitae enim ut quam iaculis consequat eu nec eros.</p>
+
+				<p>Donec sed ipsum eu libero lobortis consequat vitae in mi. In convallis convallis neque, at euismod mauris convallis eleifend. Morbi convallis mattis neque in rutrum. In nisl nulla, tincidunt eu iaculis ut, pellentesque pharetra purus. Mauris vel elit orci. Phasellus at leo id quam vehicula rutrum. Suspendisse potenti. Aliquam eleifend ullamcorper elit, nec varius mi pulvinar at.</p> -->
+			</div>
+		</div>
+
+		<div id="result">
+			<pre></pre>
+		</div>
+	</body>
+</html>

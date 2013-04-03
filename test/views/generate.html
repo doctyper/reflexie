@@ -10,20 +10,41 @@
 			<div id="flex-target"></div>
 		</div>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="lib/require.js"></script>
+		<script>
+			require.config({
+				paths: {
+					"jquery": "http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min",
+					"socket.io": "http://0.0.0.0:9999/socket.io/socket.io"
+				},
+				urlArgs : "cacheBust=" + (new Date()).getTime()
+			});
+		</script>
 
 		<script>
-			document.addEventListener("DOMContentLoaded", function () {
+			require([
+				"jquery",
+				"socket.io",
+				"lib/tests",
+				"lib/text"
+			], function ($, io, tests, text) {
 				if (!$.browser.chrome) {
 					console.error("Only Chrome 21 supports Flexbox.");
 					return;
 				}
 
-				var sizeMap = {
+				var mainSizeMap = {
 					"row": "height",
 					"row-reverse": "height",
 					"column": "width",
 					"column-reverse": "width"
+				};
+
+				var crossSizeMap = {
+					"row": "width",
+					"row-reverse": "width",
+					"column": "height",
+					"column-reverse": "height"
 				};
 
 				document.title = "Generating results...";
@@ -111,7 +132,7 @@
 					// Append children based on incoming property
 					for (var i = 0, j = count; i < j; i++) {
 						var idx = (i + 1);
-						flex.append('<div id="flex-col-' + idx + '">Col ' + idx + '</div>');
+						flex.append('<div id="flex-col-' + idx + '">' + text[i] + '</div>');
 					}
 
 					// Fresh reference to children
@@ -119,6 +140,22 @@
 
 					// Undo styles
 					flex.removeAttr("style");
+
+					var mainSize = parent["main-size"],
+						crossSize = parent["cross-size"];
+
+					if (mainSize === "auto") {
+						direction = mainSizeMap[parent["flex-direction"]];
+						parent[direction] = "auto";
+					}
+
+					if (crossSize === "auto") {
+						direction = crossSizeMap[parent["flex-direction"]];
+						parent[direction] = "auto";
+					}
+
+					delete parent["main-size"];
+					delete parent["cross-size"];
 
 					// Apply styles
 					flex.css(parent);
@@ -129,16 +166,24 @@
 
 					// Apply children styles
 					for (var i = 0, j = children.length; i < j; i++) {
-						var item = JSON.parse(JSON.stringify(items[i])),
-							mainSize = item["main-size"];
+						var item = items[i],
+							mainSize = item["main-size"],
+							crossSize = item["cross-size"],
+							direction;
 
 						if (mainSize === "auto") {
-							var direction = sizeMap[parent["flex-direction"]];
+							direction = mainSizeMap[parent["flex-direction"]];
+							item[direction] = "auto";
+						}
 
+						if (crossSize === "auto") {
+							direction = crossSizeMap[parent["flex-direction"]];
 							item[direction] = "auto";
 						}
 
 						delete item["main-size"];
+						delete item["cross-size"];
+
 						$(children[i]).css(item);
 					}
 
@@ -171,20 +216,18 @@
 						document.title = data;
 					});
 				});
+
+
+				var socket = io.connect("http://0.0.0.0:9999");
+
+				var onSocket = function (data) {
+					socket.disconnect();
+					window.location.reload();
+				};
+
+				socket.on("csschange", onSocket);
+				socket.on("testchange", onSocket);
 			});
-		</script>
-
-		<script src="http://0.0.0.0:9999/socket.io/socket.io.js"></script>
-		<script>
-			var socket = io.connect("http://0.0.0.0:9999");
-
-			var onSocket = function (data) {
-				socket.disconnect();
-				window.location.reload();
-			};
-
-			socket.on("csschange", onSocket);
-			socket.on("testchange", onSocket);
 		</script>
 	</body>
 </html>

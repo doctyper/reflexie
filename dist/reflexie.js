@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 4-1-2013
+ * Date: 4-3-2013
  */
 (function (window, undefined) {
 
@@ -994,6 +994,60 @@
 			return this.getValues(element, "padding");
 		},
 
+		getMin : function (element, dimension) {
+			var scrollMap = {
+				width: "scrollLeft",
+				height: "scrollTop"
+			};
+
+			var style = element.style;
+			var minDimension = 0;
+			var scrollType = scrollMap[dimension];
+
+			var oDimension = style[dimension] || "";
+			var oOverflow = style.overflow || "";
+
+			style[dimension] = minDimension;
+			style.overflow = "auto";
+
+			element[scrollType] = 1;
+
+			// First, increment in blocks of 10px
+			// This cuts down on write cycles
+			// until we get into the ballpark
+			while (element[scrollType]) {
+				minDimension += 10;
+				style[dimension] = minDimension + "px";
+			}
+
+			// We're in the ballpark. Reset by 10
+			minDimension -= 10;
+			style[dimension] = minDimension + "px";
+
+			// Reset scrollType
+			element[scrollType] = 1;
+
+			// Increment by one until we get the exact dimension
+			while (element[scrollType]) {
+				minDimension += 1;
+				style[dimension] = minDimension + "px";
+			}
+
+			var box = element.getBoundingClientRect();
+			// var altDimension = element.offsetHeight;
+			// console.log(altDimension);
+
+			// Reset dimension & overflow
+			style[dimension] = oDimension;
+			style.overflow = oOverflow;
+
+			// Return minDimension
+			return {
+				width: box.width,
+				height: box.height
+			};
+		},
+
 		getPristineBox : function (element, position) {
 			position = position || "absolute";
 
@@ -1040,19 +1094,13 @@
 				height: sizeBox.height - (padding.top + padding.bottom) - (border.top + border.bottom),
 				debug: {
 					auto: autoValues,
-					values: {
-						width: widthValues,
-						height: heightValues
-					},
 					border: border,
 					margin: margin,
 					padding: padding,
 					inner: {
 						left: (padding.left + padding.right) + (border.left + border.right),
 						top: (padding.top + padding.bottom) + (border.top + border.bottom)
-					},
-					width: sizeBox.width + widthValues,
-					height: sizeBox.height + heightValues
+					}
 				}
 			};
 		},
@@ -1173,6 +1221,160 @@
 				return containerSize * 0.01 * parseFloat(flexBasis.slice(0, -1));
 			}
 			// TODO: implent other lengths, probably by a slow DOM insertion & measurement
+		},
+
+		expandFlexFlow : function (properties) {
+			var map = {
+				"display": "flex",
+				"flex-direction": "row",
+				"flex-wrap": "nowrap",
+				"justify-content": "flex-start",
+				"align-items": "stretch",
+				"align-content": "stretch"
+			};
+
+			var i, j;
+
+			for (var key in properties) {
+				var value = properties[key];
+
+				if (key === "flex-flow") {
+					value = value.split(" ");
+
+					for (i = 0, j = value.length; i < j; i++) {
+						var val = value[i];
+
+						if (/row|column/.test(val)) {
+							map["flex-direction"] = val;
+						} else {
+							map["flex-wrap"] = val;
+						}
+					}
+				} else {
+					map[key] = value;
+				}
+			}
+
+			return map;
+		},
+
+		expandFlex : function (properties) {
+			var map = {
+				"align-self": "auto",
+				"order": 0,
+				"flex-grow": 0,
+				"flex-shrink": 1,
+				"flex-basis": "auto"
+			};
+
+			for (var key in properties) {
+				var value = properties[key];
+				var val, i, j;
+
+				if (key === "flex") {
+					value = value.split(" ");
+
+					switch (value.length) {
+					case 1:
+						// Can be either of:
+						// flex: initial;
+						// flex: auto;
+						// flex: none;
+						// flex: <positive number>;
+						// flex: <width-value>;
+
+						val = value[0];
+
+						if (!isNaN(val)) {
+							// A single, valid integer is mapped to flex-grow
+							// Equivalent to: "flex: <positive-number> 1 0px"
+							map["flex-grow"] = val;
+							map["flex-basis"] = "0px";
+						} else {
+							switch (val) {
+							case "initial":
+								// Equivalent to: "flex: 0 1 auto"
+								break;
+
+							case "auto":
+								// Assume value is a width value, in which case
+								// flex-grow: 1;
+								// flex-shrink: default;
+								// flex-basis: val;
+								map["flex-grow"] = 1;
+								map["flex-basis"] = val;
+								break;
+
+							case "none":
+								// Equivalent to "flex: 0 0 auto"
+								map["flex-shrink"] = 0;
+								break;
+
+							default:
+								// Assume value is a width value, in which case
+								// flex-grow: 1;
+								// flex-shrink: default;
+								// flex-basis: val;
+								map["flex-grow"] = 1;
+								map["flex-basis"] = val;
+								break;
+							}
+						}
+						break;
+					case 2:
+						// Can be either of:
+						// flex: <flex-grow> <flex-basis>;
+						// flex: <flex-basis> <flex-grow>;
+						// flex: <flex-grow> <flex-shrink>;
+
+						var hasNoBasis = !isNaN(value[0]) && !isNaN(value[1]);
+
+						// If both are valid numbers, map to flex-grow and flex-shrink
+						if (hasNoBasis) {
+							map["flex-grow"] = value[0];
+							map["flex-shrink"] = value[1];
+						} else {
+							// Map valid number to flex-grow, width value to flex-basis
+							for (i = 0, j = value.length; i < j; i++) {
+								val = value[i];
+
+								if (!isNaN(val)) {
+									map["flex-grow"] = val;
+								} else {
+									map["flex-basis"] = val;
+								}
+							}
+						}
+						break;
+					case 3:
+						var grown, shrunk, based;
+
+						for (i = 0, j = value.length; i < j; i++) {
+							val = value[i];
+
+							if (!isNaN(val)) {
+								if (!grown) {
+									map["flex-grow"] = val;
+									grown = true;
+								} else if (!shrunk) {
+									map["flex-shrink"] = val;
+									shrunk = true;
+								}
+							} else {
+								if (!based) {
+									map["flex-basis"] = val;
+									based = true;
+								}
+							}
+						}
+						break;
+					}
+				} else {
+					map[key] = value;
+				}
+			}
+
+			return map;
 		}
 	};
 	
@@ -1226,7 +1428,7 @@
 			for (i = 0, j = relationships.length; i < j; i++) {
 				relation = relationships[i];
 
-				if (support === true) {
+				if (support === false) {
 					flex = new Flexie(relation);
 				} else if (support === "partial") {
 					this.mapPartialSupportRules(relation);
@@ -1891,7 +2093,7 @@
 				} else {
 					// flex-shrink (based on size*flex-shrink"
 					if (isNaN(line.items[j].debug.properties["flex-shrink"])) {
-						line.items[j].debug.properties["flex-shrink"] = 1;
+						line.items[j].debug.properties["flex-shrink"] = "1";
 					}
 					weights[j] = flexBasis[j] * line.items[j].debug.properties["flex-shrink"];
 				}
@@ -2263,8 +2465,7 @@
 
 		// Figure out remainders & max item sizes
 		var values = this.values;
-		var mainSize = this.mainSize;
-		var containerSize = values.container[mainSize];
+		var containerSize = values.container[crossSize];
 
 		var crossTotal = crossStart + "Total";
 		var isNotFlexWrap = properties["flex-wrap"] === "nowrap";
@@ -2277,7 +2478,7 @@
 
 			for (k = 0, l = line.items.length; k < l; k++) {
 				item = line.items[k];
-				line.maxItemSize = Math.max(line.maxItemSize || 0, (item[crossSize] + item.debug.inner[crossStart]) + item.debug.margin[crossTotal]);
+				line.maxItemSize = Math.max(line.maxItemSize || 0, item[crossSize] + item.debug.inner[crossStart] + item.debug.margin[crossTotal]);
 			}
 
 			remainderSize -= line.maxItemSize;
@@ -2395,6 +2596,56 @@
 		}
 	};
 	
+	Flexbox.models.autoSize = function (size, properties, model) {
+		var values = this.values,
+			container = values.container,
+			itemValues = values.items,
+			i, j, item,
+			crossStart = this.crossStart,
+			mainStart = this.mainStart,
+			mainSize = this.mainSize,
+			crossSize = this.crossSize,
+			containerSize = container[mainSize],
+			isNotFlexWrap = properties["flex-wrap"] === "nowrap";
+
+		if (isNotFlexWrap) {
+			var totalMainSize = 0,
+				currMainDiff = 0,
+				mainDiff, element, min, padding, border;
+
+			for (i = 0, j = itemValues.length; i < j; i++) {
+				item = itemValues[i];
+				mainDiff = 0;
+
+				if (!item.debug.auto[mainSize]) {
+					continue;
+				}
+
+				element = this.items[i].element;
+
+				min = Flexbox.utils.getMin(element, mainSize);
+				padding = item.debug.padding;
+				border = item.debug.border;
+
+				var currMainSize = item[mainSize];
+
+				var minMainSize = min[mainSize] - (padding.left + padding.right) - (border.left + border.right);
+				var minCrossSize = min[crossSize] - (padding.top + padding.bottom) - (border.top + border.bottom);
+
+				item[mainSize] = minMainSize;
+				item[crossSize] = minCrossSize;
+
+				if (itemValues[i + 1]) {
+					mainDiff = currMainDiff + currMainSize - minMainSize;
+					itemValues[i + 1][mainStart] -= mainDiff;
+				}
+
+				currMainDiff += mainDiff;
+				totalMainSize += minMainSize;
+			}
+		}
+	};
+	
 	var Flexie = function (settings) {
 		this.settings = settings;
 		return this.box(settings);
@@ -2405,6 +2656,7 @@
 			order: Flexbox.models.order,
 			flexDirection : Flexbox.models.flexDirection,
 			flexWrap : Flexbox.models.flexWrap,
+			// autoSize : Flexbox.models.autoSize,
 			flexGrow : Flexbox.models.flexGrow,
 			alignContentStretch : Flexbox.models.alignContent,
 			justifyContent : Flexbox.models.justifyContent,
@@ -2428,160 +2680,6 @@
 			return this.uid;
 		},
 
-		expandFlexFlow : function (properties) {
-			var map = {
-				"display": "flex",
-				"flex-direction": "row",
-				"flex-wrap": "nowrap",
-				"justify-content": "flex-start",
-				"align-items": "stretch",
-				"align-content": "stretch"
-			};
-
-			var i, j;
-
-			for (var key in properties) {
-				var value = properties[key];
-
-				if (key === "flex-flow") {
-					value = value.split(" ");
-
-					for (i = 0, j = value.length; i < j; i++) {
-						var val = value[i];
-
-						if (/row|column/.test(val)) {
-							map["flex-direction"] = val;
-						} else {
-							map["flex-wrap"] = val;
-						}
-					}
-				} else {
-					map[key] = value;
-				}
-			}
-
-			return map;
-		},
-
-		expandFlex : function (properties) {
-			var map = {
-				"align-self": "auto",
-				"order": 0,
-				"flex-grow": 0,
-				"flex-shrink": 1,
-				"flex-basis": "auto"
-			};
-
-			for (var key in properties) {
-				var value = properties[key];
-				var val, i, j;
-
-				if (key === "flex") {
-					value = value.split(" ");
-
-					switch (value.length) {
-					case 1:
-						// Can be either of:
-						// flex: initial;
-						// flex: auto;
-						// flex: none;
-						// flex: <positive number>;
-						// flex: <width-value>;
-
-						val = value[0];
-
-						if (!isNaN(val)) {
-							// A single, valid integer is mapped to flex-grow
-							// Equivalent to: "flex: <positive-number> 1 0px"
-							map["flex-grow"] = val;
-							map["flex-basis"] = "0px";
-						} else {
-							switch (val) {
-							case "initial":
-								// Equivalent to: "flex: 0 1 auto"
-								break;
-
-							case "auto":
-								// Assume value is a width value, in which case
-								// flex-grow: 1;
-								// flex-shrink: default;
-								// flex-basis: val;
-								map["flex-grow"] = 1;
-								map["flex-basis"] = val;
-								break;
-
-							case "none":
-								// Equivalent to "flex: 0 0 auto"
-								map["flex-shrink"] = 0;
-								break;
-
-							default:
-								// Assume value is a width value, in which case
-								// flex-grow: 1;
-								// flex-shrink: default;
-								// flex-basis: val;
-								map["flex-grow"] = 1;
-								map["flex-basis"] = val;
-								break;
-							}
-						}
-						break;
-					case 2:
-						// Can be either of:
-						// flex: <flex-grow> <flex-basis>;
-						// flex: <flex-basis> <flex-grow>;
-						// flex: <flex-grow> <flex-shrink>;
-
-						var hasNoBasis = !isNaN(value[0]) && !isNaN(value[1]);
-
-						// If both are valid numbers, map to flex-grow and flex-shrink
-						if (hasNoBasis) {
-							map["flex-grow"] = value[0];
-							map["flex-shrink"] = value[1];
-						} else {
-							// Map valid number to flex-grow, width value to flex-basis
-							for (i = 0, j = value.length; i < j; i++) {
-								val = value[i];
-
-								if (!isNaN(val)) {
-									map["flex-grow"] = val;
-								} else {
-									map["flex-basis"] = val;
-								}
-							}
-						}
-						break;
-					case 3:
-						var grown, shrunk, based;
-
-						for (i = 0, j = value.length; i < j; i++) {
-							val = value[i];
-
-							if (!isNaN(val)) {
-								if (!grown) {
-									map["flex-grow"] = val;
-									grown = true;
-								} else if (!shrunk) {
-									map["flex-shrink"] = val;
-									shrunk = true;
-								}
-							} else {
-								if (!based) {
-									map["flex-basis"] = val;
-									based = true;
-								}
-							}
-						}
-						break;
-					}
-				} else {
-					map[key] = value;
-				}
-			}
-
-			return map;
-		},
-
 		render : function (settings) {
 			var utils = Flexbox.utils;
 
@@ -2599,7 +2697,7 @@
 
 				for (i = 0, j = this.items.length; i < j; i++) {
 					item = this.items[i];
-					item.properties = this.expandFlex(item.properties);
+					item.properties = utils.expandFlex(item.properties);
 				}
 
 				this.dom = this.dom || {};
@@ -2607,7 +2705,7 @@
 				this.values = utils.clonePositionValues(this.dom.values, this.items);
 
 				// Handle `flex-flow` shorthand property
-				var properties = this.expandFlexFlow(this.container.properties);
+				var properties = utils.expandFlexFlow(this.container.properties);
 				var models = this.models;
 
 				// So the way this works:

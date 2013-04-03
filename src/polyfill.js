@@ -8,6 +8,7 @@ Flexie.prototype = {
 		order: Flexbox.models.order,
 		flexDirection : Flexbox.models.flexDirection,
 		flexWrap : Flexbox.models.flexWrap,
+		// autoSize : Flexbox.models.autoSize,
 		flexGrow : Flexbox.models.flexGrow,
 		alignContentStretch : Flexbox.models.alignContent,
 		justifyContent : Flexbox.models.justifyContent,

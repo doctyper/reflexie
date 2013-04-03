@@ -39,7 +39,6 @@
 				});
 
 				$(document).ready(function () {
-
 					tests.setup().then(function () {
 						var runner;
 
@@ -50,8 +49,15 @@
 						}
 
 						runner.on("end", function () {
-							$("html").addClass("complete");
-							document.title = "Done.";
+							var fail = $(".fail").length;
+
+							if (fail) {
+								$("html").addClass("failing");
+								document.title = "Done, but errors were found.";
+							} else {
+								$("html").addClass("complete");
+								document.title = "Done without errors.";
+							}
 						});
 
 						runner.on("test fail", function (test) {

@@ -1,10 +1,10 @@
 define([
 	"jquery",
 	"dist/reflexie",
+	"lib/text",
 	"lib/mocha",
-	"lib/expect",
-	"JSON3"
-], function ($, Flexie) {
+	"lib/expect"
+], function ($, Flexie, text) {
 	"use strict";
 
 	var DEBUG = true;
@@ -49,7 +49,7 @@ define([
 		for (i = 0, j = children; i < j; i++) {
 			idx = (i + 1);
 			selector = "flex-col-" + idx;
-			element = $('<div id="' + selector + '">Col ' + idx + '</div>');
+			element = $('<div id="' + selector + '">' + text[i] + '</div>');
 
 			set.push({
 				selector: "#" + selector,
@@ -61,13 +61,6 @@ define([
 		}
 
 		return set;
-	};
-
-	var sizeMap = {
-		"row": "height",
-		"row-reverse": "height",
-		"column": "width",
-		"column-reverse": "width"
 	};
 
 	var logger = {
@@ -102,22 +95,6 @@ define([
 		return string;
 	};
 
-	var getSizeValue = function (data) {
-		var sizeValue;
-
-		if (data["flex-direction"]) {
-			sizeValue = sizeMap[data["flex-direction"]];
-		} else {
-			var possibleDirection = data["flex-flow"].split(" ");
-
-			for (var i = 0, j = possibleDirection.length; i < j; i++) {
-				sizeValue = sizeValue || sizeMap[possibleDirection[i]];
-			}
-		}
-
-		return sizeValue;
-	};
-
 	var buildFlexDescription = function (type, data) {
 		type = type.replace(/\@start/g, "[").replace(/\@end/g, "]");
 
@@ -138,33 +115,58 @@ define([
 				$("style[data-flexie]").remove();
 
 				flex = $("#flex-target");
-				flex.empty();
+				flex.empty().removeAttr("style");
 
 				var set = appendFlexChildren(flex, desc.items, data.items.length);
 				children = flex.children();
 
+				var i, j, mainSize, crossSize, sizeValue;
+
 				if (hasSupport) {
-					flex.css(desc.parent);
-				}
+					var prefixes = "webkit moz ms o".split(" ");
 
-				for (var i = 0, j = children.length; i < j; i++) {
-					var el = $(children[i]),
-						item = desc.items[i],
-						mainSize = item["main-size"];
-
-					if (mainSize === "auto") {
-						var sizeValue = getSizeValue(desc.parent);
-
-						if (hasSupport) {
-							item[sizeValue] = "auto";
-						} else {
-							el.addClass(sizeValue);
-						}
+					for (i = 0, j = prefixes.length; i < j; i++) {
+						flex.css("display", "-" + prefixes[i] + "-" + desc.parent.display);
 					}
 
-					if (hasSupport) {
-						delete item["main-size"];
-						el.css(item);
+					delete desc.parent.display;
+				}
+
+				if (hasSupport) {
+					flex.css(desc.parent);
+
+					for (i = 0, j = children.length; i < j; i++) {
+						$(children[i]).css(desc.items[i]);
+					}
+				} else {
+					if (desc.parent.width) {
+						flex.addClass("width");
+						delete desc.parent.width;
+					}
+
+					if (desc.parent.height) {
+						flex.addClass("height");
+						delete desc.parent.height;
+					}
+
+					for (i = 0, j = children.length; i < j; i++) {
+						var item = desc.items[i],
+							child = $(children[i]);
+
+						if (item.width) {
+							child.addClass("width");
+							delete item.width;
+						}
+
+						if (item.height) {
+							child.addClass("height");
+							delete item.height;
+						}
+
+						if (item.overflow) {
+							child.addClass(item.overflow);
+							delete item.overflow;
+						}
 					}
 				}
 
@@ -217,8 +219,8 @@ define([
 			}
 
 			after(function () {
-				var sizeValue = getSizeValue(desc.parent);
-				flex.children().removeClass(sizeValue);
+				flex.removeClass();
+				children.removeClass();
 			});
 		});
 	};

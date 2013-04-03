@@ -11,21 +11,31 @@
 }
 
 @mixin box-properties($dimensions: true) {
-	$rand: random(30);
+	$rand: random(20);
 
 	border: solid gray;
 	border-width: box-values($rand);
 
-	$rand: random(50);
+	$rand: random(30);
 
 	margin: box-values($rand);
 	padding: box-values($rand);
 
-	$rand: random(650);
-
 	@if $dimensions {
-		width: unquote(random($rand) + 50 + "px");
-		height: unquote(random($rand) + 50 + "px");
+		$width: random(350);
+
+		@if $width < 100 {
+			$width: $width + 100;
+		}
+
+		$height: random(350);
+
+		@if $height < 100 {
+			$height: $height + 100;
+		}
+
+		width: unquote($width + "px");
+		height: unquote($height + "px");
 	}
 }
 
@@ -44,8 +54,27 @@
 	}
 }
 
+// On failing
+@include keyframes(failing) {
+	from {
+		background: #fff;
+	}
+
+	50% {
+		background: rgba(#f00, 0.5);
+	}
+
+	to {
+		background: #fff;
+	}
+}
+
 .complete {
 	@include animation(complete 0.5s linear);
+}
+
+.failing {
+	@include animation(failing 0.5s linear);
 }
 
 #flex-container, #flex-container * {
@@ -71,44 +100,55 @@
 	width: 600px;
 	height: 600px;
 
-	overflow: hidden;
 	vertical-align: top;
 }
 
+#flex-target.visible,
+#flex-target div.visible {
+	overflow: visible;
+}
+
+#flex-target.hidden,
+#flex-target div.hidden {
+	overflow: hidden;
+}
+
+#flex-target.width,
 #flex-target div.width {
 	width: auto;
 }
 
+#flex-target.height,
 #flex-target div.height {
 	height: auto;
 }
 
-#flex-col-1 {
-	background: #ccc;
-	@include box-properties;
+#flex-target p {
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+	border-color: rgba(gray, 0.5);
 }
 
-#flex-col-2 {
-	background: red;
-	@include box-properties;
+#flex-col-2, #flex-col-4, #flex-col-6 {
+	p {
+		float: left;
+		width: 50%;
+	}
 }
 
-#flex-col-3 {
-	background: teal;
-	@include box-properties;
+$colors: #ccc, red, teal, purple, green, blue;
+$i: 1;
+
+@each $color in $colors {
+	#flex-col-#{$i} {
+		background: $color;
+		@include box-properties;
+
+		p {
+			@include box-properties(false);
+		}
+	}
+
+	$i: $i + 1;
 }
 
-#flex-col-4 {
-	background: purple;
-	@include box-properties;
-}
-
-#flex-col-5 {
-	background: green;
-	@include box-properties;
-}
-
-#flex-col-6 {
-	background: blue;
-	@include box-properties;
-}

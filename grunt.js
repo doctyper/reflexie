@@ -71,6 +71,7 @@ module.exports = function (grunt) {
 				"src/polyfill/container/justifyContent",
 				"src/polyfill/container/alignItems",
 				"src/polyfill/container/alignContent",
+				"src/polyfill/container/autoSize",
 				"src/polyfill",
 				"src/support",
 				"src/event",

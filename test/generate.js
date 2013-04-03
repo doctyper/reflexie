@@ -66,7 +66,7 @@ io.sockets.on("connection", function (socket) {
 					var rule = rules[i].split(/:\s?/);
 
 					for (var k = 0, l = prefixes.length; k < l; k++) {
-						if (rule[0] === "main-size") {
+						if (rule[0] === "main-size" || rule[0] === "cross-size") {
 							continue;
 						}
 
@@ -166,6 +166,10 @@ app.get("/runner", function (req, res) {
 
 app.get("/tester", function (req, res) {
 	res.render("tester.html");
+});
+
+app.get("/comprehensive", function (req, res) {
+	res.render("comprehensive.html");
 });
 
 app.post("/flex", function (req, res) {

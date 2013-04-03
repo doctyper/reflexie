@@ -1,72 +1,140 @@
 @-moz-keyframes complete {
-  /* line 34, ../scss/runner.scss */
+  /* line 44, ../scss/runner.scss */
   from {
     background: #fff;
   }
 
-  /* line 38, ../scss/runner.scss */
+  /* line 48, ../scss/runner.scss */
   50% {
     background: rgba(0, 255, 0, 0.5);
   }
 
-  /* line 42, ../scss/runner.scss */
+  /* line 52, ../scss/runner.scss */
   to {
     background: #fff;
   }
 }
 
 @-webkit-keyframes complete {
-  /* line 34, ../scss/runner.scss */
+  /* line 44, ../scss/runner.scss */
   from {
     background: #fff;
   }
 
-  /* line 38, ../scss/runner.scss */
+  /* line 48, ../scss/runner.scss */
   50% {
     background: rgba(0, 255, 0, 0.5);
   }
 
-  /* line 42, ../scss/runner.scss */
+  /* line 52, ../scss/runner.scss */
   to {
     background: #fff;
   }
 }
 
 @-o-keyframes complete {
-  /* line 34, ../scss/runner.scss */
+  /* line 44, ../scss/runner.scss */
   from {
     background: #fff;
   }
 
-  /* line 38, ../scss/runner.scss */
+  /* line 48, ../scss/runner.scss */
   50% {
     background: rgba(0, 255, 0, 0.5);
   }
 
-  /* line 42, ../scss/runner.scss */
+  /* line 52, ../scss/runner.scss */
   to {
     background: #fff;
   }
 }
 
 @keyframes complete {
-  /* line 34, ../scss/runner.scss */
+  /* line 44, ../scss/runner.scss */
   from {
     background: #fff;
   }
 
-  /* line 38, ../scss/runner.scss */
+  /* line 48, ../scss/runner.scss */
   50% {
     background: rgba(0, 255, 0, 0.5);
   }
 
-  /* line 42, ../scss/runner.scss */
+  /* line 52, ../scss/runner.scss */
   to {
     background: #fff;
   }
 }
 
-/* line 47, ../scss/runner.scss */
+@-moz-keyframes failing {
+  /* line 59, ../scss/runner.scss */
+  from {
+    background: #fff;
+  }
+
+  /* line 63, ../scss/runner.scss */
+  50% {
+    background: rgba(255, 0, 0, 0.5);
+  }
+
+  /* line 67, ../scss/runner.scss */
+  to {
+    background: #fff;
+  }
+}
+
+@-webkit-keyframes failing {
+  /* line 59, ../scss/runner.scss */
+  from {
+    background: #fff;
+  }
+
+  /* line 63, ../scss/runner.scss */
+  50% {
+    background: rgba(255, 0, 0, 0.5);
+  }
+
+  /* line 67, ../scss/runner.scss */
+  to {
+    background: #fff;
+  }
+}
+
+@-o-keyframes failing {
+  /* line 59, ../scss/runner.scss */
+  from {
+    background: #fff;
+  }
+
+  /* line 63, ../scss/runner.scss */
+  50% {
+    background: rgba(255, 0, 0, 0.5);
+  }
+
+  /* line 67, ../scss/runner.scss */
+  to {
+    background: #fff;
+  }
+}
+
+@keyframes failing {
+  /* line 59, ../scss/runner.scss */
+  from {
+    background: #fff;
+  }
+
+  /* line 63, ../scss/runner.scss */
+  50% {
+    background: rgba(255, 0, 0, 0.5);
+  }
+
+  /* line 67, ../scss/runner.scss */
+  to {
+    background: #fff;
+  }
+}
+
+/* line 72, ../scss/runner.scss */
 .complete {
   -webkit-animation: complete 0.5s linear;
   -moz-animation: complete 0.5s linear;
@@ -74,7 +142,15 @@
   animation: complete 0.5s linear;
 }
 
-/* line 51, ../scss/runner.scss */
+/* line 76, ../scss/runner.scss */
+.failing {
+  -webkit-animation: failing 0.5s linear;
+  -moz-animation: failing 0.5s linear;
+  -o-animation: failing 0.5s linear;
+  animation: failing 0.5s linear;
+}
+
+/* line 80, ../scss/runner.scss */
 #flex-container, #flex-container * {
   margin: 0;
   padding: 0;
@@ -83,7 +159,7 @@
   list-style: none;
 }
 
-/* line 59, ../scss/runner.scss */
+/* line 88, ../scss/runner.scss */
 #flex-container {
   top: 0;
   left: 0;
@@ -93,90 +169,158 @@
   z-index: -1;
 }
 
-/* line 68, ../scss/runner.scss */
+/* line 97, ../scss/runner.scss */
 #flex-target {
   border: solid gray;
-  border-width: 2px 4px 19px 13px;
-  margin: 27px 44px 0px 35px;
-  padding: 41px 32px 29px 27px;
+  border-width: 5px 4px 0px 4px;
+  margin: 4px 0px 11px 4px;
+  padding: 7px 11px 4px 0px;
   width: 600px;
   height: 600px;
-  overflow: hidden;
   vertical-align: top;
 }
 
-/* line 78, ../scss/runner.scss */
+/* line 107, ../scss/runner.scss */
+#flex-target.visible,
+#flex-target div.visible {
+  overflow: visible;
+}
+
+/* line 112, ../scss/runner.scss */
+#flex-target.hidden,
+#flex-target div.hidden {
+  overflow: hidden;
+}
+
+/* line 117, ../scss/runner.scss */
+#flex-target.width,
 #flex-target div.width {
   width: auto;
 }
 
-/* line 82, ../scss/runner.scss */
+/* line 122, ../scss/runner.scss */
+#flex-target.height,
 #flex-target div.height {
   height: auto;
 }
 
-/* line 86, ../scss/runner.scss */
-#flex-col-1 {
-  background: #ccc;
-  border: solid gray;
-  border-width: 0px 0px 6px 2px;
-  margin: 6px 3px 2px 0px;
-  padding: 4px 0px 1px 4px;
-  width: 106px;
-  height: 154px;
+/* line 126, ../scss/runner.scss */
+#flex-target p {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-color: rgba(128, 128, 128, 0.5);
 }
 
-/* line 91, ../scss/runner.scss */
+/* line 133, ../scss/runner.scss */
+#flex-col-2 p, #flex-col-4 p, #flex-col-6 p {
+  float: left;
+  width: 50%;
+}
+
+/* line 143, ../scss/runner.scss */
+#flex-col-1 {
+  background: #cccccc;
+  border: solid gray;
+  border-width: 3px 3px 3px 3px;
+  margin: 4px 6px 2px 8px;
+  padding: 2px 0px 1px 8px;
+  width: 215px;
+  height: 333px;
+}
+/* line 147, ../scss/runner.scss */
+#flex-col-1 p {
+  border: solid gray;
+  border-width: 0px 3px 0px 0px;
+  margin: 3px 3px 5px 3px;
+  padding: 4px 2px 5px 2px;
+}
+
+/* line 143, ../scss/runner.scss */
 #flex-col-2 {
   background: red;
   border: solid gray;
-  border-width: 1px 1px 0px 0px;
-  margin: 3px 46px 8px 14px;
-  padding: 7px 6px 25px 15px;
-  width: 168px;
-  height: 102px;
+  border-width: 4px 10px 13px 12px;
+  margin: 5px 19px 6px 19px;
+  padding: 1px 18px 14px 2px;
+  width: 234px;
+  height: 106px;
+}
+/* line 147, ../scss/runner.scss */
+#flex-col-2 p {
+  border: solid gray;
+  border-width: 1px 4px 3px 5px;
+  margin: 3px 10px 9px 10px;
+  padding: 8px 13px 6px 3px;
 }
 
-/* line 96, ../scss/runner.scss */
+/* line 143, ../scss/runner.scss */
 #flex-col-3 {
   background: teal;
   border: solid gray;
-  border-width: 7px 6px 13px 11px;
-  margin: 18px 5px 5px 12px;
-  padding: 6px 14px 18px 10px;
-  width: 207px;
-  height: 177px;
+  border-width: 4px 7px 0px 1px;
+  margin: 2px 2px 1px 1px;
+  padding: 1px 2px 2px 0px;
+  width: 176px;
+  height: 118px;
+}
+/* line 147, ../scss/runner.scss */
+#flex-col-3 p {
+  border: solid gray;
+  border-width: 0px 7px 1px 7px;
+  margin: 2px 3px 11px 5px;
+  padding: 16px 1px 16px 15px;
 }
 
-/* line 101, ../scss/runner.scss */
+/* line 143, ../scss/runner.scss */
 #flex-col-4 {
   background: purple;
   border: solid gray;
-  border-width: 13px 17px 12px 19px;
-  margin: 5px 21px 2px 6px;
-  padding: 20px 2px 3px 23px;
-  width: 52px;
-  height: 55px;
+  border-width: 5px 3px 3px 3px;
+  margin: 3px 2px 3px 9px;
+  padding: 12px 13px 10px 5px;
+  width: 343px;
+  height: 140px;
+}
+/* line 147, ../scss/runner.scss */
+#flex-col-4 p {
+  border: solid gray;
+  border-width: 1px 1px 1px 0px;
+  margin: 13px 14px 18px 8px;
+  padding: 9px 15px 19px 14px;
 }
 
-/* line 106, ../scss/runner.scss */
+/* line 143, ../scss/runner.scss */
 #flex-col-5 {
   background: green;
   border: solid gray;
-  border-width: 15px 2px 3px 3px;
-  margin: 5px 8px 7px 4px;
-  padding: 6px 5px 5px 7px;
-  width: 410px;
-  height: 560px;
+  border-width: 3px 3px 2px 6px;
+  margin: 0px 23px 22px 10px;
+  padding: 14px 10px 23px 4px;
+  width: 108px;
+  height: 102px;
+}
+/* line 147, ../scss/runner.scss */
+#flex-col-5 p {
+  border: solid gray;
+  border-width: 5px 9px 5px 3px;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
 }
 
-/* line 111, ../scss/runner.scss */
+/* line 143, ../scss/runner.scss */
 #flex-col-6 {
   background: blue;
   border: solid gray;
-  border-width: 0px 0px 0px 0px;
-  margin: 10px 16px 18px 2px;
-  padding: 14px 13px 26px 21px;
-  width: 50px;
-  height: 278px;
+  border-width: 0px 4px 12px 3px;
+  margin: 4px 7px 10px 6px;
+  padding: 12px 6px 11px 1px;
+  width: 198px;
+  height: 114px;
+}
+/* line 147, ../scss/runner.scss */
+#flex-col-6 p {
+  border: solid gray;
+  border-width: 5px 6px 9px 13px;
+  margin: 1px 8px 8px 6px;
+  padding: 1px 6px 5px 9px;
 }

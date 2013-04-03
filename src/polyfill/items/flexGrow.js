@@ -58,7 +58,7 @@ Flexbox.models.flexGrow = function (flewGrow, properties) {
 			} else {
 				// flex-shrink (based on size*flex-shrink"
 				if (isNaN(line.items[j].debug.properties["flex-shrink"])) {
-					line.items[j].debug.properties["flex-shrink"] = 1;
+					line.items[j].debug.properties["flex-shrink"] = "1";
 				}
 				weights[j] = flexBasis[j] * line.items[j].debug.properties["flex-shrink"];
 			}
