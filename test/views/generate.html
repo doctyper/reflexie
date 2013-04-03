@@ -141,6 +141,22 @@
 					// Undo styles
 					flex.removeAttr("style");
 
+					var mainSize = parent["main-size"],
+						crossSize = parent["cross-size"];
+
+					if (mainSize === "auto") {
+						direction = mainSizeMap[parent["flex-direction"]];
+						parent[direction] = "auto";
+					}
+
+					if (crossSize === "auto") {
+						direction = crossSizeMap[parent["flex-direction"]];
+						parent[direction] = "auto";
+					}
+
+					delete parent["main-size"];
+					delete parent["cross-size"];
+
 					// Apply styles
 					flex.css(parent);
 
@@ -150,7 +166,7 @@
 
 					// Apply children styles
 					for (var i = 0, j = children.length; i < j; i++) {
-						var item = JSON.parse(JSON.stringify(items[i])),
+						var item = items[i],
 							mainSize = item["main-size"],
 							crossSize = item["cross-size"],
 							direction;

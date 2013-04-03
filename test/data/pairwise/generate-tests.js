@@ -46,7 +46,7 @@
 			};
 
 			for (var k = 0, l = line.length; k < l; k++) {
-				var prop = titles[k];
+				var prop = titles[k].trim();
 				var value = line[k];
 
 				// Not using the optional identifier, so let's drop it.
@@ -54,12 +54,15 @@
 
 				switch (prop) {
 				case "display":
+				case "overflow":
 				case "flex-direction":
 				case "flex-wrap":
 				case "justify-content":
 				case "align-items":
 				case "align-content":
-					rule.parent[prop] = value;
+				case "main-size":
+				case "cross-size":
+					rule.parent[prop.toString()] = value;
 					break;
 
 				case "children":
@@ -74,7 +77,7 @@
 						var idx = match[2] - 1;
 
 						rule.items[idx] = rule.items[idx] || {};
-						rule.items[idx][pristine] = value;
+						rule.items[idx][pristine.toString()] = value;
 					}
 					break;
 				}

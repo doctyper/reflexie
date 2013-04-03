@@ -44,10 +44,12 @@
 				opacity: 0.5;
 			}
 
+			#flex-target.stretch-row,
 			#flex-target div.stretch-row {
 				height: auto;
 			}
 
+			#flex-target.stretch-col,
 			#flex-target div.stretch-col {
 				width: auto;
 			}
@@ -164,6 +166,18 @@
 
 					var target = document.querySelector("#flex-target");
 
+					if (flx.container.width) {
+						target.className += " width";
+					}
+
+					if (flx.container.height) {
+						target.className += " height";
+					}
+
+					if (flx.container.overflow) {
+						target.className += " " + flx.container.overflow;
+					}
+
 					for (var i = 0, j = flx.items.length; i < j; i++) {
 						var item = flx.items[i];
 						var index = (i + 1);
@@ -174,12 +188,16 @@
 
 						target.appendChild(element);
 
-						if (item["main-size"] === "auto") {
-							applyClass(flx.container, element);
+						if (item.width) {
+							element.className += " width";
 						}
 
-						if (item["cross-size"] === "auto") {
-							applyClass(flx.container, element, true);
+						if (item.height) {
+							element.className += " height";
+						}
+
+						if (item.overflow) {
+							element.className += " " + item.overflow;
 						}
 					}
 

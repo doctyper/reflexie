@@ -63,22 +63,6 @@ define([
 		return set;
 	};
 
-	var map = {
-		"mainSize": {
-			"row": "height",
-			"row-reverse": "height",
-			"column": "width",
-			"column-reverse": "width"
-		},
-
-		"crossSize": {
-			"row": "width",
-			"row-reverse": "width",
-			"column": "height",
-			"column-reverse": "height"
-		}
-	};
-
 	var logger = {
 		log : function () {
 			if (DEBUG) {
@@ -111,22 +95,6 @@ define([
 		return string;
 	};
 
-	var getSizeValue = function (data, type) {
-		var sizeValue;
-
-		if (data["flex-direction"]) {
-			sizeValue = map[type][data["flex-direction"]];
-		} else {
-			var possibleDirection = data["flex-flow"].split(" ");
-
-			for (var i = 0, j = possibleDirection.length; i < j; i++) {
-				sizeValue = sizeValue || map[type][possibleDirection[i]];
-			}
-		}
-
-		return sizeValue;
-	};
-
 	var buildFlexDescription = function (type, data) {
 		type = type.replace(/\@start/g, "[").replace(/\@end/g, "]");
 
@@ -147,12 +115,12 @@ define([
 				$("style[data-flexie]").remove();
 
 				flex = $("#flex-target");
-				flex.empty();
+				flex.empty().removeAttr("style");
 
 				var set = appendFlexChildren(flex, desc.items, data.items.length);
 				children = flex.children();
 
-				var i, j;
+				var i, j, mainSize, crossSize, sizeValue;
 
 				if (hasSupport) {
 					var prefixes = "webkit moz ms o".split(" ");
@@ -161,40 +129,44 @@ define([
 						flex.css("display", "-" + prefixes[i] + "-" + desc.parent.display);
 					}
 
-					flex.css(desc.parent);
+					delete desc.parent.display;
 				}
 
-				for (i = 0, j = children.length; i < j; i++) {
-					var el = $(children[i]),
-						item = desc.items[i],
-						mainSize = item["main-size"],
-						crossSize = item["cross-size"],
-						sizeValue;
+				if (hasSupport) {
+					flex.css(desc.parent);
 
-					if (mainSize === "auto") {
-						sizeValue = getSizeValue(desc.parent, "mainSize");
-
-						if (hasSupport) {
-							item[sizeValue] = "auto";
-						} else {
-							el.addClass(sizeValue);
-						}
+					for (i = 0, j = children.length; i < j; i++) {
+						$(children[i]).css(desc.items[i]);
+					}
+				} else {
+					if (desc.parent.width) {
+						flex.addClass("width");
+						delete desc.parent.width;
 					}
 
-					if (crossSize === "auto") {
-						sizeValue = getSizeValue(desc.parent, "crossSize");
-
-						if (hasSupport) {
-							item[sizeValue] = "auto";
-						} else {
-							el.addClass(sizeValue);
-						}
+					if (desc.parent.height) {
+						flex.addClass("height");
+						delete desc.parent.height;
 					}
 
-					if (hasSupport) {
-						delete item["main-size"];
-						delete item["cross-size"];
-						el.css(item);
+					for (i = 0, j = children.length; i < j; i++) {
+						var item = desc.items[i],
+							child = $(children[i]);
+
+						if (item.width) {
+							child.addClass("width");
+							delete item.width;
+						}
+
+						if (item.height) {
+							child.addClass("height");
+							delete item.height;
+						}
+
+						if (item.overflow) {
+							child.addClass(item.overflow);
+							delete item.overflow;
+						}
 					}
 				}
 
@@ -247,9 +219,8 @@ define([
 			}
 
 			after(function () {
-				children = flex.children();
-				children.removeClass(getSizeValue(desc.parent, "mainSize"));
-				children.removeClass(getSizeValue(desc.parent, "crossSize"));
+				flex.removeClass();
+				children.removeClass();
 			});
 		});
 	};
