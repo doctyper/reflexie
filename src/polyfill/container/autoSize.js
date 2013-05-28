@@ -1,13 +1,11 @@
-Flexbox.models.autoSize = function (size, properties, model) {
+Flexbox.models.autoSize = function (size, properties) {
 	var values = this.values,
 		container = values.container,
 		itemValues = values.items,
 		i, j, item,
-		crossStart = this.crossStart,
 		mainStart = this.mainStart,
 		mainSize = this.mainSize,
 		crossSize = this.crossSize,
-		containerSize = container[mainSize],
 		isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 
 	if (isNotFlexWrap) {

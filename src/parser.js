@@ -87,7 +87,7 @@ Flexbox.parser = {
 			items = relation.items,
 			i, j, parts, part, item, flex,
 			partialProperties, partialValues,
-			prop, val;
+			prop;
 
 		if (container.display) {
 			// IE10 undersands display: flexbox; or display: inline-flexbox;
@@ -352,7 +352,7 @@ Flexbox.parser = {
 
 	buildSelector : function (container, item, index) {
 		var parts = [container, " > "],
-			classes, i, j, attribute, nth;
+			classes, i, j, attribute;
 
 		// First start with the element name
 		parts.push(item.nodeName.toLowerCase());
