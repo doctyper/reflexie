@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Date: 4-3-2013
+ * Date: 5-28-2013
  */
 (function (window, undefined) {
 
@@ -1467,7 +1467,7 @@
 				items = relation.items,
 				i, j, parts, part, item, flex,
 				partialProperties, partialValues,
-				prop, val;
+				prop;
 
 			if (container.display) {
 				// IE10 undersands display: flexbox; or display: inline-flexbox;
@@ -1731,7 +1731,7 @@
 
 		buildSelector : function (container, item, index) {
 			var parts = [container, " > "],
-				classes, i, j, attribute, nth;
+				classes, i, j, attribute;
 
 			// First start with the element name
 			parts.push(item.nodeName.toLowerCase());
@@ -2596,16 +2596,14 @@
 		}
 	};
 	
-	Flexbox.models.autoSize = function (size, properties, model) {
+	Flexbox.models.autoSize = function (size, properties) {
 		var values = this.values,
 			container = values.container,
 			itemValues = values.items,
 			i, j, item,
-			crossStart = this.crossStart,
 			mainStart = this.mainStart,
 			mainSize = this.mainSize,
 			crossSize = this.crossSize,
-			containerSize = container[mainSize],
 			isNotFlexWrap = properties["flex-wrap"] === "nowrap";
 
 		if (isNotFlexWrap) {
