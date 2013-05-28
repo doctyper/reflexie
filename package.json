@@ -5,15 +5,15 @@
 	"main": "dist/reflexie.js",
 	"dependencies": {},
 	"devDependencies": {
-		"express": ">=3.0.1",
-		"ejs": ">=0.8.3",
-		"mocha": ">=1.6.0",
-		"expect.js": ">=0.2.0",
-		"socket.io": ">=0.9.11",
-		"grunt": "0.3.x",
-		"uglify-js2": "2.1.x",
-		"mocha-phantomjs": "2.0.x",
-		"gzip": "0.1.x"
+		"express": "~3.2.x",
+		"ejs": "~0.8.x",
+		"mocha": "~1.10.x",
+		"expect.js": "~0.2.0",
+		"socket.io": "~0.9.x",
+		"uglify-js": "~2.3.x",
+		"mocha-phantomjs": "~2.0.x",
+		"grunt": "~0.4.x",
+		"grunt-contrib-watch": "~0.4.x"
 	},
 	"scripts": {
 		"start": "grunt build && node test/generate.js",

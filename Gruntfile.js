@@ -27,8 +27,11 @@ module.exports = function (grunt) {
 		return bytes + units[i];
 	};
 
+	// Watcher
+	grunt.loadNpmTasks("grunt-contrib-watch");
+
 	grunt.initConfig({
-		pkg: "<json:package.json>",
+		pkg: grunt.file.readJSON("package.json"),
 		build: {
 			"dist/reflexie.js": [
 				"src/intro",
@@ -98,7 +101,7 @@ module.exports = function (grunt) {
 			source;
 
 		// conditionally concatenate source
-		this.file.src.forEach(function (filepath) {
+		this.data.forEach(function (filepath) {
 			filepath += ".js";
 
 			source = grunt.file.read(filepath);
@@ -134,36 +137,34 @@ module.exports = function (grunt) {
 		});
 
 		// Write concatenated source to file
-		grunt.file.write(this.file.dest, compiled);
-		grunt.log.subhead("Saved output to " + this.file.dest);
+		grunt.file.write(this.target, compiled);
+		grunt.log.subhead("Saved output to " + this.target);
 
-		var uglify = require("uglify-js2");
-		var result = uglify.minify(this.file.dest, {
-			outSourceMap: this.file.dest + ".map",
+		var uglify = require("uglify-js");
+		var result = uglify.minify(this.target, {
+			outSourceMap: this.target + ".map",
 			warnings: true,
 			mangle: true,
+			unused: true,
 			compress: {
 				unsafe: true
 			}
 		});
 
-		var minifiedPath = this.file.dest.replace(".js", ".min.js");
+		var minifiedPath = this.target.replace(".js", ".min.js");
 
 		// Save minified file
 		grunt.file.write(minifiedPath, result.code);
 
 		// Save source map
-		grunt.file.write(this.file.dest + ".map", result.map);
+		grunt.file.write(this.target + ".map", result.map);
 
 		var gzip = require("gzip");
 
-		gzip(result.code, function (err, data) {
-			grunt.log.ok(getBytesWithUnit(compiled.length) + " uncompressed");
-			grunt.log.ok(getBytesWithUnit(result.code.length) + " minified");
-			grunt.log.ok(getBytesWithUnit(data.length) + " min & gzipped");
+		grunt.log.ok(getBytesWithUnit(compiled.length) + " uncompressed");
+		grunt.log.ok(getBytesWithUnit(result.code.length) + " minified");
 
-			done();
-		});
+		done();
 	});
 
 };
