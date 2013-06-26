@@ -13,7 +13,8 @@
 		"uglify-js": "~2.3.x",
 		"mocha-phantomjs": "~2.0.x",
 		"grunt": "~0.4.x",
-		"grunt-contrib-watch": "~0.4.x"
+		"grunt-contrib-watch": "~0.4.x",
+		"gzip": "~0.1.0"
 	},
 	"scripts": {
 		"start": "grunt build && node test/generate.js",
